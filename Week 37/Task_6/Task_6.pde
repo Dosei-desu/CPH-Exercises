@@ -13,10 +13,16 @@ void setup(){
   }else{
     println("6a - Failure!");
   }
-  x = 5; y = 15; z = 10;
-  if(x+y+z == 30 && x % 10 != 0 && y % 10 != 0 && z % 10 != 0 ){
+  
+  x = -5; y = 40; z = -5;
+  if(x+y+z == 30 && check(x) && check(y) && z % 10 != 0 ){
     println("6b - Success!");
   }else{
     println("6b - Failure!");
   }
+}
+
+boolean check(int n){ //makes it so you can test for negatives, which isn't
+                      //possible with % modulus
+  return n != 10 && n != 20 && n != 30;
 }

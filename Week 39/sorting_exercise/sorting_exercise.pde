@@ -1,8 +1,7 @@
 //sorting exercise
 
 int[] numbers = {5,3,8,4,6,53,88,0,12,75,3,8,-2,19,99,-6};
-int temp1;
-int temp2;
+int temp;
 
 void setup(){
   size(800,800);
@@ -28,21 +27,19 @@ void draw(){
 void mouseClicked(){
   if(mouseButton == LEFT){
     for(int n = 1; n < numbers.length; n++){
-      temp1 = numbers[n-1];
-      temp2 = numbers[n];
       if(numbers[n-1] > numbers[n]){
-        numbers[n-1] = temp2;
-        numbers[n] = temp1;
+        temp = numbers[n-1];
+        numbers[n-1] = numbers[n];
+        numbers[n] = temp;
       }
     }
   }
   if(mouseButton == RIGHT){
     for(int n = 1; n < numbers.length; n++){
-      temp1 = numbers[n-1];
-      temp2 = numbers[n];
       if(numbers[n-1] < numbers[n]){
-        numbers[n-1] = temp2;
-        numbers[n] = temp1;
+        temp = numbers[n-1];
+        numbers[n-1] = numbers[n];
+        numbers[n] = temp;
       }
     }
   }

@@ -16,7 +16,7 @@ void draw(){
     fill(255-5*n,255-10*n,0);
     strokeWeight(2);
     stroke(0);
-    rect(0+n*50,0,50+n*50,50);
+    rect(n*50,0,50,50); //remember default rectMode is CORNER i.e: rect(x,y,width,height); !!
     fill(0);
     textSize(25);
     textAlign(CENTER, BOTTOM);

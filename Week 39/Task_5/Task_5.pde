@@ -19,7 +19,6 @@ of 0's and 1's.
 */
 
 int[][] board = new int[8][8];
-int x, y = 0;
 int sideLength = 40;
 
 void setup(){

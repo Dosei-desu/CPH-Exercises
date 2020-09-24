@@ -63,7 +63,7 @@ int dFunction(int _input){
 }
 
 int eFunction(int n1, int n2){ //got help from Jens (@JPfroosh)
-  println(n1);
+  println(n1+"\t"+n2);
   if(n1 > 10000 || n2 > 10000) return 0;
   return eFunction(n2,n1+n2); 
 }

@@ -191,7 +191,6 @@ class Game
           dx = player.getX() - enemies[i].getX();
           dy = player.getY() - enemies[i].getY();
         }
-        
         if(abs(dx) > abs(dy) || abs(dx2) > abs(dy2))
         {
           if(dx > 0 || dx2 > 0)
@@ -338,12 +337,14 @@ class Game
       {
         //We have a collision
         playerLife -= 3;
+        if(playerLife <= 0) playerLife = 0;
       }
       if(coop){
         if(enemies[i].getX() == player2.getX() && enemies[i].getY() == player2.getY())
         {
           //We have a collision
           player2Life -= 3;
+          if(player2Life <= 0) player2Life = 0;
         }
       }
     }

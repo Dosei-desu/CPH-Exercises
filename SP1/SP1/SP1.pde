@@ -12,30 +12,38 @@
  
 import java.util.Random;
 int enemies = 6;
-int foodCount = 1;
+int foodCount = 2;
 int arenaWidth = 30, arenaHeight = 20;
-boolean coop = false;
+boolean coop = true;
 int winScore = 10;
 
 Game game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop); //last boolean is coop
 
 boolean nightmareMode = false;
-boolean doOnce = true;
+boolean nmDoOnce = true;
+boolean unicornMode = false;
+boolean uDoOnce = true;
 
-color bgCol = color(0,200);
+color bgCol = color(0,150);
 color P1Col = color(0,0,255);
 color P2Col = color(0,255,255);
 color enCol = color(255,0,0);
 color foodCol = color(0,255,0);
 
+color P1TextCol = color(100,100,255);
+color P2TextCol = color(100,255,255);
+color textCol = color(255);
+
 PFont font;
 PImage nmPic;
 PImage bgPic;
+PImage uPic;
 
 public void settings() {
   size(1201, 801);
   nmPic = loadImage("devil.jpg");
   bgPic = loadImage("vista.jpg");
+  uPic = loadImage("unicorn.jpg");
 }
 
 void setup()
@@ -70,25 +78,51 @@ void keyPressed()
   }
   //resume game
   if(keyCode == ENTER){
-    if(game.gameOver() || game.win() || game.win2()){
+    if(game.gameOver() || game.win() || game.win2() || game.coopGameOver() > 0){
+      //reset colours
       enCol = color(255,0,0);
       foodCol = color(0,255,0);
-      doOnce = true;
+      P1TextCol = color(100,100,255);
+      P2TextCol = color(100,255,255);
+      textCol = color(255);
+      P1Col = color(0,0,255);
+      P2Col = color(0,255,255);
+      //reset booleans (but not modes)
+      nmDoOnce = true;
+      uDoOnce = true;
+      //reset game
       game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
     }
+    //start sketch
     loop();
   }
   if(key == 'r' || key == 'R'){
+    //reset colours
     enCol = color(255,0,0);
     foodCol = color(0,255,0);
-    doOnce = true;
-    game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
+    P1TextCol = color(100,100,255);
+    P2TextCol = color(100,255,255);
+    textCol = color(255);
+    P1Col = color(0,0,255);
+    P2Col = color(0,255,255);
+    //reset booleans
+    nmDoOnce = true;
     nightmareMode = false;
-    doOnce = true;
+    unicornMode = false;
+    nmDoOnce = true;
+    uDoOnce = true;
+    //reset game
+    game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
+    //start sketch
     loop();
   }
-  if(key == 'u' || key == 'U'){
+  if(key == 'u'){
+    unicornMode = false;
     nightmareMode = true;
+  }
+  if(key == 'U'){
+    nightmareMode = false;
+    unicornMode = true;
   }
 }
 
@@ -101,6 +135,9 @@ void draw()
   if(nightmareMode){
     imageMode(CENTER);
     image(nmPic, width/2, height/2, width, height);
+  }else if(unicornMode){
+    imageMode(CENTER);
+    image(uPic, width/2, height/2, width, height);
   }else{
     imageMode(CENTER);
     image(bgPic, width/2, height/2, width, height);
@@ -140,12 +177,14 @@ void draw()
       rect(x*40, y*40, 40, 40);
     }
   }
+  
   //displays
   scoreDisplay();
   lifeDisplay();
   
   //modes
   nightMare();
+  uniCorn();
   
   //varies failure/win states
   failureState();
@@ -154,11 +193,34 @@ void draw()
 }
 
 void nightMare(){
-  if(nightmareMode && doOnce){
-    doOnce = false;
-    enCol = color(66,28,82);
+  if(nightmareMode){
+    enCol = color(random(33,66),random(14,28),random(41,82));
     foodCol = color(255);
-    game = new Game(arenaWidth, arenaHeight, enemies*4, foodCount, winScore*2, coop);
+    P1TextCol = color(200,0,0);
+    P2TextCol = color(200,0,0);
+    P1Col = color(255,255,0);
+    P2Col = color(255,0,0);
+    textCol = color(200,0,0);
+  }
+  if(nightmareMode && nmDoOnce){
+    nmDoOnce = false;
+    game = new Game(arenaWidth, arenaHeight, enemies*4, 1, winScore*2, coop);
+  }
+}
+
+void uniCorn(){
+  if(unicornMode){
+    enCol = color(random(1,255),random(1,255),random(1,255));
+    foodCol = color(0);
+    P1TextCol = color(random(1,255),random(100,150));
+    P2TextCol = color(random(1,255),random(100,150));
+    textCol = color(random(1,255),random(1,255),random(1,255));
+    P1Col = color(random(1,255),random(100,150));
+    P2Col = color(random(1,255),random(100,150));
+  }
+  if(unicornMode && uDoOnce){
+    uDoOnce = false;
+    game = new Game(arenaWidth, arenaHeight, enemies*8, 5, 3, coop);
   }
 }
 
@@ -166,12 +228,12 @@ void scoreDisplay(){
   textAlign(CENTER,BOTTOM);
   textSize(25);
   if(coop){
-    fill(100,100,255);
+    fill(P1TextCol);
     text("P1 Score: "+game.getScore(), width-100, 30);
-    fill(100,255,255);
+    fill(P2TextCol);
     text("P2 Score: "+game.getP2Score(), width-100, 60);
   }else{
-    fill(255);
+    fill(textCol);
     text("Score: "+game.getScore(), width-100, 30);
   }
 }
@@ -180,12 +242,12 @@ void lifeDisplay(){
   textAlign(CENTER,BOTTOM);
   textSize(25);
   if(coop){
-    fill(100,100,255);
+    fill(P1TextCol);
     text("P1 Life: "+game.getPlayerLife(), 100, 30);
-    fill(100,255,255);
+    fill(P2TextCol);
     text("P2 Life: "+game.getPlayer2Life(), 100, 60);
   }else{
-    fill(255);
+    fill(textCol);
     text("Life: "+game.getPlayerLife(), 100, 30);
   }
 }
@@ -193,12 +255,12 @@ void lifeDisplay(){
 void winState(){
   if(game.win()){
     textSize(50);
-    fill(100,100,255);
+    fill(150,150);
     rectMode(CENTER);
     rect(width/2,height/2,width,height);
     fill(0);
     text("You won!",width/2,height/2-120);
-    text("Press Enter to restart",width/2,height/2-50);
+    text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
     textSize(35);
     text("Score: "+game.getScore(),width/2,height/2);
     noLoop();
@@ -208,12 +270,12 @@ void winState(){
 void failureState(){
   if(game.gameOver()){
     textSize(50);
-    fill(150,0,0);
+    fill(150,0,0,150);
     rectMode(CENTER);
     rect(width/2,height/2,width,height);
     fill(0);
     text("Game Over!",width/2,height/2-120);
-    text("Press Enter to restart",width/2,height/2-50);
+    text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
     textSize(35);
     text("Score: "+game.getScore(),width/2,height/2);
     noLoop();
@@ -229,7 +291,7 @@ void coopFailureState(){
       rect(width/2,height/2,width,height);
       fill(0);
       text("Player Two Wins!",width/2,height/2-100);
-      text("Press Enter to restart",width/2,height/2-50);
+      text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
       textSize(35);
       text("P2 Score: "+game.getP2Score(),width/2,height/2);
       text("P1 Score: "+game.getScore(),width/2,height/2+35);
@@ -242,7 +304,7 @@ void coopFailureState(){
       rect(width/2,height/2,width,height);
       fill(0);
       text("Player One Wins!",width/2,height/2-100);
-      text("Press Enter to restart",width/2,height/2-50);
+      text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
       textSize(35);
       text("P1 Score: "+game.getScore(),width/2,height/2);
       text("P2 Score: "+game.getP2Score(),width/2,height/2+35);

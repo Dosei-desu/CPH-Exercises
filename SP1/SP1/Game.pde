@@ -9,15 +9,18 @@ class Game
   private Keys keys;
   private Keys2 keys2;
   private int playerLife;
+  private int player2Life;
   private Dot player;
   private Dot player2;
   private Dot[] enemies;
   private Dot[] food;
   private int score = 0;
+  private int score2 = 0;
   private boolean coop;
+  private int winScore;
   
    
-  Game(int width, int height, int numberOfEnemies, int foodCounter, boolean _coop)
+  Game(int width, int height, int numberOfEnemies, int foodCounter, int _winScore, boolean _coop)
   {
     if(width < 10 || height < 10)
     {
@@ -31,27 +34,31 @@ class Game
     this.board = new int[width][height];
     this.width = width;
     this.height = height;
-    keys = new Keys();
-    keys2 = new Keys2();
-    player = new Dot(0,0,width-1, height-1);
-    coop = _coop;
-    if(coop){
-      player2 = new Dot(0,height-1,width-1, height-1);
+    this.winScore = _winScore;
+    this.keys = new Keys();
+    this.keys2 = new Keys2();
+    this.player = new Dot(0,0,width-1, height-1);
+    this.coop = _coop;
+    if(this.coop){
+      this.player2 = new Dot(0,height-1,width-1, height-1);
     }
     
-    enemies = new Dot[numberOfEnemies];
+    this.enemies = new Dot[numberOfEnemies];
     for(int i = 0; i < numberOfEnemies; ++i)
     {
-      enemies[i] = new Dot(width-1, height-1, width-1, height-1);
+      this.enemies[i] = new Dot(width-1, height-1, width-1, height-1);
     }
-    
-    food = new Dot[foodCounter];
+    if(this.coop){
+      foodCounter *= 2;
+    }
+    this.food = new Dot[foodCounter];
     for(int i = 0; i < foodCounter; ++i)
     {
-      food[i] = new Dot((int)random(1,width-1), (int)random(1,height-1), width-1, height-1);
+      this.food[i] = new Dot((int)random(1,width-1), (int)random(1,height-1), width-1, height-1);
     }
     
     this.playerLife = 100;
+    this.player2Life = 100;
   }
   
   public int getWidth()
@@ -67,6 +74,11 @@ class Game
   public int getPlayerLife()
   {
     return playerLife;
+  }
+  
+  public int getPlayer2Life()
+  {
+    return player2Life;
   }
   
   public void onKeyPressed(char ch)
@@ -171,11 +183,18 @@ class Game
       if(rnd.nextInt(3) < 2)
       {
         //We follow
-        int dx = player.getX() - enemies[i].getX();
-        int dy = player.getY() - enemies[i].getY();
-        if(abs(dx) > abs(dy))
+        int dx = 0, dy = 0, dx2 = 0, dy2 = 0;
+        if(coop && i < enemies.length/2){
+          dx2 = player2.getX() - enemies[i].getX();
+          dy2 = player2.getY() - enemies[i].getY();
+        }else{
+          dx = player.getX() - enemies[i].getX();
+          dy = player.getY() - enemies[i].getY();
+        }
+        
+        if(abs(dx) > abs(dy) || abs(dx2) > abs(dy2))
         {
-          if(dx > 0)
+          if(dx > 0 || dx2 > 0)
           {
             //Player is to the right
             enemies[i].moveRight();
@@ -186,7 +205,7 @@ class Game
             enemies[i].moveLeft();
           }
         }
-        else if(dy > 0)
+        else if(dy > 0 || dy2 > 0)
         {
           //Player is down;
           enemies[i].moveDown();
@@ -233,9 +252,15 @@ class Game
       if(rnd.nextInt(3) < 2)
       {
         //We avoid
-        int fx = player.getX() - food[i].getX();
-        int fy = player.getY() - food[i].getY();
-        if(abs(fx) < abs(fy))
+        int fx = 0, fy = 0, fx2 = 0, fy2 = 0;
+        if(coop && i < enemies.length/2){
+          fx2 = player2.getX() - food[i].getX();
+          fy2 = player2.getY() - food[i].getY();
+        }else{
+          fx = player.getX() - food[i].getX();
+          fy = player.getY() - food[i].getY();
+        }
+        if(abs(fx) < abs(fy) || abs(fx2) < abs(fy2))
         {
           if(fx > 0)
           {
@@ -312,7 +337,14 @@ class Game
       if(enemies[i].getX() == player.getX() && enemies[i].getY() == player.getY())
       {
         //We have a collision
-        --playerLife;
+        playerLife -= 3;
+      }
+      if(coop){
+        if(enemies[i].getX() == player2.getX() && enemies[i].getY() == player2.getY())
+        {
+          //We have a collision
+          player2Life -= 3;
+        }
       }
     }
     for(int i = 0; i < food.length; ++i)
@@ -329,15 +361,53 @@ class Game
         food[i] = new Dot((int)random(1,width-1), (int)random(1,height-1), width-1, height-1);
         }
       }
+      if(coop){
+        if(food[i].getX() == player2.getX() && food[i].getY() == player2.getY())
+        {
+          //We have a collision
+          ++score2;
+          if(player2Life > 100){
+          playerLife += 5;
+          }
+          for(int n = 0; n < food.length; ++n)
+          {
+          food[i] = new Dot((int)random(1,width-1), (int)random(1,height-1), width-1, height-1);
+          }
+        }
+      }
     }
   }
   
   private int getScore(){
-    return score;
+    return this.score;
+  }
+  
+  private int getP2Score(){
+    return this.score2;
+  }
+  
+  private boolean win(){
+    if(this.score >= this.winScore) return true;
+    return false;
+  }
+  
+  private boolean win2(){
+    if(this.score2 >= this.winScore) return true;
+    return false;
   }
   
   private boolean gameOver(){
-    if(playerLife < 1) return true;
+    if(!this.coop){
+      if(this.playerLife < 1) return true;
+    }
     return false;
+  }
+  
+  private int coopGameOver(){
+    if(this.coop){
+      if(this.playerLife < 1) return 1;
+      if(this.player2Life < 1) return 2;
+    }
+    return 0;
   }
 }

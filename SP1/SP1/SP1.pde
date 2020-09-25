@@ -22,7 +22,7 @@ Game game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop
 boolean nightmareMode = false;
 boolean doOnce = true;
 
-color bgCol = color(0);
+color bgCol = color(0,200);
 color P1Col = color(0,0,255);
 color P2Col = color(0,255,255);
 color enCol = color(255,0,0);
@@ -30,10 +30,12 @@ color foodCol = color(0,255,0);
 
 PFont font;
 PImage nmPic;
+PImage bgPic;
 
 public void settings() {
   size(1201, 801);
   nmPic = loadImage("devil.jpg");
+  bgPic = loadImage("vista.jpg");
 }
 
 void setup()
@@ -69,7 +71,6 @@ void keyPressed()
   //resume game
   if(keyCode == ENTER){
     if(game.gameOver() || game.win() || game.win2()){
-      bgCol = color(0);
       enCol = color(255,0,0);
       foodCol = color(0,255,0);
       doOnce = true;
@@ -78,7 +79,6 @@ void keyPressed()
     loop();
   }
   if(key == 'r' || key == 'R'){
-    bgCol = color(0);
     enCol = color(255,0,0);
     foodCol = color(0,255,0);
     doOnce = true;
@@ -95,11 +95,17 @@ void keyPressed()
 void draw()
 {
   background(0); //Black
+  game.update();
+  
+  //Nightmare Mode background
   if(nightmareMode){
     imageMode(CENTER);
     image(nmPic, width/2, height/2, width, height);
+  }else{
+    imageMode(CENTER);
+    image(bgPic, width/2, height/2, width, height);
   }
-  game.update();
+  
   // This embedded loop skips over values in the arrays based on
   // the spacer variable, so there are more values in the array
   // than are drawn here. Change the value of the spacer variable
@@ -150,7 +156,6 @@ void draw()
 void nightMare(){
   if(nightmareMode && doOnce){
     doOnce = false;
-    bgCol = color(0,0);
     enCol = color(66,28,82);
     foodCol = color(255);
     game = new Game(arenaWidth, arenaHeight, enemies*4, foodCount, winScore*2, coop);

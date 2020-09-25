@@ -46,7 +46,7 @@ class Game
     this.enemies = new Dot[numberOfEnemies];
     for(int i = 0; i < numberOfEnemies; ++i)
     {
-      this.enemies[i] = new Dot(width-1, height-1, width-1, height-1);
+      this.enemies[i] = new Dot(width-1, (int)random(1,height-1), width-1, height-1);
     }
     if(this.coop){
       foodCounter *= 2;

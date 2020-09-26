@@ -2,7 +2,7 @@
 //Kristoffer Borg Pauly
 
 /*
-- Add start menu where you can select whether to play solo or coop.
+- Think of new stuff to add, since you still have 5 days left....
 */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -13,6 +13,9 @@ int foodCount = 2;
 int arenaWidth = 30, arenaHeight = 20;
 boolean coop = false;
 int winScore = 10;
+
+//startscreen
+boolean startScreen = true;
 
 //initialising the game
 Game game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop); //last boolean is coop
@@ -42,10 +45,12 @@ int timer = 1800; //3min at a fps of 10
 
 //image and font Objects
 PFont font;
-PImage nmPic;
 PImage bgPic;
+PImage nmPic;
 PImage uPic;
 PImage ePic;
+PImage homeSymbol;
+PImage returnSymbol;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //Settings:
@@ -57,42 +62,99 @@ public void settings() {
 void setup()
 {
   frameRate(10);
-  font = createFont("Arial", 25, true);
+  font = createFont("Gungsuh", 25, true); //didn't like Arial so I decided to go with Gungsuh (hopefully this is available on all word font libraries)
   textFont(font);
-  nmPic = loadImage("devil.jpg");
   bgPic = loadImage("vista.jpg");
+  nmPic = loadImage("devil.jpg");
   uPic = loadImage("unicorn.jpg");
   ePic = loadImage("endless.jpg");
+  homeSymbol = loadImage("home.png");
+  returnSymbol = loadImage("return.png");
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //Draw:
 void draw()
 {
   background(0); //Black
-  game.update();
   
-  //gamemode backgrounds (comes before gameBoard, because it decides colours and backgrounds that the gameBoard uses)
-  gameModeBGs();
+  //start screen
+  startScreen();
   
-  //gameboard (how colours of enemies, allies, food, etc. is determined
-  gameBoard();
-  
-  //point stuff
-  pointScore();
-  
-  //displays
-  scoreDisplay();
-  lifeDisplay();
-  
-  //modes
-  nightMare();
-  uniCorn();
-  endLess();
-  
-  //varies failure/win states
-  failureState();
-  coopWinFailureState();
-  winState();
+  if(!startScreen){ //only starts if the startScreen is not active (this is to prevent a bug where you can die in the background)
+    game.update();
+    
+    //gamemode backgrounds (comes before gameBoard, because it decides colours and backgrounds that the gameBoard uses)
+    gameModeBGs();
+    
+    //gameboard (how colours of enemies, allies, food, etc. is determined
+    gameBoard();
+    
+    //point stuff
+    pointScore();
+    
+    //displays
+    scoreDisplay();
+    lifeDisplay();
+    buttonsDisplay();
+    
+    //modes
+    nightMare();
+    uniCorn();
+    endLess();
+    
+    //varies failure/win states
+    failureState();
+    coopWinFailureState();
+    winState();
+  }
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------
+//Start Screen:
+void startScreen(){
+  if(startScreen){
+    //start screen canvas
+    rectMode(CENTER);
+    fill(0);
+    rect(width/2,height/2,width,height);
+    
+    //intro text + title?
+    textAlign(CENTER,BOTTOM);
+    textSize(50);
+    fill(255);
+    text("Pick a Gamemode", width/2, height/4);
+    
+    //selection boxes
+    textSize(40);
+    text("Singleplayer", width/4, height/2);
+    text("Co-op", width-width/4, height/2);
+    stroke(255);
+    noFill();
+    rect(300,385,300,60);
+    rect(900,385,150,60);
+    
+    //selection imagery stuff
+    noStroke();
+    fill(0,0,255);
+    rect(300,height-height/3,50,50);
+    rect(850,height-height/3,50,50);
+    fill(0,255,255);
+    rect(950,height-height/3,50,50);
+    fill(255);
+    text("+",900,550);
+    
+    if(mousePressed && mouseX < 450 && mouseX > 150 && mouseY < 415 && mouseY > 355){
+      coop = false;
+      game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
+      resetVar();
+      startScreen = false;
+    }else if(mousePressed && mouseX < 975 && mouseX > 825 && mouseY < 415 && mouseY > 355){
+      coop = true;
+      game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
+      resetVar();
+      startScreen = false;
+    }
+  }
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -106,6 +168,39 @@ void pointScore(){
     text("Points: "+points, width/2, 30);
     --timer;
   }
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------
+//reset stuff
+void resetModes(){
+  //reset modes
+  nightmareMode = false;
+  unicornMode = false;
+  endlessMode = false;
+}
+
+void resetVar(){
+  //reset variables
+  enemies = 6;
+  foodCount = 2;
+  arenaWidth = 30;
+  arenaHeight = 20;
+  winScore = 10;
+  //reset colours
+  enCol = color(255,0,0);
+  foodCol = color(0,255,0);
+  P1TextCol = color(100,100,255);
+  P2TextCol = color(100,255,255);
+  textCol = color(255);
+  P1Col = color(0,0,255);
+  P2Col = color(0,255,255);
+  //reset booleans
+  nmDoOnce = true;
+  uDoOnce = true;
+  eDoOnce = true;
+  //reset points and timer
+  points = 0;
+  timer = 1800;
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -208,6 +303,14 @@ void lifeDisplay(){
   }
 }
 
+void buttonsDisplay(){
+  image(homeSymbol,220,20,40,40);
+  image(returnSymbol,260,20,40,40);
+  image(nmPic,300,20,40,40);
+  image(uPic,340,20,40,40);
+  image(ePic,380,20,40,40);
+}
+
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //Various game states (win and defeat, as well as coop win/defeat):
 void winState(){
@@ -278,6 +381,41 @@ void coopWinFailureState(){
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
+//Buttons:
+void mouseClicked(){
+  //return (x260,y20,w40,h40)
+  if(mouseX < 240 && mouseX > 200 && mouseY < 40 && mouseY > 0){
+    loop();
+    startScreen = true;
+  }
+  if(mouseX < 280 && mouseX > 240 && mouseY < 40 && mouseY > 0){
+    loop();
+    resetVar();
+    resetModes();
+    game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
+    loop();
+  }
+  if(mouseX < 320 && mouseX > 280 && mouseY < 40 && mouseY > 0){
+    loop();
+    unicornMode = false;
+    endlessMode = false;
+    nightmareMode = true;
+  }
+  if(mouseX < 360 && mouseX > 320 && mouseY < 40 && mouseY > 0){
+    loop();
+    endlessMode = false;
+    nightmareMode = false;
+    unicornMode = true;
+  }
+  if(mouseX < 400 && mouseX > 360 && mouseY < 40 && mouseY > 0){
+    loop();
+    nightmareMode = false;
+    unicornMode = false;
+    endlessMode = true;
+  }
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------
 //Controls:
 void keyReleased()
 {
@@ -305,21 +443,8 @@ void keyPressed()
   //resume game
   if(keyCode == ENTER){
     if(game.gameOver() || game.win() || game.win2() || game.coopGameOver() > 0){
-      //reset colours
-      enCol = color(255,0,0);
-      foodCol = color(0,255,0);
-      P1TextCol = color(100,100,255);
-      P2TextCol = color(100,255,255);
-      textCol = color(255);
-      P1Col = color(0,0,255);
-      P2Col = color(0,255,255);
-      //reset booleans (but not modes)
-      nmDoOnce = true;
-      uDoOnce = true;
-      eDoOnce = true;
-      //reset points and timer
-      points = 0;
-      timer = 1800;
+      //reset
+      resetVar();
       //reset game
       game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
     }
@@ -327,44 +452,36 @@ void keyPressed()
     loop();
   }
   if(key == 'r' || key == 'R'){
-    //reset colours
-    enCol = color(255,0,0);
-    foodCol = color(0,255,0);
-    P1TextCol = color(100,100,255);
-    P2TextCol = color(100,255,255);
-    textCol = color(255);
-    P1Col = color(0,0,255);
-    P2Col = color(0,255,255);
-    //reset booleans
-    nmDoOnce = true;
-    nightmareMode = false;
-    unicornMode = false;
-    endlessMode = false;
-    nmDoOnce = true;
-    uDoOnce = true;
-    eDoOnce = true;
-    //reset points and timer
-    points = 0;
-    timer = 1800;
+    //reset
+    resetVar();
+    //reset modes
+    resetModes();
     //reset game
     game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
     //start sketch
     loop();
   }
   if(key == 'u'){
+    loop();
     unicornMode = false;
     endlessMode = false;
     nightmareMode = true;
   }
   if(key == 'U'){
+    loop();
     nightmareMode = false;
     endlessMode = false;
     unicornMode = true;
   }
   if(key == 'E'){
+    loop();
     nightmareMode = false;
     unicornMode = false;
     endlessMode = true;
+  }
+  if(key == 'X'){
+    loop();
+    startScreen = true;
   }
 }
 

@@ -2,7 +2,7 @@
 //Kristoffer Borg Pauly
 
 /*
-- Think of new stuff to add, since you still have 5 days left....
+- Think of new stuff to add, since you still have 4 days left....
 */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -133,13 +133,25 @@ void startScreen(){
     text("Pick a Gamemode", width/2, height/4);
     
     //selection boxes
+    stroke(255);
+      //left box
+    if(!coop){
+      fill(0,150,0);
+    }else{
+      noFill();
+    }
+    rect(300,385,300,60);
+      //right box
+    if(coop){
+      fill(0,150,0);
+    }else{
+      noFill();
+    }
+    rect(900,385,150,60);
+    fill(255);
     textSize(40);
     text("Singleplayer", width/4, height/2);
     text("Co-op", width-width/4, height/2);
-    stroke(255);
-    noFill();
-    rect(300,385,300,60);
-    rect(900,385,150,60);
     
     //selection imagery stuff
     noStroke();
@@ -380,8 +392,8 @@ void winState(){
     text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
     textSize(35);
     int winPoints = points;
-    if(nightmareMode) winPoints *= 2;
-    if(unicornMode) winPoints *= 3;
+    if(nightmareMode) winPoints *= 3;
+    if(unicornMode) winPoints *= 2;
     text("Points: "+winPoints,width/2,height/2);
     noLoop();
   }
@@ -417,8 +429,8 @@ void coopWinFailureState(){
       textSize(35);
       int winPoints = points;
       if(game.win2()){
-        if(nightmareMode) winPoints *= 2;
-        if(unicornMode) winPoints *= 3;
+        if(nightmareMode) winPoints *= 3;
+        if(unicornMode) winPoints *= 2;
       }
       text("P2 Points: "+winPoints,width/2,height/2);
       points = points/2 - 75*(winScore - game.getScore());
@@ -437,8 +449,8 @@ void coopWinFailureState(){
       textSize(35);
       int winPoints = points;
       if(game.win()){
-        if(nightmareMode) winPoints *= 2;
-        if(unicornMode) winPoints *= 3;
+        if(nightmareMode) winPoints *= 3;
+        if(unicornMode) winPoints *= 2;
       }
       text("P1 Points: "+winPoints,width/2,height/2);
       points = points/2 - 75*(winScore - game.getP2Score());

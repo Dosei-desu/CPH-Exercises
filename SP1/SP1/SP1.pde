@@ -246,7 +246,6 @@ void nightMare(){
     skullReaper();
   }
   if(nightmareMode && nmDoOnce){
-    points *= 2;
     skullX = (int)random(width/2,width-1);
     skullY = (int)random(1,height-1);
     skullSpeedX = (int)random(1,10); 
@@ -267,7 +266,6 @@ void uniCorn(){
     P2Col = color(random(1,255),random(100,150));
   }
   if(unicornMode && uDoOnce){
-    points *= 3;
     uDoOnce = false;
     winScore = 5;
     game = new Game(arenaWidth, arenaHeight, enemies*10, foodCount/2, winScore, coop);
@@ -381,7 +379,10 @@ void winState(){
     text("You won!",width/2,height/2-120);
     text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
     textSize(35);
-    text("Points: "+points,width/2,height/2);
+    int winPoints = points;
+    if(nightmareMode) winPoints *= 2;
+    if(unicornMode) winPoints *= 3;
+    text("Points: "+winPoints,width/2,height/2);
     noLoop();
   }
 }
@@ -414,7 +415,12 @@ void coopWinFailureState(){
       text("Player Two Wins!",width/2,height/2-120);
       text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
       textSize(35);
-      text("P2 Points: "+points,width/2,height/2);
+      int winPoints = points;
+      if(game.win2()){
+        if(nightmareMode) winPoints *= 2;
+        if(unicornMode) winPoints *= 3;
+      }
+      text("P2 Points: "+winPoints,width/2,height/2);
       points = points/2 - 75*(winScore - game.getScore());
       if(points < 0) points = 0;
       text("P1 Points: "+points,width/2,height/2+45);
@@ -429,7 +435,12 @@ void coopWinFailureState(){
       text("Player One Wins!",width/2,height/2-120);
       text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
       textSize(35);
-      text("P1 Points: "+points,width/2,height/2);
+      int winPoints = points;
+      if(game.win()){
+        if(nightmareMode) winPoints *= 2;
+        if(unicornMode) winPoints *= 3;
+      }
+      text("P1 Points: "+winPoints,width/2,height/2);
       points = points/2 - 75*(winScore - game.getP2Score());
       if(points < 0) points = 0;
       text("P2 Points: "+points,width/2,height/2+45);
@@ -475,6 +486,15 @@ void mouseClicked(){
     unicornMode = false;
     endlessMode = true;
   }
+  
+  if(game.gameOver() || game.win() || game.win2() || game.coopGameOver() > 0){
+    //reset
+    resetVar();
+    //reset game
+    game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
+  }
+  //start sketch
+  loop();
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------

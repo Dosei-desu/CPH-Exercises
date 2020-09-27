@@ -8,8 +8,8 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //Variables:
 import java.util.Random; //imports Random utility (legacy code from Tobias' original sketch that I haven't bothered to change
-int enemies = 6;
-int foodCount = 2;
+int enemies = 3;
+int foodCount = 3;
 int arenaWidth = 30, arenaHeight = 20;
 boolean coop = false;
 int winScore = 10;
@@ -55,8 +55,8 @@ PImage returnSymbol;
 //skull reaper
 int skullX = (int)random(width/2,width-1);
 int skullY = (int)random(1,height-1);
-int skullSpeedX = (int)random(1,10); 
-int skullSpeedY = (int)random(1,10);
+int skullSpeedX = (int)random(40); 
+int skullSpeedY = (int)random(40);  
 PImage skullPic;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -124,6 +124,7 @@ void startScreen(){
     //start screen canvas
     rectMode(CENTER);
     fill(0);
+    noStroke();
     rect(width/2,height/2,width,height);
     
     //intro text + title?
@@ -132,8 +133,9 @@ void startScreen(){
     fill(255);
     text("Pick a Gamemode", width/2, height/4);
     
-    //selection boxes
+    //solo/coop selection boxes
     stroke(255);
+    strokeWeight(2);
       //left box
     if(!coop){
       fill(0,150,0);
@@ -152,8 +154,7 @@ void startScreen(){
     textSize(40);
     text("Singleplayer", width/4, height/2);
     text("Co-op", width-width/4, height/2);
-    
-    //selection imagery stuff
+    //solo/coop imagery stuff
     noStroke();
     fill(0,0,255);
     rect(300,height-height/3,50,50);
@@ -163,16 +164,70 @@ void startScreen(){
     fill(255);
     text("+",900,550);
     
+    //difficulty modes
+    stroke(255);
+      //left box
+    if(foodCount == 3){ //easy
+      fill(0,150,0);
+    }else{
+      noFill();
+    }
+    rect(350,700,150,60);
+      //middle box
+    if(foodCount == 2){ //medium
+      fill(0,150,0);
+    }else{
+      noFill();
+    }
+    rect(600,700,200,60);
+    if(foodCount == 1){ //hard
+      fill(0,150,0);
+    }else{
+      noFill();
+    }
+    rect(850,700,150,60);
+    //text
+    fill(255);
+    textSize(40);
+    text("Easy",350,715);
+    text("Medium",600,715);
+    text("Hard",850,715);
+    
+    //start button
+    stroke(255);
+    fill(150,0,0);
+    strokeWeight(2);
+    triangle(570,450,570,550,670,500);
+    fill(255);
+    textSize(20);
+    text("Play",605,508);
+    if(mousePressed && mouseX < 650 && mouseX > 550 && mouseY < 550 && mouseY > 450){
+      resetVar();
+      game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
+      startScreen = false;
+    }
+    
+    //singleplayer or co-op button clicks
     if(mousePressed && mouseX < 450 && mouseX > 150 && mouseY < 415 && mouseY > 355){
       coop = false;
-      game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
-      resetVar();
-      startScreen = false;
-    }else if(mousePressed && mouseX < 975 && mouseX > 825 && mouseY < 415 && mouseY > 355){
+      
+    }
+    if(mousePressed && mouseX < 975 && mouseX > 825 && mouseY < 415 && mouseY > 355){
       coop = true;
-      game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
-      resetVar();
-      startScreen = false;
+    }
+    
+    //difficulty level picker
+    if(mousePressed && mouseX < 425 && mouseX > 275 && mouseY < 730 && mouseY > 670){ //easy
+      enemies = 3;
+      foodCount = 3; 
+    }
+    if(mousePressed && mouseX < 700 && mouseX > 500 && mouseY < 730 && mouseY > 670){ //medium
+      enemies = 6;
+      foodCount = 2; 
+    }
+    if(mousePressed && mouseX < 925 && mouseX > 775 && mouseY < 730 && mouseY > 670){ //hard
+      enemies = 9;
+      foodCount = 1; 
     }
   }
 }
@@ -201,10 +256,6 @@ void resetModes(){
 
 void resetVar(){
   //reset variables
-  enemies = 6;
-  foodCount = 2;
-  arenaWidth = 30;
-  arenaHeight = 20;
   winScore = 10;
   //reset colours
   enCol = color(255,0,0);
@@ -221,8 +272,8 @@ void resetVar(){
   //reset misc enemies and stuff
   skullX = (int)random(width/2,width-1);
   skullY = (int)random(1,height-1);
-  skullSpeedX = (int)random(1,10); 
-  skullSpeedY = (int)random(1,10);
+  skullSpeedX = (int)random(40); 
+  skullSpeedY = (int)random(40); 
   //reset points and timer
   points = 0;
   timer = 1800;
@@ -260,10 +311,10 @@ void nightMare(){
   if(nightmareMode && nmDoOnce){
     skullX = (int)random(width/2,width-1);
     skullY = (int)random(1,height-1);
-    skullSpeedX = (int)random(1,10); 
-    skullSpeedY = (int)random(1,10);
+    skullSpeedX = (int)random(40); 
+    skullSpeedY = (int)random(40); 
     nmDoOnce = false;
-    game = new Game(arenaWidth, arenaHeight, enemies*4, foodCount/2, winScore, coop);
+    game = new Game(arenaWidth, arenaHeight, enemies*4, foodCount, winScore, coop);
   }
 }
 
@@ -280,7 +331,7 @@ void uniCorn(){
   if(unicornMode && uDoOnce){
     uDoOnce = false;
     winScore = 5;
-    game = new Game(arenaWidth, arenaHeight, enemies*10, foodCount/2, winScore, coop);
+    game = new Game(arenaWidth, arenaHeight, enemies*10, foodCount, winScore, coop);
   }
 }
 
@@ -296,7 +347,6 @@ void endLess(){
   }
   if(endlessMode && eDoOnce){
     eDoOnce = false;
-    enemies = 6;
     winScore = 10000;
     game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
   }
@@ -326,12 +376,12 @@ void skullReaper(){
   }
   
   //collision
-  if(game.player.getX() > (skullX-50)/40 && game.player.getX() < (skullX+50)/40 && game.player.getY() > (skullY-50)/40 && game.player.getY() < (skullY+50)/40){
+  if(game.player.getX() > (skullX-80)/40 && game.player.getX() < (skullX+80)/40 && game.player.getY() > (skullY-80)/40 && game.player.getY() < (skullY+80)/40){
     println("collision!");
     game.setPlayerLife(0);
   }
   if(coop){
-    if(game.player2.getX() > (skullX-50)/40 && game.player2.getX() < (skullX+50)/40 && game.player2.getY() > (skullY-50)/40 && game.player2.getY() < (skullY+50)/40){
+    if(game.player2.getX() > (skullX-80)/40 && game.player2.getX() < (skullX+80)/40 && game.player2.getY() > (skullY-80)/40 && game.player2.getY() < (skullY+80)/40){
       game.setPlayer2Life(0);
     }
   }
@@ -360,7 +410,9 @@ void scoreDisplay(){
 void lifeDisplay(){
   textAlign(CENTER,BOTTOM);
   textSize(25);
+  if(game.getPlayerLife() > 100) game.setPlayerLife(100);
   if(coop){
+    if(game.getPlayer2Life() > 100) game.setPlayer2Life(100);
     fill(P1TextCol);
     text("P1 Life: "+game.getPlayerLife(), 100, 30);
     fill(P2TextCol);
@@ -392,6 +444,8 @@ void winState(){
     text("Press 'Enter' to restart or 'R' to reset",width/2,height/2-50);
     textSize(35);
     int winPoints = points;
+    if(foodCount == 2) winPoints /= 2;
+    if(foodCount == 3) winPoints /= 4;
     if(nightmareMode) winPoints *= 3;
     if(unicornMode) winPoints *= 2;
     text("Points: "+winPoints,width/2,height/2);
@@ -429,6 +483,8 @@ void coopWinFailureState(){
       textSize(35);
       int winPoints = points;
       if(game.win2()){
+        if(foodCount == 2) winPoints /= 2;
+        if(foodCount == 3) winPoints /= 4;
         if(nightmareMode) winPoints *= 3;
         if(unicornMode) winPoints *= 2;
       }
@@ -449,6 +505,8 @@ void coopWinFailureState(){
       textSize(35);
       int winPoints = points;
       if(game.win()){
+        if(foodCount == 2) winPoints /= 2;
+        if(foodCount == 3) winPoints /= 4;
         if(nightmareMode) winPoints *= 3;
         if(unicornMode) winPoints *= 2;
       }

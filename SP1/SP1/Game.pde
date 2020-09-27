@@ -42,7 +42,7 @@ class Game
     if(this.coop){
       this.player2 = new Dot(0,height-1,width-1, height-1);
     }
-    
+    if(coop) numberOfEnemies *= 2;
     this.enemies = new Dot[numberOfEnemies];
     for(int i = 0; i < numberOfEnemies; ++i)
     {
@@ -360,8 +360,8 @@ class Game
       {
         //We have a collision
         ++score;
-        if(playerLife > 100){
-        playerLife += 5;
+        if(playerLife < 100){
+        playerLife += 10;
         }
         for(int n = 0; n < food.length; ++n)
         {
@@ -373,8 +373,8 @@ class Game
         {
           //We have a collision
           ++score2;
-          if(player2Life > 100){
-          playerLife += 5;
+          if(player2Life < 100){
+          playerLife += 10;
           }
           for(int n = 0; n < food.length; ++n)
           {

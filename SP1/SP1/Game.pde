@@ -76,9 +76,17 @@ class Game
     return playerLife;
   }
   
+  public void setPlayerLife(int _life){
+    this.playerLife = _life;
+  }
+  
   public int getPlayer2Life()
   {
     return player2Life;
+  }
+  
+  public void setPlayer2Life(int _life){
+    this.player2Life = _life;
   }
   
   public void onKeyPressed(char ch)
@@ -111,8 +119,6 @@ class Game
     clearBoard();
     populateBoard();
   }
-  
-  
   
   public int[][] getBoard()
   {
@@ -379,32 +385,32 @@ class Game
     }
   }
   
-  private int getScore(){
+  public int getScore(){
     return this.score;
   }
   
-  private int getP2Score(){
+  public int getP2Score(){
     return this.score2;
   }
   
-  private boolean win(){
+  public boolean win(){
     if(this.score >= this.winScore) return true;
     return false;
   }
   
-  private boolean win2(){
+  public boolean win2(){
     if(this.score2 >= this.winScore) return true;
     return false;
   }
   
-  private boolean gameOver(){
+  public boolean gameOver(){
     if(!this.coop){
       if(this.playerLife < 1) return true;
     }
     return false;
   }
   
-  private int coopGameOver(){
+  public int coopGameOver(){
     if(this.coop){
       if(this.playerLife < 1) return 1;
       if(this.player2Life < 1) return 2;

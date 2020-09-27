@@ -52,6 +52,13 @@ PImage ePic;
 PImage homeSymbol;
 PImage returnSymbol;
 
+//skull reaper
+int skullX = (int)random(width/2,width-1);
+int skullY = (int)random(1,height-1);
+int skullSpeedX = (int)random(1,10); 
+int skullSpeedY = (int)random(1,10);
+PImage skullPic;
+
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //Settings:
 public void settings() {
@@ -70,6 +77,7 @@ void setup()
   ePic = loadImage("endless.jpg");
   homeSymbol = loadImage("home.png");
   returnSymbol = loadImage("return.png");
+  skullPic = loadImage("skull.png");
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------
 //Draw:
@@ -198,6 +206,11 @@ void resetVar(){
   nmDoOnce = true;
   uDoOnce = true;
   eDoOnce = true;
+  //reset misc enemies and stuff
+  skullX = (int)random(width/2,width-1);
+  skullY = (int)random(1,height-1);
+  skullSpeedX = (int)random(1,10); 
+  skullSpeedY = (int)random(1,10);
   //reset points and timer
   points = 0;
   timer = 1800;
@@ -230,11 +243,16 @@ void nightMare(){
     P1Col = color(255,255,0);
     P2Col = color(255,0,0);
     textCol = color(200,0,0);
+    skullReaper();
   }
   if(nightmareMode && nmDoOnce){
     points *= 2;
+    skullX = (int)random(width/2,width-1);
+    skullY = (int)random(1,height-1);
+    skullSpeedX = (int)random(1,10); 
+    skullSpeedY = (int)random(1,10);
     nmDoOnce = false;
-    game = new Game(arenaWidth, arenaHeight, enemies*4, 1, winScore, coop);
+    game = new Game(arenaWidth, arenaHeight, enemies*4, foodCount/2, winScore, coop);
   }
 }
 
@@ -252,7 +270,7 @@ void uniCorn(){
     points *= 3;
     uDoOnce = false;
     winScore = 5;
-    game = new Game(arenaWidth, arenaHeight, enemies*10, 1, winScore, coop);
+    game = new Game(arenaWidth, arenaHeight, enemies*10, foodCount/2, winScore, coop);
   }
 }
 
@@ -268,24 +286,64 @@ void endLess(){
   }
   if(endlessMode && eDoOnce){
     eDoOnce = false;
+    enemies = 6;
     winScore = 10000;
-    game = new Game(arenaWidth, arenaHeight, enemies, 2, winScore, coop);
+    game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);
   }
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
+//Skull Reaper:
+void skullReaper(){
+  //Nightmare Mode Skull Reaper
+  imageMode(CENTER);
+  image(skullPic, skullX, skullY, 100, 100);
+  
+  //if skull collides with walls
+  if(skullX < 50){
+    skullSpeedX *= (int)random(-1,-3);
+    skullX = 50;
+  }else if(skullX > width-50){
+    skullSpeedX *= (int)random(-1,-3);
+    skullX = width-50;
+  }
+  if(skullY < 50){
+    skullSpeedY *= (int)random(-1,-3);
+    skullY = 50;
+  }else if(skullY > height-50){
+    skullSpeedY *= (int)random(-1,-3);
+    skullY = height-50;
+  }
+  
+  //collision
+  if(game.player.getX() > (skullX-50)/40 && game.player.getX() < (skullX+50)/40 && game.player.getY() > (skullY-50)/40 && game.player.getY() < (skullY+50)/40){
+    println("collision!");
+    game.setPlayerLife(0);
+  }
+  if(coop){
+    if(game.player2.getX() > (skullX-50)/40 && game.player2.getX() < (skullX+50)/40 && game.player2.getY() > (skullY-50)/40 && game.player2.getY() < (skullY+50)/40){
+      game.setPlayer2Life(0);
+    }
+  }
+  
+  //speed
+  skullX += skullSpeedX;
+  skullY += skullSpeedY;
+}
+
+//-----------------------------------------------------------------------
 //Displays:
 void scoreDisplay(){
   textAlign(CENTER,BOTTOM);
   textSize(25);
   if(coop){
     fill(P1TextCol);
-    text("P1 Score: "+game.getScore()+"/"+winScore, width-100, 30);
+    text("P1 Score: "+game.getScore()+"/"+winScore, width-120, 30);
     fill(P2TextCol);
-    text("P2 Score: "+game.getP2Score()+"/"+winScore, width-100, 60);
+    text("P2 Score: "+game.getP2Score()+"/"+winScore, width-120, 60);
   }else{
     fill(textCol);
-    text("Score: "+game.getScore()+"/"+winScore, width-100, 30);
+    text("Score: "+game.getScore()+"/"+winScore, width-120, 30);
   }
 }
 
@@ -386,6 +444,7 @@ void mouseClicked(){
   //return (x260,y20,w40,h40)
   if(mouseX < 240 && mouseX > 200 && mouseY < 40 && mouseY > 0){
     loop();
+    resetVar();
     startScreen = true;
   }
   if(mouseX < 280 && mouseX > 240 && mouseY < 40 && mouseY > 0){
@@ -397,18 +456,21 @@ void mouseClicked(){
   }
   if(mouseX < 320 && mouseX > 280 && mouseY < 40 && mouseY > 0){
     loop();
+    resetVar();
     unicornMode = false;
     endlessMode = false;
     nightmareMode = true;
   }
   if(mouseX < 360 && mouseX > 320 && mouseY < 40 && mouseY > 0){
     loop();
+    resetVar();
     endlessMode = false;
     nightmareMode = false;
     unicornMode = true;
   }
   if(mouseX < 400 && mouseX > 360 && mouseY < 40 && mouseY > 0){
     loop();
+    resetVar();
     nightmareMode = false;
     unicornMode = false;
     endlessMode = true;

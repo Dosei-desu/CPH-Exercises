@@ -325,7 +325,9 @@ void nightMare(){
     skullY = (int)random(1,height-1);
     skullSpeedX = (int)random(40); 
     skullSpeedY = (int)random(40); 
+    uDoOnce = true;
     nmDoOnce = false;
+    eDoOnce = true;
     game = new Game(arenaWidth, arenaHeight, enemies*4, foodCount, winScore, coop);
   }
 }
@@ -342,6 +344,8 @@ void uniCorn(){
   }
   if(unicornMode && uDoOnce){
     uDoOnce = false;
+    nmDoOnce = true;
+    eDoOnce = true;
     winScore = 5;
     game = new Game(arenaWidth, arenaHeight, enemies*10, foodCount, winScore, coop);
   }
@@ -358,6 +362,8 @@ void endLess(){
     P2Col = color(0,random(155,255),random(155,255));
   }
   if(endlessMode && eDoOnce){
+    uDoOnce = true;
+    nmDoOnce = true;
     eDoOnce = false;
     winScore = 10000;
     game = new Game(arenaWidth, arenaHeight, enemies, foodCount, winScore, coop);

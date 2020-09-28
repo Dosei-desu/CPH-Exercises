@@ -2,7 +2,18 @@
 //Kristoffer Borg Pauly
 
 /*
-- Think of new stuff to add, since you still have 4 days left....
+- I'm out of ideas of what else to add.
+*/
+
+//Buttons:
+/*
+- p/P: Pause / Unpause
+- ENTER: unpause / restart
+- r/R: Reset
+- u: Nightmare Mode
+- U: Unicorn Mode
+- E: Endless Mode
+- X: Home
 */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -27,6 +38,7 @@ boolean unicornMode = false;
 boolean uDoOnce = true;
 boolean endlessMode = false;
 boolean eDoOnce = true;
+boolean pause = true;
 
 //default colours
 color bgCol = color(0,150);
@@ -581,16 +593,21 @@ void keyPressed()
   game.onKeyPressed2(keyCode);
   
   //pause game
-  if(keyCode == BACKSPACE){
+  if(key == 'p' && pause || key == 'P' && pause){
     rectMode(CENTER);
+    stroke(255,50);
     fill(150,150);
     rect(width/2-15,height/2,10,50);
     rect(width/2+15,height/2,10,50);
     textAlign(CENTER,BOTTOM);
     textSize(35);
     fill(200);
-    text("Press Enter to resume",width/2,height/2-45);
+    text("Press 'Enter' or 'P' to resume",width/2,height/2-45);
+    pause = false;
     noLoop();
+  }else if(key == 'p' && !pause || key == 'P' && !pause){
+    pause = true;
+    loop();
   }
   //resume game
   if(keyCode == ENTER){

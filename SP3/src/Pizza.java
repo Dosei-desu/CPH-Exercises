@@ -14,8 +14,10 @@ public class Pizza {
     }
 
     //custom pizza
-    public Pizza(String[] ingredients) {
-        this.ingredients = ingredients;
+    public Pizza(String ingredients) {
+        this.ingredients = ingredients.split(",");
+        this.name = "Custom Pizza";
+        this.id = 0;
         this.price = 85.0;
     }
 

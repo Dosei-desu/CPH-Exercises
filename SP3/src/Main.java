@@ -17,7 +17,7 @@ public class Main {
         //errors
         menu.viewPizzaByName("Alfonso"); //incorrect search
 
-//--------search with pizza ingredient(s)
+//--------search with pizza ingredient(s) (maximum of 5 allowed, since all pizzas come with tomato and cheese)
         menu.viewPizzaByIngredients("Cheese"); //should always be correct since every pizza has cheese
         menu.viewPizzaByIngredients("Prosciutto"); //rare ingredient, but shows up multiple times
         menu.viewPizzaByIngredients("Jalapeno"); //should only return one pizza

@@ -111,6 +111,7 @@ public class Menu {
         String view = "";
         boolean doOnce = true;
         String[] ing = ingredients.split(",");
+
         for (int i = 0; i < menuPizzas.size(); i++) {
             for (int q = 0; q < menuPizzas.get(i).getIngredients().length; q++) {
                 //checks for ingredients that match the ones inputted

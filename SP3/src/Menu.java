@@ -1,20 +1,24 @@
 //kris
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Menu {
     ArrayList<Pizza> menuPizzas = new ArrayList<Pizza>();
     public void pizzaMenu(){
         //pizza menu
-        this.menuPizzas.add(0,new MenuPizza("Pepe",1,"Tomato,Cheese,Pepperoni",61.0));
-        this.menuPizzas.add(1,new MenuPizza("Mario",2,"Tomato,Cheese,Shawarma,Creme Fraiche,Chili",64.0));
-        this.menuPizzas.add(2,new MenuPizza("Alfonso Special",3,"Tomato,Cheese,Minced Beef,Onion,Chili",64.0));
-        this.menuPizzas.add(3,new MenuPizza("Vesuvio",4,"Tomato,Cheese,Ham",61.0));
-        this.menuPizzas.add(4,new MenuPizza("Capricciosa",5,"Tomato,Cheese,Ham,Mushroom",65.0));
-        this.menuPizzas.add(5,new MenuPizza("Quatro",6,"Tomato,Cheese,Ham,Pepperoni",67.0));
-        this.menuPizzas.add(6,new MenuPizza("Delizia",7,"Tomato,Cheese,Pepperoni,Paprika,Onion",67.0));
-        this.menuPizzas.add(7,new MenuPizza("Hawaii",8,"Tomato,Cheese,Ham,Pineapple",65.0));
-        this.menuPizzas.add(8,new MenuPizza("Bacone",9,"Tomato,Cheese,Ham,Pepperoni,Bacon",72.0));
-        this.menuPizzas.add(9,new MenuPizza("Milano",10,"Tomato,Cheese,Ham,Meat Sauce",70.0));
+        this.menuPizzas.add(0, new MenuPizza("Pepe",1,"Tomato,Cheese,Pepperoni",61.0));
+        this.menuPizzas.add(1, new MenuPizza("Mario",2,"Tomato,Cheese,Shawarma,Creme Fraiche,Chili",64.0));
+        this.menuPizzas.add(2, new MenuPizza("Alfonso Special",3,"Tomato,Cheese,Minced Beef,Onion,Chili",64.0));
+        this.menuPizzas.add(3, new MenuPizza("Vesuvio",4,"Tomato,Cheese,Ham",61.0));
+        this.menuPizzas.add(4, new MenuPizza("Capricciosa",5,"Tomato,Cheese,Ham,Mushroom",65.0));
+        this.menuPizzas.add(5, new MenuPizza("Quatro",6,"Tomato,Cheese,Ham,Pepperoni",67.0));
+        this.menuPizzas.add(6, new MenuPizza("Delizia",7,"Tomato,Cheese,Pepperoni,Paprika,Onion",67.0));
+        this.menuPizzas.add(7, new MenuPizza("Hawaii",8,"Tomato,Cheese,Ham,Pineapple",65.0));
+        this.menuPizzas.add(8, new MenuPizza("Bacone",9,"Tomato,Cheese,Ham,Pepperoni,Bacon",72.0));
+        this.menuPizzas.add(9, new MenuPizza("Milano",10,"Tomato,Cheese,Ham,Meat Sauce",70.0));
         this.menuPizzas.add(10,new MenuPizza("Balkoni",11,"Tomato,Cheese,Ham,Bacon,Egg",61.0));
         this.menuPizzas.add(11,new MenuPizza("O Solo Mio",12,"Tomato,Cheese,Ham,Bacon,Cocktail Shrimp",72.0));
         this.menuPizzas.add(12,new MenuPizza("Bari",13,"Tomato,Cheese,Beef Sauce,Mushroom,Sliced Tomato",67.0));
@@ -38,12 +42,12 @@ public class Menu {
         this.menuPizzas.add(30,new MenuPizza("Baron",31,"Tomato,Cheese,Meat Strips,Pepperoni,Garlic",70.0));
         this.menuPizzas.add(31,new MenuPizza("Forza",32,"Tomato,Cheese,Shawarma,Onion,Bearnaise Sauce",69.0));
         this.menuPizzas.add(32,new MenuPizza("Maldini",33,"Tomato,Cheese,Shawarma,Chicken,Pepperoni,Onion",72.0));
-        this.menuPizzas.add(33,new MenuPizza("Matador",34,"Tomato,Cheese,Beef,Mushroom,Onion,Bearnaise",73.0));
+        this.menuPizzas.add(33,new MenuPizza("Matador",34,"Tomato,Cheese,Beef,Mushroom,Onion,Bearnaise Sauce",73.0));
     }
 //--view entire menu
     public void viewMenu(){
         String view = "";
-        pizzaMenu();
+
         for (int n = 0; n < menuPizzas.size(); n++) {
             view += menuPizzas.get(n).getId();
             if(menuPizzas.get(n).getId() < 10){
@@ -69,7 +73,7 @@ public class Menu {
             //searches through menuPizzas to see if the ID matches
             if(id == menuPizzas.get(n).getId()){
                 view += "Pizza number: "+id;
-                view += "\n\"Number: "+menuPizzas.get(n).getName()+"\"\nIngredients: ";
+                view += "\n\""+menuPizzas.get(n).getName()+"\"\nIngredients: ";
                 for (int i = 0; i < menuPizzas.get(n).getIngredients().length; i++) {
                     view += menuPizzas.get(n).getIngredients()[i];
                     if(i < menuPizzas.get(n).getIngredients().length-1){
@@ -106,105 +110,103 @@ public class Menu {
         }
         System.out.println(view);
     }
-//--searching based on ingredient(s) (max five since all come with tomato and cheese)
-    public void viewPizzaByIngredients(String ingredients){ //fix to work with multiple ingredients
+//--searching based on ingredient(s) (max seven, even though all come with tomato and cheese (for now))
+    public void viewPizzaByIngredients(String ingredients){
         String view = "";
         boolean doOnce = true;
-        String[] ing = ingredients.split(",");
+
+//------//
+        //Short way to turn words like "this" or "tHIs" into "This" (tl;dr: capitalises user input)
+        String[] ing = ingredients.toLowerCase().split(",");
+        for (int n = 0; n < ing.length; n++) {
+            ing[n] = StringUtils.capitalize(ing[n]);
+        }
+//------//
 
         for (int i = 0; i < menuPizzas.size(); i++) {
-            for (int q = 0; q < menuPizzas.get(i).getIngredients().length; q++) {
-                //checks for ingredients that match the ones inputted
-                if (ing.length == 1) {
-                    if (compare(ing[0], menuPizzas.get(i).ingredients[q]))
-                    {
-                        if (doOnce) {
-                            view += "Pizzas with " + ingredients + ":\n";
-                            doOnce = false;
-                        }
-                        view += "Pizza num: " + menuPizzas.get(i).getId();
-                        if (menuPizzas.get(i).getId() < 10) {
-                            view += " --- \"";
-                        } else {
-                            view += " -- \"";
-                        }
-                        view += menuPizzas.get(i).getName() + "\"\n";
+            List<String> menuPizzaList = Arrays.asList(menuPizzas.get(i).ingredients);
+            //checks for ingredients that match the ones inputted
+            if (ing.length == 1) {
+                if (menuPizzaList.contains(ing[0]))
+                {
+                    if (doOnce) {
+                        view += "Pizzas with " + ingredients + ":\n";
+                        doOnce = false;
                     }
-                }else
-                if (ing.length == 2) {
-                    if (compare(ing[0], menuPizzas.get(i).ingredients[q]) && compare(ing[1], menuPizzas.get(i).ingredients[q]))
-                    {
-                        if (doOnce) {
-                            view += "Pizzas with " + ingredients + ":\n";
-                            doOnce = false;
-                        }
-                        view += "Pizza num: " + menuPizzas.get(i).getId();
-                        if (menuPizzas.get(i).getId() < 10) {
-                            view += " --- \"";
-                        } else {
-                            view += " -- \"";
-                        }
-                        view += menuPizzas.get(i).getName() + "\"\n";
+                    view = printHelper(view, menuPizzas.get(i));
+                }
+            }
+            if (ing.length == 2) {
+                if (menuPizzaList.contains(ing[0]) && menuPizzaList.contains(ing[1]))
+                {
+                    if (doOnce) {
+                        view += "Pizzas with " + ingredients + ":\n";
+                        doOnce = false;
                     }
-                }else
-                if (ing.length == 3) {
-                    if (compare(ing[0], menuPizzas.get(i).ingredients[q]) && compare(ing[1], menuPizzas.get(i).ingredients[q]) &&
-                        compare(ing[2], menuPizzas.get(i).ingredients[q]))
-                    {
-                        if (doOnce) {
-                            view += "Pizzas with " + ingredients + ":\n";
-                            doOnce = false;
-                        }
-                        view += "Pizza num: " + menuPizzas.get(i).getId();
-                        if (menuPizzas.get(i).getId() < 10) {
-                            view += " --- \"";
-                        } else {
-                            view += " -- \"";
-                        }
-                        view += menuPizzas.get(i).getName() + "\"\n";
+                    view = printHelper(view, menuPizzas.get(i));
+                }
+            }
+            if (ing.length == 3) {
+                if (menuPizzaList.contains(ing[0]) && menuPizzaList.contains(ing[1]) && menuPizzaList.contains(ing[2]))
+                {
+                    if (doOnce) {
+                        view += "Pizzas with " + ingredients + ":\n";
+                        doOnce = false;
                     }
-                }else
-                if (ing.length == 4) {
-                    if (compare(ing[0], menuPizzas.get(i).ingredients[q]) && compare(ing[1], menuPizzas.get(i).ingredients[q]) &&
-                        compare(ing[2], menuPizzas.get(i).ingredients[q]) && compare(ing[3], menuPizzas.get(i).ingredients[q]))
-                    {
-                        if (doOnce) {
-                            view += "Pizzas with " + ingredients + ":\n";
-                            doOnce = false;
-                        }
-                        view += "Pizza num: " + menuPizzas.get(i).getId();
-                        if (menuPizzas.get(i).getId() < 10) {
-                            view += " --- \"";
-                        } else {
-                            view += " -- \"";
-                        }
-                        view += menuPizzas.get(i).getName() + "\"\n";
+                    view = printHelper(view, menuPizzas.get(i));
+                }
+            }
+            if (ing.length == 4) {
+                if (menuPizzaList.contains(ing[0]) && menuPizzaList.contains(ing[1]) && menuPizzaList.contains(ing[2]) &&
+                    menuPizzaList.contains(ing[3]))
+                {
+                    if (doOnce) {
+                        view += "Pizzas with " + ingredients + ":\n";
+                        doOnce = false;
                     }
-                }else
-                if (ing.length == 5) {
-                    if (compare(ing[0], menuPizzas.get(i).ingredients[q]) && compare(ing[1], menuPizzas.get(i).ingredients[q]) &&
-                        compare(ing[2], menuPizzas.get(i).ingredients[q]) && compare(ing[3], menuPizzas.get(i).ingredients[q]) &&
-                        compare(ing[4], menuPizzas.get(i).ingredients[q]))
-                    {
-                        if (doOnce) {
-                            view += "Pizzas with " + ingredients + ":\n";
-                            doOnce = false;
-                        }
-                        view += "Pizza num: " + menuPizzas.get(i).getId();
-                        if (menuPizzas.get(i).getId() < 10) {
-                            view += " --- \"";
-                        } else {
-                            view += " -- \"";
-                        }
-                        view += menuPizzas.get(i).getName() + "\"\n";
+                    view = printHelper(view, menuPizzas.get(i));
+                }
+            }
+            if (ing.length == 5) {
+                if (menuPizzaList.contains(ing[0]) && menuPizzaList.contains(ing[1]) && menuPizzaList.contains(ing[2]) &&
+                    menuPizzaList.contains(ing[3]) && menuPizzaList.contains(ing[4]))
+                {
+                    if (doOnce) {
+                        view += "Pizzas with " + ingredients + ":\n";
+                        doOnce = false;
                     }
+                    view = printHelper(view, menuPizzas.get(i));
+                }
+            }
+            if (ing.length == 6) {
+                if (menuPizzaList.contains(ing[0]) && menuPizzaList.contains(ing[1]) && menuPizzaList.contains(ing[2]) &&
+                    menuPizzaList.contains(ing[3]) && menuPizzaList.contains(ing[4]) && menuPizzaList.contains(ing[5]))
+                {
+                    if (doOnce) {
+                        view += "Pizzas with " + ingredients + ":\n";
+                        doOnce = false;
+                    }
+                    view = printHelper(view, menuPizzas.get(i));
+                }
+            }
+            if (ing.length == 7) {
+                if (menuPizzaList.contains(ing[0]) && menuPizzaList.contains(ing[1]) && menuPizzaList.contains(ing[2]) &&
+                    menuPizzaList.contains(ing[3]) && menuPizzaList.contains(ing[4]) && menuPizzaList.contains(ing[5]) &&
+                    menuPizzaList.contains(ing[6]))
+                {
+                    if (doOnce) {
+                        view += "Pizzas with " + ingredients + ":\n";
+                        doOnce = false;
+                    }
+                    view = printHelper(view, menuPizzas.get(i));
                 }
             }
         }
-        if(view == "" && ing.length <= 1){ //if ingredients don't match any pizza
+        //if ingredients don't match any pizza
+        if(view == "" && ing.length <= 1){ //for one ingredient
             view = "There are no pizzas with "+ingredients+".\n";
         }
-        if(view == "" && ing.length > 1){ //if ingredients don't match any pizza
+        if(view == "" && ing.length > 1 || ing.length > 7){ //for multiple ingredients or if there are more ingredients than is allowed (7)
             view += "There are no pizzas with ";
             for (int n = 0; n < ing.length; n++) {
                 view += ing[n];
@@ -218,12 +220,16 @@ public class Menu {
         }
         System.out.println(view);
     }
-    //helper function to limit repetitive text
-    public boolean compare(String a, String b){
-        if(a.toLowerCase().equals(b.toLowerCase())) {
-            return true;
+    //helper function
+    public String printHelper(String view, Pizza menuPizzas){
+        view += "Pizza number: " + menuPizzas.getId();
+        if (menuPizzas.getId() < 10) {
+            view += " --- \"";
+        } else {
+            view += " -- \"";
         }
-        return false;
+        view += menuPizzas.getName() + "\"\n";
+        return view;
     }
 }
 

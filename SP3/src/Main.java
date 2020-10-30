@@ -1,0 +1,31 @@
+public class Main {
+
+    public static void main(String[] args) {
+//--------Testing the code
+        Menu menu = new Menu();
+
+        menu.viewMenu();
+
+//--------search with pizza number
+        menu.viewPizzaByID(13);
+        //errors
+        menu.viewPizzaByID(35); //incorrect search
+
+//--------search with pizza name
+        menu.viewPizzaByName("Alfonso Special");
+        menu.viewPizzaByName("mArio"); //incorrect capitalisation (doesn't work with "==", needs ".equals()" method!)
+        //errors
+        menu.viewPizzaByName("Alfonso"); //incorrect search
+
+//--------search with pizza ingredient(s)
+        menu.viewPizzaByIngredients("Cheese"); //should always be correct since every pizza has cheese
+        menu.viewPizzaByIngredients("Prosciutto"); //rare ingredient, but shows up multiple times
+        menu.viewPizzaByIngredients("Jalapeno"); //should only return one pizza
+        menu.viewPizzaByIngredients("Cheese,Garlic"); //multiple ingredients
+        menu.viewPizzaByIngredients("Jalapeno,Chili"); //multiple ingredients, both correct, but no combination existing
+        //errors
+        menu.viewPizzaByIngredients("Squid"); //incorrect search
+        menu.viewPizzaByIngredients("Humus,Copper Coins"); //incorrect search with two parameters
+        menu.viewPizzaByIngredients("Humus,Copper Coins,Squid,Paper Flags,Pearls"); //incorrect search with more than two parameters
+    }
+}

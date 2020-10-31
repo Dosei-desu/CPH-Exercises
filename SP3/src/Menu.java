@@ -1,11 +1,11 @@
 //kris
-import com.sun.xml.internal.ws.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.sun.xml.internal.ws.util.StringUtils; //used for "capitalise()", which is a StringUtils function
+import java.util.*;
 
 public class Menu {
+    //simulated active order list
+    LinkedList<Pizza> activeOrders = new LinkedList<Pizza>();
+
     ArrayList<Pizza> menuPizzas = new ArrayList<Pizza>();
     public void pizzaMenu(){
         //pizza menu
@@ -46,8 +46,8 @@ public class Menu {
     }
 //--view entire menu
     public void viewMenu(){
-        String view = "";
-
+        String view = ""; //String object used to print all the info to the console
+        //search and print
         for (int n = 0; n < menuPizzas.size(); n++) {
             view += menuPizzas.get(n).getId();
             if(menuPizzas.get(n).getId() < 10){
@@ -64,11 +64,12 @@ public class Menu {
             }
             view += "| -- Price: "+menuPizzas.get(n).getPrice()+"kr.\n";
         }
-        System.out.println(view);
+        System.out.println(view); //prints the long string of stuff created above
     }
 //--searching based on ID
     public void viewPizzaByID(int id){
         String view = "";
+        //search and print
         for (int n = 0; n < menuPizzas.size(); n++) {
             //searches through menuPizzas to see if the ID matches
             if(id == menuPizzas.get(n).getId()){
@@ -91,6 +92,7 @@ public class Menu {
 //--searching based on name
     public void viewPizzaByName(String name){
         String view = "";
+        //search and print
         for (int n = 0; n < menuPizzas.size(); n++) {
             //searches through menuPizzas to see if the ID matches
             if(name.toLowerCase().equals(menuPizzas.get(n).getName().toLowerCase())){
@@ -113,20 +115,29 @@ public class Menu {
 //--searching based on ingredient(s) (max seven, even though all come with tomato and cheese (for now))
     public void viewPizzaByIngredients(String ingredients){
         String view = "";
-        boolean doOnce = true;
+        boolean doOnce = true; //used to print "Pizza with -ingredients-:" only once per search
 
 //------//
         //Short way to turn words like "this" or "tHIs" into "This" (tl;dr: capitalises user input)
+        //This bit of code avoids a whole lot of messy code that'd otherwise be necessary to maintain proper Title Case
         String[] ing = ingredients.toLowerCase().split(",");
         for (int n = 0; n < ing.length; n++) {
             ing[n] = StringUtils.capitalize(ing[n]);
         }
 //------//
-
+        //search function (it is hardcoded a lot in terms of the whole "if(ingredient array . length == x)", but the
+        //alternative is really complicated and I will just leave it like this for now, unless I have enough time to
+        //work out how to accomplish the more dynamic method
         for (int i = 0; i < menuPizzas.size(); i++) {
+            //makes a List of String objects that contains all the ingredients every every i-index of menuPizzas
+            //the only reason I added the menuPizzas to a List is because the List class has a "contains" function
+            //that is necessary to accomplish multiple comparison with ingredients, since ".equals" and "==" did not
+            //work for multiple comparisons (tl;dr: without this the multiple-ingredient search wouldn't work)
             List<String> menuPizzaList = Arrays.asList(menuPizzas.get(i).ingredients);
             //checks for ingredients that match the ones inputted
             if (ing.length == 1) {
+                //if the number of searched-for ingredients just 1 long, then it makes only one comparison (this is the
+                //part that could be more dynamic instead of ultra-hardcoded, but as said above, it's more complex to do)
                 if (menuPizzaList.contains(ing[0]))
                 {
                     if (doOnce) {
@@ -218,9 +229,15 @@ public class Menu {
             }
             view += ".\n";
         }
-        System.out.println(view);
+        if(view.contains("There are no pizzas")){
+            //used the "contains()" function to basically just search for the beginning of the failure state message
+            System.out.println(view);
+            customPizza(ingredients);
+        }else {
+            System.out.println(view);
+        }
     }
-    //helper function
+    //helper function for ingredient search (only used to contain repetitive code and minimise the lines of code needed)
     public String printHelper(String view, Pizza menuPizzas){
         view += "Pizza number: " + menuPizzas.getId();
         if (menuPizzas.getId() < 10) {
@@ -230,6 +247,19 @@ public class Menu {
         }
         view += menuPizzas.getName() + "\"\n";
         return view;
+    }
+
+    public void customPizza(String ingredients){
+        Scanner input = new Scanner(System.in);
+        System.out.println("Would you like to make a custom pizza with: "+ingredients+"?\n1-'YES' | 2-'NO'");
+        int num = input.nextInt();
+        if(num == 1){
+            activeOrders.add(new Pizza(ingredients));
+            System.out.println("0 --- Name: \"Custom Pizza\" -- Ingredients: |"+ingredients+"| -- Price: 85.0kr.\n");
+        }else{
+            System.out.println("Returning to main menu...\n");
+            //since this is just a simulation of the order/restaurant system, this just ends the program
+        }
     }
 }
 

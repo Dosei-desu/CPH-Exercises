@@ -3,8 +3,10 @@ import com.sun.xml.internal.ws.util.StringUtils; //used for "capitalise()", whic
 import java.util.*;
 
 public class Menu {
+    /*
     //simulated active order list
     LinkedList<Pizza> activeOrders = new LinkedList<Pizza>();
+    */
 
     ArrayList<Pizza> menuPizzas = new ArrayList<Pizza>();
     public void pizzaMenu(){
@@ -43,6 +45,9 @@ public class Menu {
         this.menuPizzas.add(31,new MenuPizza("Forza",32,"Tomato,Cheese,Shawarma,Onion,Bearnaise Sauce",69.0));
         this.menuPizzas.add(32,new MenuPizza("Maldini",33,"Tomato,Cheese,Shawarma,Chicken,Pepperoni,Onion",72.0));
         this.menuPizzas.add(33,new MenuPizza("Matador",34,"Tomato,Cheese,Beef,Mushroom,Onion,Bearnaise Sauce",73.0));
+        this.menuPizzas.add(34,new MenuPizza("The Kirby",35,"Cheese,Gouda,Gorgonzola,Camembert,Emmentaler,Cream Cheese,Blue Cheese",69.0));
+        this.menuPizzas.add(35,new MenuPizza("Unicorn",36,"Glitter,Orphan Tears,Fairy Dust,Skittles",77.0));
+        this.menuPizzas.add(36,new MenuPizza("Jack O' Lantern",37,"Pumpkin,A Stephen King Novel,The Ring DVD,Lit Candles,Canned Farts",66.0));
     }
 //--view entire menu
     public void viewMenu(){
@@ -51,18 +56,18 @@ public class Menu {
         for (int n = 0; n < menuPizzas.size(); n++) {
             view += menuPizzas.get(n).getId();
             if(menuPizzas.get(n).getId() < 10){
-                view += " --- Name: \"";
+                view += " --- \"";
             }else{
-                view += " -- Name: \"";
+                view += " -- \"";
             }
-            view += menuPizzas.get(n).getName()+"\" -- "+"Ingredients: |";
+            view += menuPizzas.get(n).getName()+"\" --- ";
             for (int i = 0; i < menuPizzas.get(n).getIngredients().length; i++) {
                 view += menuPizzas.get(n).getIngredients()[i];
                 if(i < menuPizzas.get(n).getIngredients().length-1){
                     view += ", ";
                 }
             }
-            view += "| -- Price: "+menuPizzas.get(n).getPrice()+"kr.\n";
+            view += " --- "+menuPizzas.get(n).getPrice()+"kr.\n";
         }
         System.out.println(view); //prints the long string of stuff created above
     }
@@ -113,7 +118,7 @@ public class Menu {
         System.out.println(view);
     }
 //--searching based on ingredient(s) (max seven, even though all come with tomato and cheese (for now))
-    public void viewPizzaByIngredients(String ingredients){
+    public void viewPizzaByIngredients(String ingredients, Scanner input, LinkedList<Pizza> customerPizza){
         String view = "";
         boolean doOnce = true; //used to print "Pizza with -ingredients-:" only once per search
 
@@ -232,9 +237,13 @@ public class Menu {
         if(view.contains("There are no pizzas")){
             //used the "contains()" function to basically just search for the beginning of the failure state message
             System.out.println(view);
-            customPizza(ingredients);
+            customPizza(ingredients,input,customerPizza);
         }else {
             System.out.println(view);
+            //add the selection functionality here otherwise it'd be clunky to code in
+            System.out.println("Select pizza (by id):");
+            int pizNum = input.nextInt();
+            customerPizza.add(menuPizzas.get(pizNum-1));
         }
     }
     //helper function for ingredient search (only used to contain repetitive code and minimise the lines of code needed)
@@ -249,12 +258,11 @@ public class Menu {
         return view;
     }
 
-    public void customPizza(String ingredients){
-        Scanner input = new Scanner(System.in);
+    public void customPizza(String ingredients, Scanner input, LinkedList<Pizza> customerPizza){
         System.out.println("Would you like to make a custom pizza with: "+ingredients+"?\n1-'YES' | 2-'NO'");
         int num = input.nextInt();
         if(num == 1){
-            activeOrders.add(new Pizza(ingredients));
+            customerPizza.add(new Pizza(ingredients));
             System.out.println("0 --- Name: \"Custom Pizza\" -- Ingredients: |"+ingredients+"| -- Price: 85.0kr.\n");
         }else{
             System.out.println("Returning to main menu...\n");

@@ -25,6 +25,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="create.test.in.the.same.root" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="restartRequiresConfirmation" value="false" />
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true">
@@ -59,25 +61,33 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="234" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1604056345371" />
-    <state width="1876" height="659" key="GridCell.Tab.0.bottom" timestamp="1604157515274">
+    <state x="740" y="273" key="FileChooserDialogImpl" timestamp="1604405142414">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="659" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1604157515274" />
-    <state width="1876" height="659" key="GridCell.Tab.0.center" timestamp="1604157515273">
+    <state x="740" y="273" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1604405142414" />
+    <state width="1876" height="689" key="GridCell.Tab.0.bottom" timestamp="1604436589140">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="659" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1604157515273" />
-    <state width="1876" height="659" key="GridCell.Tab.0.left" timestamp="1604157515273">
+    <state width="1876" height="689" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1604436589140" />
+    <state width="1876" height="689" key="GridCell.Tab.0.center" timestamp="1604436589140">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="659" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1604157515273" />
-    <state width="1876" height="659" key="GridCell.Tab.0.right" timestamp="1604157515274">
+    <state width="1876" height="689" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1604436589140" />
+    <state width="1876" height="689" key="GridCell.Tab.0.left" timestamp="1604436589140">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="659" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1604157515274" />
+    <state width="1876" height="689" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1604436589140" />
+    <state width="1876" height="689" key="GridCell.Tab.0.right" timestamp="1604436589140">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1876" height="689" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1604436589140" />
     <state x="731" y="332" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1604055495842">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="731" y="332" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1604055495842" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1604405604447">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1604405604447" />
   </component>
 </project>

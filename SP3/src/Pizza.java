@@ -1,4 +1,6 @@
 //kris
+import com.sun.xml.internal.ws.util.StringUtils; //used for "capitalise()", which is a StringUtils function
+
 public class Pizza {
     String name;
     int id;
@@ -35,5 +37,32 @@ public class Pizza {
 
     public double getPrice() {
         return price;
+    }
+
+    //idea from Johan, which saves a lot of lines of code
+    @Override
+    public String toString() { //contains everything necessary for the formatting that was previously in Menu.viewMenu()
+        StringBuilder pizzaString = new StringBuilder();
+        pizzaString.append(this.id);
+        if(this.id < 10){
+            pizzaString.append(" --- \"");
+        }else{
+            pizzaString.append(" -- \"");
+        }
+        pizzaString.append(this.name);
+        pizzaString.append("\" --- " );
+        for (int i = 0; i < ingredients.length; i++) {
+            StringUtils.capitalize(ingredients[i]);
+            pizzaString.append(ingredients[i]);
+            if(i < ingredients.length-2) {
+                pizzaString.append(", ");
+            }else if(i < ingredients.length-1){
+                pizzaString.append(", and ");
+            }
+        }
+        pizzaString.append(" --- ");
+        pizzaString.append(this.price);
+        pizzaString.append("kr.");
+        return pizzaString.toString();
     }
 }

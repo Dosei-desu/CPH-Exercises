@@ -1,14 +1,14 @@
-//kris
+//kris (polishing/optimising work by Johan)
 import com.sun.xml.internal.ws.util.StringUtils; //used for "capitalise()", which is a StringUtils function
 import java.util.*;
 
 public class Menu {
-    /*
-    //simulated active order list
-    LinkedList<Pizza> activeOrders = new LinkedList<Pizza>();
-    */
+    ArrayList<Pizza> menuPizzas = new ArrayList<>();
 
-    ArrayList<Pizza> menuPizzas = new ArrayList<Pizza>();
+    Menu(){
+        pizzaMenu();
+    }
+
     public void pizzaMenu(){
         //pizza menu
         this.menuPizzas.add(0, new MenuPizza("Pepe",1,"Tomato,Cheese,Pepperoni",61.0));
@@ -51,6 +51,14 @@ public class Menu {
     }
 //--view entire menu
     public void viewMenu(){
+        System.out.println("\"Mario's Pizzabar\" Menu:");
+        for (Pizza pizza : menuPizzas){
+            System.out.println(pizza);
+        }
+        System.out.println(" "); //spacer
+
+        //Old function ^ that one is cleaner
+        /*
         String view = ""; //String object used to print all the info to the console
         //search and print
         for (int n = 0; n < menuPizzas.size(); n++) {
@@ -70,32 +78,20 @@ public class Menu {
             view += " --- "+menuPizzas.get(n).getPrice()+"kr.\n";
         }
         System.out.println(view); //prints the long string of stuff created above
+        */
+
     }
-//--searching based on ID
-    public void viewPizzaByID(int id){
-        String view = "";
-        //search and print
-        for (int n = 0; n < menuPizzas.size(); n++) {
-            //searches through menuPizzas to see if the ID matches
-            if(id == menuPizzas.get(n).getId()){
-                view += "Pizza number: "+id;
-                view += "\n\""+menuPizzas.get(n).getName()+"\"\nIngredients: ";
-                for (int i = 0; i < menuPizzas.get(n).getIngredients().length; i++) {
-                    view += menuPizzas.get(n).getIngredients()[i];
-                    if(i < menuPizzas.get(n).getIngredients().length-1){
-                        view += ", ";
-                    }
-                }
-                view += "\nPrice: "+menuPizzas.get(n).getPrice()+"kr.\n";
-            }
-        }
-        if(view == ""){ //if ID didn't match any pizza
-            view = "Pizza number "+id+" does not exist.\n";
-        }
-        System.out.println(view);
-    }
+
 //--searching based on name
     public void viewPizzaByName(String name){
+        for (Pizza pizza : menuPizzas) {
+            if (pizza.getName().toLowerCase().equals(name.toLowerCase())) {
+                System.out.println(pizza);
+            }
+        }
+        System.out.println(" "); //spacer
+        //Old function
+        /*
         String view = "";
         //search and print
         for (int n = 0; n < menuPizzas.size(); n++) {
@@ -116,8 +112,43 @@ public class Menu {
             view = "\""+name+"\" does not exist.\n";
         }
         System.out.println(view);
+        */
+    }
+//--searching based on ID
+    public void viewPizzaByID(int id){
+        for (Pizza pizza : menuPizzas) {
+            if (pizza.getId() == id) {
+                System.out.println(pizza);
+            }
+        }
+        System.out.println(" "); //spacer
+        //Old function
+        /*
+        String view = "";
+        //search and print
+        for (int n = 0; n < menuPizzas.size(); n++) {
+            //searches through menuPizzas to see if the ID matches
+            if(id == menuPizzas.get(n).getId()){
+                view += "Pizza number: "+id;
+                view += "\n\""+menuPizzas.get(n).getName()+"\"\nIngredients: ";
+                for (int i = 0; i < menuPizzas.get(n).getIngredients().length; i++) {
+                    view += menuPizzas.get(n).getIngredients()[i];
+                    if(i < menuPizzas.get(n).getIngredients().length-1){
+                        view += ", ";
+                    }
+                }
+                view += "\nPrice: "+menuPizzas.get(n).getPrice()+"kr.\n";
+            }
+        }
+        if(view == ""){ //if ID didn't match any pizza
+            view = "Pizza number "+id+" does not exist.\n";
+        }
+        System.out.println(view);
+        */
     }
 //--searching based on ingredient(s) (max seven, even though all come with tomato and cheese (for now))
+    //this can be cleaned up later, because making it work too so many hours and I don't really feel like reworking it
+    //from scratch to make it look better
     public void viewPizzaByIngredients(String ingredients, Scanner input, LinkedList<Pizza> customerPizza){
         String view = "";
         boolean doOnce = true; //used to print "Pizza with -ingredients-:" only once per search
@@ -218,6 +249,10 @@ public class Menu {
                 }
             }
         }
+        //capitalises custom ingredients
+        for (int i = 0; i < ing.length; i++) {
+            StringUtils.capitalize(ing[i]);
+        }
         //if ingredients don't match any pizza
         if(view == "" && ing.length <= 1){ //for one ingredient
             view = "There are no pizzas with "+ingredients+".\n";
@@ -259,14 +294,28 @@ public class Menu {
     }
 
     public void customPizza(String ingredients, Scanner input, LinkedList<Pizza> customerPizza){
-        System.out.println("Would you like to make a custom pizza with: "+ingredients+"?\n1-'YES' | 2-'NO'");
+//------//
+        //this is all for the purpose of formatting (yes i'm neurotic)
+        String[] ing = ingredients.split(",");
+        String ingClone = "";
+        for (int i = 0; i < ing.length; i++) {
+            ingClone += StringUtils.capitalize(ing[i].toLowerCase());
+            if(i < ing.length -2){
+                ingClone += ", ";
+            }else if(i < ing.length -1){
+                ingClone += ", and ";
+            }
+        }
+//------//
+        System.out.println("Would you like to make a custom pizza with: "+ingClone+"?\n1-'YES' | 2-'NO'");
         int num = input.nextInt();
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //some kind of bug here that happens when you abort custom pizza and make a custom pizza afterwards
+        //haven't managed to recreate the bug yet, but it feels like it's currently a secondary thing anyway,
+        //will focus on it when everything is done
         if(num == 1){
             customerPizza.add(new Pizza(ingredients));
-            System.out.println("0 --- Name: \"Custom Pizza\" -- Ingredients: |"+ingredients+"| -- Price: 85.0kr.\n");
-        }else{
-            System.out.println("Returning to main menu...\n");
-            //since this is just a simulation of the order/restaurant system, this just ends the program
+            System.out.println("0 --- \"Custom Pizza\" --- "+ingClone+" --- 85.0kr.\n");
         }
     }
 }

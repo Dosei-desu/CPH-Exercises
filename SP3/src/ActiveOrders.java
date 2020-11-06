@@ -18,19 +18,7 @@ public class ActiveOrders extends IdGenerator {
         activeOrders.addLast(new Order(id, _remote, _items, _customer));
     }
 
-    public void processOrder(Order _order) {
-        int pId = _order.getId();
-        int index = 0;
-        for (Order order : activeOrders) {
-            if (order.getId() == pId) {
-                activeOrders.remove(index);
-                orderHistory.addOrder(order);
-            }
-            ++index;
-        }
-    }
-
-    public void processOrder(int _id) {
+    public void archiveOrder(int _id) { //could just be a for i loop (enhanced not necessary)
         int index = 0;
         for (Order order : activeOrders) {
             if (order.getId() == _id) {
@@ -39,25 +27,6 @@ public class ActiveOrders extends IdGenerator {
             }
             ++index;
         }
-    }
-
-    public void processOrder(Customer _customer) {
-        int index = 0;
-        for (Order order : activeOrders) {
-            if (order.getCustomer() == _customer) {
-                activeOrders.remove(index);
-                orderHistory.addOrder(order);
-            }
-            ++index;
-        }
-    }
-
-    public int getLastOrderId() {
-        return id;
-    }
-
-    public int getLength() {
-        return activeOrders.size();
     }
 
     public LinkedList<Order> getActiveOrders() {

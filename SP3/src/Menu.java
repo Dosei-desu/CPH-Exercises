@@ -1,4 +1,4 @@
-//kris (polishing/optimising work by Johan)
+//Kris & Timmy & Johan
 import com.sun.xml.internal.ws.util.StringUtils; //used for "capitalise()", which is a StringUtils function
 import java.util.*;
 
@@ -6,7 +6,7 @@ public class Menu {
     ArrayList<Pizza> menuPizzas = new ArrayList<>();
 
     Menu(){
-        pizzaMenu();
+        pizzaMenu(); //initialised inside the constructor, so it doesn't have to be called in Main
     }
 
     public void pizzaMenu(){
@@ -49,40 +49,16 @@ public class Menu {
         this.menuPizzas.add(35,new MenuPizza("Unicorn",36,"Glitter,Orphan Tears,Fairy Dust,Skittles",77.0));
         this.menuPizzas.add(36,new MenuPizza("Jack O' Lantern",37,"Pumpkin,A Stephen King Novel,The Ring DVD,Lit Candles,Canned Farts",66.0));
     }
-//--view entire menu
+//--View entire menu
     public void viewMenu(){
         System.out.println("\"Mario's Pizzabar\" Menu:");
         for (Pizza pizza : menuPizzas){
             System.out.println(pizza);
         }
         System.out.println(" "); //spacer
-
-        //Old function ^ that one is cleaner
-        /*
-        String view = ""; //String object used to print all the info to the console
-        //search and print
-        for (int n = 0; n < menuPizzas.size(); n++) {
-            view += menuPizzas.get(n).getId();
-            if(menuPizzas.get(n).getId() < 10){
-                view += " --- \"";
-            }else{
-                view += " -- \"";
-            }
-            view += menuPizzas.get(n).getName()+"\" --- ";
-            for (int i = 0; i < menuPizzas.get(n).getIngredients().length; i++) {
-                view += menuPizzas.get(n).getIngredients()[i];
-                if(i < menuPizzas.get(n).getIngredients().length-1){
-                    view += ", ";
-                }
-            }
-            view += " --- "+menuPizzas.get(n).getPrice()+"kr.\n";
-        }
-        System.out.println(view); //prints the long string of stuff created above
-        */
-
     }
 
-//--searching based on name
+//--Searching based on name
     public void viewPizzaByName(String name){
         for (Pizza pizza : menuPizzas) {
             if (pizza.getName().toLowerCase().equals(name.toLowerCase())) {
@@ -90,31 +66,8 @@ public class Menu {
             }
         }
         System.out.println(" "); //spacer
-        //Old function
-        /*
-        String view = "";
-        //search and print
-        for (int n = 0; n < menuPizzas.size(); n++) {
-            //searches through menuPizzas to see if the ID matches
-            if(name.toLowerCase().equals(menuPizzas.get(n).getName().toLowerCase())){
-                view += "\""+menuPizzas.get(n).getName()+"\"";
-                view += "\nID: "+menuPizzas.get(n).getId()+"\nIngredients: ";
-                for (int i = 0; i < menuPizzas.get(n).getIngredients().length; i++) {
-                    view += menuPizzas.get(n).getIngredients()[i];
-                    if(i < menuPizzas.get(n).getIngredients().length-1){
-                        view += ", ";
-                    }
-                }
-                view += "\nPrice: "+menuPizzas.get(n).getPrice()+"kr.\n";
-            }
-        }
-        if(view == ""){ //if name didn't match any pizza
-            view = "\""+name+"\" does not exist.\n";
-        }
-        System.out.println(view);
-        */
     }
-//--searching based on ID
+//--Searching based on ID
     public void viewPizzaByID(int id){
         for (Pizza pizza : menuPizzas) {
             if (pizza.getId() == id) {
@@ -122,33 +75,10 @@ public class Menu {
             }
         }
         System.out.println(" "); //spacer
-        //Old function
-        /*
-        String view = "";
-        //search and print
-        for (int n = 0; n < menuPizzas.size(); n++) {
-            //searches through menuPizzas to see if the ID matches
-            if(id == menuPizzas.get(n).getId()){
-                view += "Pizza number: "+id;
-                view += "\n\""+menuPizzas.get(n).getName()+"\"\nIngredients: ";
-                for (int i = 0; i < menuPizzas.get(n).getIngredients().length; i++) {
-                    view += menuPizzas.get(n).getIngredients()[i];
-                    if(i < menuPizzas.get(n).getIngredients().length-1){
-                        view += ", ";
-                    }
-                }
-                view += "\nPrice: "+menuPizzas.get(n).getPrice()+"kr.\n";
-            }
-        }
-        if(view == ""){ //if ID didn't match any pizza
-            view = "Pizza number "+id+" does not exist.\n";
-        }
-        System.out.println(view);
-        */
     }
-//--searching based on ingredient(s) (max seven, even though all come with tomato and cheese (for now))
-    //this can be cleaned up later, because making it work too so many hours and I don't really feel like reworking it
-    //from scratch to make it look better
+//--Searching based on ingredient(s) (max seven, even though all come with tomato and cheese (for now))
+    //this can be cleaned up later, but making it work took so many hours and I don't really feel like reworking it
+    //from scratch to make it look better... TOO BAD!
     public void viewPizzaByIngredients(String ingredients, Scanner input, LinkedList<Pizza> customerPizza){
         String view = "";
         boolean doOnce = true; //used to print "Pizza with -ingredients-:" only once per search
@@ -249,7 +179,7 @@ public class Menu {
                 }
             }
         }
-        //capitalises custom ingredients
+        //cApItAlIsEs custom ingredients
         for (int i = 0; i < ing.length; i++) {
             StringUtils.capitalize(ing[i]);
         }
@@ -281,7 +211,7 @@ public class Menu {
             customerPizza.add(menuPizzas.get(pizNum-1));
         }
     }
-    //helper function for ingredient search (only used to contain repetitive code and minimise the lines of code needed)
+    //Helper function for ingredient search (only used to contain repetitive code and minimise the lines of code needed)
     public String printHelper(String view, Pizza menuPizzas){
         view += "Pizza number: " + menuPizzas.getId();
         if (menuPizzas.getId() < 10) {

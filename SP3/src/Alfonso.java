@@ -1,4 +1,6 @@
 //Timmy & Kris
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -40,24 +42,24 @@ public class Alfonso extends Restaurant{
 //--Selection Helper (moved from Restaurant class)
     public void selectionHelper(Scanner input, boolean isRemote, String customerName, Long phoneNum, LinkedList<Pizza> currentPizzas){
         startOrder(customerName, phoneNum); //moved this here to avoid a problem with the newly-created customer LinkedList
-        System.out.println("Choose pizza:\n1 -- By Name\n2 -- By Id\n3 -- By Ingredients\n0 -- Return");
+        System.out.println("Choose pizza:\n1 -- By Name\n2 -- By ID\n3 -- By Ingredients\n0 -- Return");
         int selection = input.nextInt();
         switch(selection){
             case 1:
-                System.out.println("Enter Pizza Name:");
+                System.out.println("Enter pizza Name:");
                 String theGreaterSwallower = input.nextLine(); //necessary to make nextLine() work
                 String pizzaName = input.nextLine();
                 addPizzaToOrderByName(pizzaName);
                 break;
 
             case 2:
-                System.out.println("Enter Pizza Id:");
+                System.out.println("Enter pizza ID:");
                 int pizzaId = input.nextInt();
                 addPizzaToOrderById(pizzaId);
                 break;
 
             case 3:
-                System.out.println("Enter Pizza Ingredient(s):");
+                System.out.println("Enter pizza ingredient(s):");
                 theGreaterSwallower = input.nextLine();
                 String pizzaIng = input.nextLine();
                 addPizzaToOrderByIngredients(pizzaIng);
@@ -74,44 +76,152 @@ public class Alfonso extends Restaurant{
         int addMore = input.nextInt();
         if(addMore == 1){
             selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
+        }else { //else statement necessary to avoid duplication bug
+            activeOrders.addOrder(isRemote, currentPizzas, currentCustomer.getLast()); //similar to Johan's "push order"
         }
-        //moved the activeOrders.addOrder outside of this function, since it caused a duplication bug
+
     }
-//--Deliver (i.e. remove an order)
+
+//--Print latest pizza
+    public void printLastPizza(){
+        if(activeOrders.getActiveOrders().size() > 0) {
+            System.out.println("Receipt:");
+            for (int i = 0; i < activeOrders.getActiveOrders().getLast().getItems().size(); i++) {
+                System.out.println(activeOrders.getActiveOrders().getLast().getItems().get(i));
+            }
+            System.out.println("Total: "+activeOrders.getActiveOrders().getLast().getPrice()+"kr.\n");
+        }else{
+            System.out.println("N/A\n");
+        }
+    }
+
+//--Create Order
+    public void createOrder(){ //can probably be moved to Alfonso
+        boolean isRemote = false;
+        System.out.println("Please enter customer name:");
+
+        String customerName = input.nextLine();
+        System.out.println("Is it ordered by phone?\n1-'YES' | 2-'NO'");
+        int byPhone = input.nextInt();
+        if (byPhone == 1) {
+            isRemote = true;
+        }
+        System.out.println("Please enter customer phone number:");
+        Long phoneNum = input.nextLong();
+        LinkedList<Pizza> currentPizzas = new LinkedList<>(); //similar to the "clear order" function Johan made
+        //moved selectionHelper to Alfonso class, since it tidies up the Restaurant code
+        selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
+    }
+
+//--Process (edit) active orders
+    public void processActiveOrder(){ //can probably be moved to Alfonso
+        if(activeOrders.getActiveOrders().size() > 0) {
+            System.out.println("There are "+activeOrders.getActiveOrders().size()+" active orders");
+            System.out.println("1 -- Deliver Order (ID)\n2 -- Abandon Order (ID)\n0 -- Return");
+            int selection = input.nextInt();
+
+            switch (selection) {
+
+                case 1: //deliver (i.e, move to history and mark Delivered as True)
+                    viewActiveOrders();
+                    System.out.println("Enter customer ID: ");
+                    int id1 = input.nextInt();
+                    deliver(id1);
+                    System.out.println("Finished processing Order ID: "+id1+"\n");
+                    break;
+
+                case 2: //abandon (i.e, move to history and mark Delivered as False)
+                    viewActiveOrders();
+                    System.out.println("Enter customer ID: ");
+                    int id2 = input.nextInt();
+                    abandon(id2);
+                    System.out.println("Finished processing Order ID: "+id2+"\n");
+                    break;
+
+                case 0: //does nothing, just stops it from doing anything (used to have Restaurant() in here, but that
+                        //causes a bug where the entire activeOrders list is wiped...)
+                    break;
+
+                default:
+                    break;
+            }
+        }else{
+            System.out.println("No active orders\n");
+        }
+    }
+
+//--Deliver (i.e. remove an order from active orders and process as delivered)
     public void deliver(int id){
         for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
-            if (id == activeOrders.getActiveOrders().get(i).id){
-                activeOrders.getActiveOrders().remove(i);
+            if (id == activeOrders.getActiveOrders().get(i).id && activeOrders.getActiveOrders().get(i).isReady()){
+                activeOrders.getActiveOrders().get(i).setDelivered(true);
+                activeOrders.archiveOrder(activeOrders.getActiveOrders().get(i).getId());
+            }else if(id == activeOrders.getActiveOrders().get(i).id){
+                //check to ensure order is ready, otherwise it won't let you deliver it
+                System.out.println("Order is not ready to be delivered");
+            }else{
+                System.out.println("Order does not exist");
             }
         }
     }
 
-//--Print Orders >|decommissioned|<
-    //suddenly doesn't work... (no clue why, don't really care either since it has been replaced)
-    /*
-    public void printOrders(){
-        String view = "";
-        for (int n = 0; n < customerPizza.size(); n++) {
-            view += "'"+ currentCustomer.get(n).name +"' (num: "+ currentCustomer.get(n).number +"): ";
-            view += customerPizza.get(n).getId();
-            if(customerPizza.get(n).getId() < 10){
-                view += " --- \"";
+//--Abandon (i.e. remove an order from active orders and process as abandoned)
+    public void abandon(int id){ //has no "is it ready?" check, since you can abandon whenever
+        for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
+            if (id == activeOrders.getActiveOrders().get(i).id){
+                activeOrders.getActiveOrders().get(i).setDelivered(false);
+                activeOrders.archiveOrder(activeOrders.getActiveOrders().get(i).getId());
             }else{
-                view += " -- \"";
+                System.out.println("Order does not exist");
             }
-            view += customerPizza.get(n).getName()+"\" --- "+" ";
-            for (int i = 0; i < customerPizza.get(n).getIngredients().length; i++) {
-                view += customerPizza.get(n).getIngredients()[i];
-                if(i < customerPizza.get(n).getIngredients().length-1){
-                    view += ", ";
-                }
-            }
-            view += " --- "+customerPizza.get(n).getPrice()+"kr.\n";
         }
-        if(view.equals("")){
-            view = "No orders in list.\n";
-        }
-        System.out.println(view); //prints the long string of stuff created above
     }
-    */
+
+//--View active orders (copied from Mario)
+    //this can be improved, but this is currently just to get around the fact alfonso can't access mario's functions
+    public void viewActiveOrders(){
+        System.out.println("Active Orders:\n--------------");
+        String view = "";
+        for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
+            view += "\n#" + activeOrders.getActiveOrders().get(i).getId() + " '" + activeOrders.getActiveOrders().get(i).customer.name +
+                    "' (" + activeOrders.getActiveOrders().get(i).customer.number + ") - ";
+            if (activeOrders.getActiveOrders().get(i).remote) {
+                view += "Ordered by Phone\n";
+            } else {
+                view += "Ordered in Person\n";
+            }
+            if(activeOrders.getActiveOrders().get(i).isReady()){
+                view += "-Ready-\n";
+            }else{
+                view += "-Not Ready-\n";
+            }
+            view += "Order(s):\n";
+            double sum = 0;
+            for (int j = 0; j < activeOrders.getActiveOrders().get(i).getItems().size(); j++) {
+                view += activeOrders.getActiveOrders().get(i).getItems().get(j).getId();
+                if (activeOrders.getActiveOrders().get(i).getItems().get(j).getId() < 10) {
+                    view += " --- ";
+                } else {
+                    view += " -- ";
+                }
+                view += "\"" + activeOrders.getActiveOrders().get(i).getItems().get(j).getName() + "\" --- ";
+                for (int k = 0; k < activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients().length; k++) {
+                    view += StringUtils.capitalize(activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients()[k].toLowerCase());
+                    if (k < activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients().length - 2) {
+                        view += ", ";
+                    } else if (k < activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients().length - 1) {
+                        view += ", and ";
+                    }
+                }
+                view += " --- " + activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice() + "kr.\n";
+                sum += activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice();
+            }
+            view += "Total: " + sum + "kr.\n";
+        }
+        if (view.equals("")) {
+            view = "No active orders";
+        }
+        System.out.println(view);
+        System.out.println("--------------");
+    }
 }

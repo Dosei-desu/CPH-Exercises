@@ -1,4 +1,6 @@
 //Johan
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
 
@@ -17,6 +19,23 @@ public class Order {
         this.customer = _customer;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder("Order #");
+        string.append(id);
+        if (ready) string.append(" READY: ");
+        else if (delivered) string.append(" DELIVERED: ");
+        else string.append(" IN PROGRESS: ");
+        for (Pizza pizza : this.items) {
+            string.append(pizza.getName());
+            string.append(";");
+        }
+        string.append(" -- Total: ");
+        string.append(getPrice());
+        string.append(",-");
+        return string.toString();
+    }
+
     public double getPrice() {
         double price = 0;
         for (Pizza item : items) {
@@ -25,27 +44,34 @@ public class Order {
         return price;
     }
 
+    public boolean isDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(boolean delivered) {
+        this.delivered = delivered;
+    }
+
     public int getId() {
         return id;
     }
 
-    public long getCreated() {
-        return created;
+    public String getCreated() {
+        Date currentDate = new Date(this.created);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss");
+        String date = dateFormat.format(currentDate);
+        return date;
+    }
+
+    public void setReady(boolean flag){
+        this.ready = flag;
     }
 
     public boolean isReady() {
         return ready;
     }
 
-    public boolean isRemote() {
-        return remote;
-    }
-
     public LinkedList<Pizza> getItems() {
         return items;
-    }
-
-    public Customer getCustomer() {
-        return customer;
     }
 }

@@ -1,27 +1,31 @@
+//Timmy & Kris
+
 import com.sun.xml.internal.ws.util.StringUtils;
 
-import java.util.LinkedList;
-
-//Timmy & Kris
 public class Mario extends Restaurant{
     Menu menu;
     ActiveOrders activeOrders;
+    OrderHistory orderHistory;
 
-    Mario(Menu menu, ActiveOrders activeOrders){
+//--Constructor (unlike Alfonso's, this one includes OrderHistory, because Mario needs to access its functionality)
+    Mario(Menu menu, ActiveOrders activeOrders, OrderHistory orderHistory){
         this.menu = menu;
         this.activeOrders = activeOrders; //initialising this within the class solves the problem of changes here not
                                           //not affecting stuff in Restaurant
+        this.orderHistory = orderHistory;
     }
 
+//--View Menu
     public void viewMenu(){
         menu.viewMenu();
     }
 
+//--View Active Orders
     public void viewActiveOrders(){ //moved from Restaurant, to give Mario some kind of actual purpose
-        System.out.println("Printing Active Orders:");
+        System.out.println("Active Orders:\n--------------");
         String view = "";
         for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
-            view += "#" + activeOrders.getActiveOrders().get(i).getId() + " '" + activeOrders.getActiveOrders().get(i).customer.name +
+            view += "\n#" + activeOrders.getActiveOrders().get(i).getId() + " '" + activeOrders.getActiveOrders().get(i).customer.name +
                     "' (" + activeOrders.getActiveOrders().get(i).customer.number + ") - ";
             if (activeOrders.getActiveOrders().get(i).remote) {
                 view += "Ordered by Phone";
@@ -49,15 +53,30 @@ public class Mario extends Restaurant{
                 view += " --- " + activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice() + "kr.\n";
                 sum += activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice();
             }
-            view += "Total: " + sum + "kr.\n\n";
+            view += "Total: " + sum + "kr.\n";
         }
         if (view.equals("")) {
-            view = "N/A\n";
+            view = "No active orders";
         }
         System.out.println(view);
+        System.out.println("--------------");
     }
 
-    public void viewHistory(){
+//--Make Orders (i.e. select an order to "make" (i.e.i.e. set as "ready"))
+    public void makeOrders(){
+        viewActiveOrders();
+        System.out.println("Pick an order to make");
+        int id = input.nextInt();
+        for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
+            if(id == activeOrders.getActiveOrders().get(i).getId()) {
+                activeOrders.getActiveOrders().get(i).setReady(true);
+            }
+        }
+        System.out.println("Order #"+id+" has been made\n");
+    }
 
+//--View History (i.e. OrderHistory list)
+    public void viewHistory(){
+       orderHistory.viewHistory(); //moved the code for this to OrderHistory
     }
 }

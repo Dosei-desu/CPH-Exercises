@@ -1,4 +1,7 @@
-//Kris & Timmy & Johan
+/**
+ * @author Timmy & Kris & Johan
+ */
+
 import com.sun.xml.internal.ws.util.StringUtils; //used for "capitalise()", which is a StringUtils function
 import java.util.*;
 
@@ -239,10 +242,6 @@ public class Menu {
 //------//
         System.out.println("Would you like to make a custom pizza with: "+ingClone+"?\n1-'YES' | 2-'NO'");
         int num = input.nextInt();
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //some kind of bug here that happens when you abort custom pizza and make a custom pizza afterwards
-        //haven't managed to recreate the bug yet, but it feels like it's currently a secondary thing anyway,
-        //will focus on it when everything is done
         if(num == 1){
             customerPizza.add(new Pizza(ingredients));
             System.out.println("0 --- \"Custom Pizza\" --- "+ingClone+" --- 85.0kr.\n");

@@ -1,8 +1,10 @@
-//Timmy & Kris
+/**
+ * @author Timmy & Kris
+ */
+
 import com.sun.xml.internal.ws.util.StringUtils;
 
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 public class Alfonso extends Restaurant{
     Menu menu;
@@ -14,72 +16,104 @@ public class Alfonso extends Restaurant{
         this.menu = menu;
         this.activeOrders = activeOrders;
     }
+
 //--Start Order (initialises Customer)
     public void startOrder(String name, long number){
         this.currentCustomer.add(new Customer(name, number));
     }
+
 //--Add Pizza to Order (by Name)
-    public void addPizzaToOrderByName(String pizzaName){
+    public boolean addPizzaToOrderByName(String pizzaName, LinkedList<Pizza> currentPizzas){
         menu.viewPizzaByName(pizzaName);
         for (int i = 0; i < menu.menuPizzas.size(); i++) {
-            if(menu.menuPizzas.get(i).getName().toLowerCase().equals(pizzaName.toLowerCase())){
+            if (menu.menuPizzas.get(i).getName().toLowerCase().equals(pizzaName.toLowerCase())) {
                 customerPizza.add(menu.menuPizzas.get(i));
+                return true;
             }
         }
+        return false;
     }
+
 //--Add Pizza to Order (by ID)
     public void addPizzaToOrderById(int pizzaId){
         menu.viewPizzaByID(pizzaId);
         customerPizza.add(menu.menuPizzas.get(pizzaId - 1)); //has to be -1 to match the index
     }
-//--Add Pizza to Order (by Ingredients)
-    public void addPizzaToOrderByIngredients(String ingredients){ //need to make function that handles CustomPizzas
-        //added all the functionality for selection and such to the viewPizza and its embedded customPizza function
-        menu.viewPizzaByIngredients(ingredients,input,customerPizza);
-    }
 
+//--Add Pizza to Order (by Ingredients)
+    public void addPizzaToOrderByIngredients(String ingredients) { //need to make function that handles CustomPizzas
+        //added all the functionality for selection and such to the viewPizza and its embedded customPizza function
+        menu.viewPizzaByIngredients(ingredients, input, customerPizza);
+    }
 
 //--Selection Helper (moved from Restaurant class)
     public void selectionHelper(Scanner input, boolean isRemote, String customerName, Long phoneNum, LinkedList<Pizza> currentPizzas){
+        boolean check = false; //used to prevent "no such element" + addLast problem with Pizza Name order
         startOrder(customerName, phoneNum); //moved this here to avoid a problem with the newly-created customer LinkedList
-        System.out.println("Choose pizza:\n1 -- By Name\n2 -- By ID\n3 -- By Ingredients\n0 -- Return");
-        int selection = input.nextInt();
-        switch(selection){
-            case 1:
-                System.out.println("Enter pizza Name:");
-                String theGreaterSwallower = input.nextLine(); //necessary to make nextLine() work
-                String pizzaName = input.nextLine();
-                addPizzaToOrderByName(pizzaName);
-                break;
+        System.out.println("Choose pizza:\n1 -- By Name\n2 -- By ID\n3 -- By Ingredients\n0 -- Return (Cancels Order)");
+        try {
+            int selection = input.nextInt();
+            switch (selection) {
+                case 1:
+                    System.out.println("Enter pizza name:");
+                    String theGreaterSwallower = input.nextLine(); //flushes the scanner input (could also just be "input.nextLine();")
+                    String pizzaName = input.nextLine();
+                    check = addPizzaToOrderByName(pizzaName, currentPizzas); //this is the only way it would cooperate... deal with it
+                    break;
 
-            case 2:
-                System.out.println("Enter pizza ID:");
-                int pizzaId = input.nextInt();
-                addPizzaToOrderById(pizzaId);
-                break;
+                case 2:
+                    System.out.println("Enter pizza ID:");
+                    int pizzaId = input.nextInt();
+                    addPizzaToOrderById(pizzaId);
+                    break;
 
-            case 3:
-                System.out.println("Enter pizza ingredient(s):");
-                theGreaterSwallower = input.nextLine();
-                String pizzaIng = input.nextLine();
-                addPizzaToOrderByIngredients(pizzaIng);
-                break;
+                case 3:
+                    System.out.println("Enter pizza ingredient(s):");
+                    theGreaterSwallower = input.nextLine();
+                    String pizzaIng = input.nextLine();
+                    addPizzaToOrderByIngredients(pizzaIng);
+                    break;
 
-            default:
-                restaurant();
+                case 0: //return
+                    break;
+
+                default:
+                    break;
+            }
+            if (selection > 0 && selection < 4) { //only triggers if 1, 2, or 3 are entered
+                //temporary list used to add to active orders since it takes a LinkedList as parameter
+                //Is it a mess? yes. but too bad!
+                if(selection != 1 || check) { //if the selection is based on name (i.e. == 1), it uses "check" instead
+                    currentPizzas.add(customerPizza.getLast());
+                }else{ //technically not an exception, but it should be ...!
+                    System.out.println("No such element error!\n");
+                    selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
+                }
+
+                //add another (loops back through and keeps customer data)
+                System.out.println("Would you like to add another pizza to this order?\n1-'YES' | 2-'NO'");
+                int addMore = input.nextInt();
+                if (addMore == 1) {
+                    selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
+                } else { //else statement necessary to avoid duplication bug
+                    activeOrders.addOrder(isRemote, currentPizzas, currentCustomer.getLast()); //similar to Johan's "push order"
+                    printLastPizza();
+                }
+            }
         }
-        //temporary list used to add to active orders since it takes a LinkedList as parameter
-        currentPizzas.add(customerPizza.getLast());
-
-        //add another (loops back through and keeps customer data)
-        System.out.println("Would you like to add another pizza to this order?\n1-'YES' | 2-'NO'");
-        int addMore = input.nextInt();
-        if(addMore == 1){
+        catch (InputMismatchException ex){
+            System.out.println("Input mismatch error!\n");
+            input.nextLine();
             selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
-        }else { //else statement necessary to avoid duplication bug
-            activeOrders.addOrder(isRemote, currentPizzas, currentCustomer.getLast()); //similar to Johan's "push order"
         }
-
+        catch (NoSuchElementException ex){
+            System.out.println("No such element error!\n");
+            selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
+        }
+        catch (IndexOutOfBoundsException ex){
+            System.out.println("Out of bounds error!\n");
+            selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
+        }
     }
 
 //--Print latest pizza
@@ -117,7 +151,7 @@ public class Alfonso extends Restaurant{
     public void processActiveOrder(){ //can probably be moved to Alfonso
         if(activeOrders.getActiveOrders().size() > 0) {
             System.out.println("There are "+activeOrders.getActiveOrders().size()+" active orders");
-            System.out.println("1 -- Deliver Order (ID)\n2 -- Abandon Order (ID)\n0 -- Return");
+            System.out.println("1 -- Deliver Order\n2 -- Abandon Order\n0 -- Return");
             int selection = input.nextInt();
 
             switch (selection) {
@@ -127,7 +161,6 @@ public class Alfonso extends Restaurant{
                     System.out.println("Enter customer ID: ");
                     int id1 = input.nextInt();
                     deliver(id1);
-                    System.out.println("Finished processing Order ID: "+id1+"\n");
                     break;
 
                 case 2: //abandon (i.e, move to history and mark Delivered as False)
@@ -135,7 +168,6 @@ public class Alfonso extends Restaurant{
                     System.out.println("Enter customer ID: ");
                     int id2 = input.nextInt();
                     abandon(id2);
-                    System.out.println("Finished processing Order ID: "+id2+"\n");
                     break;
 
                 case 0: //does nothing, just stops it from doing anything (used to have Restaurant() in here, but that
@@ -152,28 +184,39 @@ public class Alfonso extends Restaurant{
 
 //--Deliver (i.e. remove an order from active orders and process as delivered)
     public void deliver(int id){
+        boolean check = false; //to avoid failure statement appearing on successful processing of an order
         for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
             if (id == activeOrders.getActiveOrders().get(i).id && activeOrders.getActiveOrders().get(i).isReady()){
                 activeOrders.getActiveOrders().get(i).setDelivered(true);
                 activeOrders.archiveOrder(activeOrders.getActiveOrders().get(i).getId());
+                check = true;
             }else if(id == activeOrders.getActiveOrders().get(i).id){
                 //check to ensure order is ready, otherwise it won't let you deliver it
                 System.out.println("Order is not ready to be delivered");
-            }else{
-                System.out.println("Order does not exist");
+                check = true;
             }
+        }
+        if(!check){
+            System.out.println("Order ID: "+id+" does not exist\n");
+        }else{
+            System.out.println("Finished processing Order ID: "+id+"\n");
         }
     }
 
 //--Abandon (i.e. remove an order from active orders and process as abandoned)
     public void abandon(int id){ //has no "is it ready?" check, since you can abandon whenever
+        boolean check = false; //to avoid failure statement appearing on successful processing of an order
         for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
             if (id == activeOrders.getActiveOrders().get(i).id){
                 activeOrders.getActiveOrders().get(i).setDelivered(false);
                 activeOrders.archiveOrder(activeOrders.getActiveOrders().get(i).getId());
-            }else{
-                System.out.println("Order does not exist");
+                check = true;
             }
+        }
+        if(!check){
+            System.out.println("Order ID: "+id+" does not exist\n");
+        }else{
+            System.out.println("Finished processing Order ID: "+id+"\n");
         }
     }
 

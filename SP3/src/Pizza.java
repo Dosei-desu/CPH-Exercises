@@ -1,4 +1,7 @@
-//Kris & Timmy & Johan
+/**
+ * @author Timmy & Kris & Johan
+ */
+
 import com.sun.xml.internal.ws.util.StringUtils; //used for "capitalise()", which is a StringUtils function
 
 public class Pizza {

@@ -1,4 +1,7 @@
-//Johan
+/**
+ * @author Johan
+ */
+
 import com.sun.xml.internal.ws.util.StringUtils;
 
 import java.util.LinkedList;
@@ -64,5 +67,9 @@ public class OrderHistory {
         }
         System.out.println(view);
         System.out.println("----------------");
+    }
+
+    public LinkedList<Order> getOrderHistory(){
+        return orderHistory;
     }
 }

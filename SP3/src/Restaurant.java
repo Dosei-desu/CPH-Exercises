@@ -1,5 +1,8 @@
-//Timmy & Kris
+/**
+ * @author Timmy & Kris
+ */
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Restaurant {
@@ -16,57 +19,65 @@ public class Restaurant {
 
         //Welcome Screen
         welcomeScreen();
-        int num = input.nextInt();
 
-        switch (num) {
+        try {
+            int num = input.nextInt();
 
-            case 1: //view menu
-                mario.viewMenu();
-                restaurant();
-                break;
+            switch (num) {
 
-            case 2: //start order (all of this could probably be moved into alfonso too)
-                alfonso.createOrder();
-                alfonso.printLastPizza();
-                restaurant();
-                break;
+                case 1: //view menu
+                    mario.viewMenu();
+                    restaurant();
+                    break;
 
-            case 3: //print current orders
-                mario.viewActiveOrders();
-                restaurant();
-                break;
+                case 2: //start order
+                    alfonso.createOrder();
+                    restaurant();
+                    break;
 
-            case 4: //make orders (set to ready)
-                mario.makeOrders();
-                restaurant();
-                break;
+                case 3: //print current orders
+                    mario.viewActiveOrders();
+                    restaurant();
+                    break;
 
-            case 5: //edit order
-                alfonso.processActiveOrder();
-                restaurant();
-                break;
+                case 4: //make orders (set to ready)
+                    mario.makeOrders();
+                    restaurant();
+                    break;
 
-            case 6: //view order history
-                mario.viewHistory();
-                restaurant();
-                break;
+                case 5: //edit orders
+                    alfonso.processActiveOrder();
+                    restaurant();
+                    break;
 
-            case 7: //statistics (not implemented)
-                //stuff happens here
-                restaurant();
-                break;
+                case 6: //view order history
+                    mario.viewHistory();
+                    restaurant();
+                    break;
 
-            case 0: //shutdown
-                break;
+                case 7: //statistics
+                    mario.printStats();
+                    restaurant();
+                    break;
 
-            default:
-                restaurant();
+                case 0: //shutdown
+                    break;
+
+                default: //if the value isn't accounted for, it simply returns
+                    restaurant();
+            }
+        }
+
+        catch (InputMismatchException ex){ //if the input isn't an int, this is triggered
+            System.out.println("Input mismatch error!\n");
+            input.nextLine(); //flushes the scanner so that it doesn't create an infinite loop
+            restaurant();
         }
     }
 
     public void welcomeScreen(){
         System.out.println("WELCOME TO MARIO'S PIZZABAR\n\n1 -- View Menu (As Mario)\n2 -- Start Order (As Alfonso)"+
         "\n3 -- View Active Orders (As Mario)\n4 -- Make Orders (As Mario)\n5 -- Process Order (As Alfonso)" +
-        "\n6 -- View History (as Mario)\n0 -- Shutdown");
+        "\n6 -- View History (As Mario)\n7 -- Order Statistics (As Mario)\n0 -- Shutdown");
     }
 }

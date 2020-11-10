@@ -1,4 +1,7 @@
-//Timmy
+/**
+ * @author Timmy
+ */
+
 public class Customer {
     String name;
     long number;

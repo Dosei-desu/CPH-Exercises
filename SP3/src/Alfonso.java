@@ -158,14 +158,14 @@ public class Alfonso extends Restaurant{
 
                 case 1: //deliver (i.e, move to history and mark Delivered as True)
                     viewActiveOrders();
-                    System.out.println("Enter customer ID: ");
+                    System.out.println("Enter order ID: ");
                     int id1 = input.nextInt();
                     deliver(id1);
                     break;
 
                 case 2: //abandon (i.e, move to history and mark Delivered as False)
                     viewActiveOrders();
-                    System.out.println("Enter customer ID: ");
+                    System.out.println("Enter order ID: ");
                     int id2 = input.nextInt();
                     abandon(id2);
                     break;

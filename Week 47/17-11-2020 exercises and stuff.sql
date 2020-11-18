@@ -2,6 +2,8 @@
 
 -- CREATE DATABASE Pizzabar;
 USE Pizzabar;
+
+
 /*
 CREATE TABLE Pizzas(
 -- Doesn't have a primary key, so it needs to be remade

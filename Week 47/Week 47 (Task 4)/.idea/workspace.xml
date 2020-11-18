@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4752a7f4-b667-486b-9bb9-f1bc1975aca4" name="Default Changelist" comment="" />
+    <list default="true" id="64bcb662-62df-4240-9cbe-3f9f32ba2f0e" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,7 +35,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectId" id="1kSHYUryWZyBRzHd76X3E0QcMF7" />
+  <component name="ProjectId" id="1kTZqHYvFVhnzx0ZaYSrZLsfW6I" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -44,14 +44,18 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/mysql-connector-java-8.0.22.jar" />
     <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="restartRequiresConfirmation" value="false" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="JDBC_stuff" />
+      <module name="Week 47 (Task 4)" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
@@ -68,11 +72,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="4752a7f4-b667-486b-9bb9-f1bc1975aca4" name="Default Changelist" comment="" />
-      <created>1605687119827</created>
+      <changelist id="64bcb662-62df-4240-9cbe-3f9f32ba2f0e" name="Default Changelist" comment="" />
+      <created>1605726730658</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1605687119827</updated>
+      <updated>1605726730658</updated>
     </task>
     <servers />
   </component>
@@ -86,44 +90,35 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="225" key="#com.intellij.ide.util.MemberChooser" timestamp="1605694017122">
+    <state x="765" y="234" key="#com.intellij.ide.util.MemberChooser" timestamp="1605728685059">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="225" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1605694017122" />
-    <state x="666" y="260" key="FileChooserDialogImpl" timestamp="1605726711069">
+    <state x="765" y="234" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1605728685059" />
+    <state x="666" y="260" key="FileChooserDialogImpl" timestamp="1605727319644">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="666" y="260" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1605726711069" />
-    <state width="1876" height="277" key="GridCell.Tab.0.bottom" timestamp="1605699280669">
+    <state x="666" y="260" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1605727319644" />
+    <state width="1876" height="277" key="GridCell.Tab.0.bottom" timestamp="1605729461263">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="277" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605699280669" />
-    <state width="1876" height="277" key="GridCell.Tab.0.center" timestamp="1605699280669">
+    <state width="1876" height="277" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605729461263" />
+    <state width="1876" height="277" key="GridCell.Tab.0.center" timestamp="1605729461263">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="277" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605699280669" />
-    <state width="1876" height="277" key="GridCell.Tab.0.left" timestamp="1605699280669">
+    <state width="1876" height="277" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605729461263" />
+    <state width="1876" height="277" key="GridCell.Tab.0.left" timestamp="1605729461263">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="277" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605699280669" />
-    <state width="1876" height="277" key="GridCell.Tab.0.right" timestamp="1605699280669">
+    <state width="1876" height="277" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605729461263" />
+    <state width="1876" height="277" key="GridCell.Tab.0.right" timestamp="1605729461263">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="277" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605699280669" />
-    <state x="440" y="93" key="SettingsEditor" timestamp="1605687393064">
+    <state width="1876" height="277" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605729461263" />
+    <state x="440" y="93" key="SettingsEditor" timestamp="1605727323205">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="440" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1605687393064" />
-    <state x="551" y="139" key="new project wizard" timestamp="1605726729794">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="551" y="139" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1605726729794" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1605726665513">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605726665513" />
+    <state x="440" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1605727323205" />
   </component>
 </project>

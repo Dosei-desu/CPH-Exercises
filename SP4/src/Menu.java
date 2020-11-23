@@ -15,6 +15,7 @@ public class Menu {
         //pizzaMenu(); //initialised inside the constructor, so it doesn't have to be called in Main
     }
 
+//--not in use
     public void pizzaMenu(){
         //pizza menu
         this.menuPizzas.add(0, new MenuPizza("Pepe",1,"Tomato,Cheese,Pepperoni",61.0));

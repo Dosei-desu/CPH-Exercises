@@ -1,6 +1,6 @@
 /**
  * @author Kris
- * Reworked from SP3, which were a group project between: Cassandra, Johan, Kris, and Timmy
+ * Reworked from SP3, which was a group project between: Cassandra, Johan, Kris, and Timmy
  * Bug-squashers: Kris, Kirby
  */
 

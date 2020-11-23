@@ -21,6 +21,18 @@ public class Pizza {
     //custom pizza
     public Pizza(String ingredients) {
         this.ingredients = ingredients.split(",");
+
+//------decided not to use this, as it screws with the statistics
+        //gives the custom pizza a unique code based on the ingredients
+        /*
+        String ingCode = "";
+        for (int i = 0; i < this.ingredients.length; i++) {
+            ingCode += this.ingredients[i].toLowerCase().charAt(0);
+            ingCode += this.ingredients[i].toLowerCase().charAt(1);
+        }
+        this.name = "Custom Pizza ("+ingCode+")";
+        */
+
         this.name = "Custom Pizza";
         this.id = 0;
         this.price = 85.0;

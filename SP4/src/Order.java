@@ -1,5 +1,5 @@
 /**
- * @author Johan
+ * @author Johan, reworked by Kris
  */
 
 import java.sql.Timestamp;
@@ -69,7 +69,8 @@ public class Order {
         this.created_at = created_at;
     }
 
-    public String getCreated() { //old
+    //not in use
+    public String getCreated() {
         Date currentDate = new Date(this.created);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss");
         String date = dateFormat.format(currentDate);
@@ -86,10 +87,6 @@ public class Order {
 
     public Customer getCustomer() {
         return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     public void setReady(boolean flag){

@@ -12,7 +12,6 @@ public class Restaurant {
     Alfonso alfonso;
     OrderHistory orderHistory = new OrderHistory();
     ActiveOrders activeOrders = new ActiveOrders(orderHistory);
-    Database database = new Database();
 
     public void restaurant(){
         mario = new Mario(menu, activeOrders, orderHistory);

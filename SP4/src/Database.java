@@ -181,7 +181,8 @@ public class Database {
             if(i > 0) {
                 if(orderHistory.get(i).getId() != orderHistory.get(i-1).getId()) { //checks if same unique id
                     view += "\n" + orderHistory.get(i).getCreated_at() + "\n";
-                    view += "#" + orderHistory.get(i).getId() + " '" + orderHistory.get(i).customer.name +
+                    view += "#" + orderHistory.get(i).getId() + " '" +
+                            StringUtils.capitalize(orderHistory.get(i).customer.name.toLowerCase()) +
                             "' (" + orderHistory.get(i).customer.number + ") - ";
                     if (orderHistory.get(i).remote) {
                         view += "Ordered by Phone\n";
@@ -197,7 +198,8 @@ public class Database {
                 }
             }else{ //first time through
                 view += "\n" + orderHistory.get(i).getCreated_at() + "\n";
-                view += "#" + orderHistory.get(i).getId() + " '" + orderHistory.get(i).customer.name +
+                view += "#" + orderHistory.get(i).getId() + " '" +
+                        StringUtils.capitalize(orderHistory.get(i).customer.name.toLowerCase()) +
                         "' (" + orderHistory.get(i).customer.number + ") - ";
                 if (orderHistory.get(i).remote) {
                     view += "Ordered by Phone\n";
@@ -251,14 +253,19 @@ public class Database {
             view = "No archived orders";
         }
         System.out.println(view);
+
+        double totalSum = 0;
+        for (int i = 0; i < orderHistory.size(); i++) {
+            if(orderHistory.get(i).isDelivered()){
+                totalSum += orderHistory.get(i).getPrice();
+            }
+        }
+        System.out.println("Total sum of all past orders: "+totalSum+"kr.");
         System.out.print("----------------\n");
     }
 }
 
 //TODO
 /*
-- Maybe colours using the ANSI code August made
-- Custom Pizza name stuff (maybe based on ingredients? or random??)
-- Total of all orders in the orderHistory, so you can tell how much money has been made in total
-- Specifications of the statistics (like most prevalent toppings, excluding cheese and tomato)
+- Maybe text colours using the ANSI code August made
 */

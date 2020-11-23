@@ -13,6 +13,7 @@ import java.util.*;
 public class Statistics {
     OrderHistory orderHistory;
     List<String> orderHistoryList = new ArrayList<>();
+    List<String> orderHistoryIngredientsList = new ArrayList<>();
 
     Statistics(OrderHistory orderHistory){
         this.orderHistory = orderHistory;
@@ -20,6 +21,7 @@ public class Statistics {
     }
 
     public void populate(){
+        //populates with names to use for pizza order prevalence
         for (int i = 0; i < orderHistory.getOrderHistory().size(); i++) {
             for (int j = 0; j < orderHistory.getOrderHistory().get(i).getItems().size(); j++) {
                 //only adds to the list if it was delivered
@@ -29,9 +31,25 @@ public class Statistics {
             }
         }
         orderHistoryList.sort(Comparator.naturalOrder()); //sorts the list alphabetically
+
+        //populates with ingredients to use for pizza ingredient order prevalence
+        for (int i = 0; i < orderHistory.getOrderHistory().size(); i++) {
+            for (int j = 0; j < orderHistory.getOrderHistory().get(i).getItems().size(); j++) {
+                //only adds to the list if it was delivered
+                if(orderHistory.getOrderHistory().get(i).isDelivered()) {
+                    String ingList = "";
+                    for (int k = 0; k < orderHistory.getOrderHistory().get(i).getItems().get(j).getIngredients().length; k++) {
+                        orderHistoryIngredientsList.add(orderHistory.getOrderHistory().get(i).getItems().get(j).getIngredients()[k]);
+                    }
+
+                }
+            }
+        }
+        orderHistoryIngredientsList.sort(Comparator.naturalOrder()); //sorts the list alphabetically
     }
 
-    public void printOrderList(){ //not used, just for debugging purposes
+//--not used, just for debugging purposes
+    public void printOrderList(){
         System.out.println("Printing list of order history pizza names");
         for (int i = 0; i < orderHistoryList.size(); i++) {
             System.out.println(orderHistoryList.get(i));
@@ -49,16 +67,46 @@ public class Statistics {
                         //if it's an 'int' the calculation below doesn't work ('float' also works)
                         double count = Collections.frequency(orderHistoryList, orderHistoryList.get(i));
                         //the 'String.format("%.1f",number)' limits the number of decimal places
-                        System.out.println("\"" + orderHistoryList.get(i) + "\" makes up " + (String.format("%.1f", (count /
-                                orderHistoryList.size()) * 100)) + "% of all orders");
+                        System.out.println(
+                                "\"" + orderHistoryList.get(i) + "\" makes up " +
+                                (String.format("%.1f", (count / orderHistoryList.size()) * 100)) +
+                                "% of all orders"
+                        );
                     }
                 } else {
                     //same as above, but without the "if()" statement (handles the cases when there is only 1 item on the list)
                     double count = Collections.frequency(orderHistoryList, orderHistoryList.get(i));
-                    System.out.println("\"" + orderHistoryList.get(i) + "\" makes up " + (String.format("%.1f", (count /
-                            orderHistoryList.size()) * 100)) + "% of all orders");
+                    System.out.println(
+                            "\"" + orderHistoryList.get(i) + "\" makes up " +
+                            (String.format("%.1f", (count / orderHistoryList.size()) * 100)) +
+                            "% of all orders"
+                    );
                 }
             }
+
+            System.out.println("\nOccurrence statistics of most popular toppings\n-----------------------------------------");
+            for (int i = 0; i < orderHistoryIngredientsList.size(); i++) {
+                if (i > 0) {
+                    //ensures no duplicates (easy because of the sorting done above)
+                    if (
+                            !orderHistoryIngredientsList.get(i).equals(orderHistoryIngredientsList.get(i - 1)) &&
+                            !orderHistoryIngredientsList.get(i).toLowerCase().equals("cheese") &&
+                            !orderHistoryIngredientsList.get(i).toLowerCase().equals("tomato")
+                    )
+                    {
+                        //counts frequency of a certain object through a collection and adds it to a 'double' variable
+                        //if it's an 'int' the calculation below doesn't work ('float' also works)
+                        double count = Collections.frequency(orderHistoryIngredientsList, orderHistoryIngredientsList.get(i));
+                        //the 'String.format("%.1f",number)' limits the number of decimal places
+                        System.out.println(
+                                "\"" + orderHistoryIngredientsList.get(i) + "\" makes up " +
+                                (String.format("%.1f", (count / orderHistoryIngredientsList.size()) * 100)) +
+                                "% of all toppings"
+                        );
+                    }
+                }
+            }
+
             System.out.println("-----------------------------------------\n");
         }else{
             System.out.println("No statistics available\n");

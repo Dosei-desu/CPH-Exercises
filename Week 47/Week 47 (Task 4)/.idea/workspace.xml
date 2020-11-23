@@ -90,6 +90,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="765" y="234" key="#com.intellij.ide.util.MemberChooser" timestamp="1605728685059">
@@ -120,5 +121,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="440" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1605727323205" />
+    <state x="551" y="139" key="new project wizard" timestamp="1605970977171">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="551" y="139" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1605970977171" />
   </component>
 </project>

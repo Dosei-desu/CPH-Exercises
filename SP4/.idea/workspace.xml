@@ -90,25 +90,40 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="260" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1605973312249" />
-    <state width="1876" height="867" key="GridCell.Tab.0.bottom" timestamp="1606163913477">
+    <state width="1876" height="867" key="GridCell.Tab.0.bottom" timestamp="1606337078556">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="867" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1606163913477" />
-    <state width="1876" height="867" key="GridCell.Tab.0.center" timestamp="1606163913476">
+    <state width="1876" height="867" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1606337078556" />
+    <state width="1876" height="867" key="GridCell.Tab.0.center" timestamp="1606337078556">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="867" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1606163913476" />
-    <state width="1876" height="867" key="GridCell.Tab.0.left" timestamp="1606163913476">
+    <state width="1876" height="867" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1606337078556" />
+    <state width="1876" height="867" key="GridCell.Tab.0.left" timestamp="1606337078556">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="867" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1606163913476" />
-    <state width="1876" height="867" key="GridCell.Tab.0.right" timestamp="1606163913476">
+    <state width="1876" height="867" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1606337078556" />
+    <state width="1876" height="867" key="GridCell.Tab.0.right" timestamp="1606337078556">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="867" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1606163913476" />
+    <state width="1876" height="867" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1606337078556" />
     <state x="440" y="93" key="SettingsEditor" timestamp="1605973314851">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="440" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1605973314851" />
+    <state x="777" y="432" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1606330160424">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="777" y="432" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1606330160424" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Order.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

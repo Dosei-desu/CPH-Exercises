@@ -12,6 +12,7 @@ public class Restaurant {
     Alfonso alfonso;
     OrderHistory orderHistory = new OrderHistory();
     ActiveOrders activeOrders = new ActiveOrders(orderHistory);
+    ConsoleColour cc = new ConsoleColour();
 
     public void restaurant(){
         mario = new Mario(menu, activeOrders, orderHistory);
@@ -69,15 +70,15 @@ public class Restaurant {
         }
 
         catch (InputMismatchException ex){ //if the input isn't an int, this is triggered
-            System.out.println("Input mismatch error!\n");
+            System.out.println(cc.redB+"Input mismatch error!\n"+cc.reset);
             input.nextLine(); //flushes the scanner so that it doesn't create an infinite loop
             restaurant();
         }
     }
 
     public void welcomeScreen(){
-        System.out.println("WELCOME TO MARIO'S PIZZABAR\n\n1 -- View Menu (As Mario)\n2 -- Start Order (As Alfonso)"+
+        System.out.println(cc.blueU+"WELCOME TO MARIO'S PIZZABAR\n"+cc.reset+cc.blueB+"\n1 -- View Menu (As Mario)\n2 -- Start Order (As Alfonso)"+
         "\n3 -- View Active Orders (As Mario)\n4 -- Make Orders (As Mario)\n5 -- Process Order (As Alfonso)" +
-        "\n6 -- View History (As Mario)\n7 -- Order Statistics (As Mario)\n0 -- Shutdown");
+        "\n6 -- View History (As Mario)\n7 -- Order Statistics (As Mario)\n0 -- Shutdown"+cc.reset);
     }
 }

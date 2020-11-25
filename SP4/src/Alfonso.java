@@ -11,6 +11,7 @@ public class Alfonso extends Restaurant{
     LinkedList<Customer> currentCustomer = new LinkedList<>();
     LinkedList<Pizza> customerPizza = new LinkedList<>();
     ActiveOrders activeOrders; //not used for anything
+    ConsoleColour cc = new ConsoleColour();
 
     Alfonso(Menu menu, ActiveOrders activeOrders){
         this.menu = menu;
@@ -86,12 +87,12 @@ public class Alfonso extends Restaurant{
                 if(selection != 1 || check) { //if the selection is based on name (i.e. == 1), it uses "check" instead
                     currentPizzas.add(customerPizza.getLast());
                 }else{ //technically not an exception, but it should be ...!
-                    System.out.println("No such element error!\n");
+                    System.out.println(cc.red+"No such element error!\n"+cc.reset);
                     selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
                 }
 
                 //add another (loops back through and keeps customer data)
-                System.out.println("Would you like to add another pizza to this order?\n1-'YES' | 2-'NO'");
+                System.out.println("Would you like to add another pizza to this order?\n1-"+cc.green+"'YES'"+cc.reset+" | 2-"+cc.red+"'NO'"+cc.reset);
                 int addMore = input.nextInt();
                 if (addMore == 1) {
                     selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
@@ -102,16 +103,16 @@ public class Alfonso extends Restaurant{
             }
         }
         catch (InputMismatchException ex){
-            System.out.println("Input mismatch error!\n");
+            System.out.println(cc.red+"Input mismatch error!\n"+cc.reset);
             input.nextLine();
             selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
         }
         catch (NoSuchElementException ex){
-            System.out.println("No such element error!\n");
+            System.out.println(cc.red+"No such element error!\n"+cc.reset);
             selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
         }
         catch (IndexOutOfBoundsException ex){
-            System.out.println("Out of bounds error!\n");
+            System.out.println(cc.red+"Out of bounds error!\n"+cc.reset);
             selectionHelper(input, isRemote, customerName, phoneNum, currentPizzas);
         }
     }
@@ -123,9 +124,9 @@ public class Alfonso extends Restaurant{
             for (int i = 0; i < activeOrders.getActiveOrders().getLast().getItems().size(); i++) {
                 System.out.println(activeOrders.getActiveOrders().getLast().getItems().get(i));
             }
-            System.out.println("Total: "+activeOrders.getActiveOrders().getLast().getPrice()+"kr.\n");
+            System.out.println(cc.green+"Total: "+activeOrders.getActiveOrders().getLast().getPrice()+"kr.\n"+cc.reset);
         }else{
-            System.out.println("N/A\n");
+            System.out.println(cc.red+"N/A\n"+cc.reset);
         }
     }
 
@@ -135,7 +136,7 @@ public class Alfonso extends Restaurant{
         System.out.println("Please enter customer name:");
 
         String customerName = input.nextLine();
-        System.out.println("Is it ordered by phone?\n1-'YES' | 2-'NO'");
+        System.out.println("Is it ordered by phone?\n1-"+cc.green+"'YES'"+cc.reset+" | 2-"+cc.red+"'NO'"+cc.reset);
         int byPhone = input.nextInt();
         if (byPhone == 1) {
             isRemote = true;
@@ -150,7 +151,7 @@ public class Alfonso extends Restaurant{
 //--Process (edit) active orders
     public void processActiveOrder(){ //can probably be moved to Alfonso
         if(activeOrders.getActiveOrders().size() > 0) {
-            System.out.println("There are "+activeOrders.getActiveOrders().size()+" active orders");
+            System.out.println(cc.green+"There are "+activeOrders.getActiveOrders().size()+" active orders"+cc.reset);
             System.out.println("1 -- Deliver Order\n2 -- Abandon Order\n0 -- Return");
             int selection = input.nextInt();
 
@@ -178,7 +179,7 @@ public class Alfonso extends Restaurant{
                     break;
             }
         }else{
-            System.out.println("No active orders\n");
+            System.out.println(cc.red+"No active orders to process\n"+cc.reset);
         }
     }
 
@@ -192,14 +193,14 @@ public class Alfonso extends Restaurant{
                 check = true;
             }else if(id == activeOrders.getActiveOrders().get(i).id){
                 //check to ensure order is ready, otherwise it won't let you deliver it
-                System.out.println("Order is not ready to be delivered");
+                System.out.println(cc.red+"Order is not ready to be delivered"+cc.reset);
                 check = true;
             }
         }
         if(!check){
-            System.out.println("Order ID: "+id+" does not exist\n");
+            System.out.println(cc.red+"Order ID: "+id+" does not exist\n"+cc.reset);
         }else{
-            System.out.println("Finished processing Order ID: "+id+"\n");
+            System.out.println(cc.green+"Finished processing Order ID: "+id+"\n"+cc.reset);
         }
     }
 
@@ -214,16 +215,16 @@ public class Alfonso extends Restaurant{
             }
         }
         if(!check){
-            System.out.println("Order ID: "+id+" does not exist\n");
+            System.out.println(cc.red+"Order ID: "+id+" does not exist\n"+cc.reset);
         }else{
-            System.out.println("Finished processing Order ID: "+id+"\n");
+            System.out.println(cc.green+"Finished processing Order ID: "+id+"\n"+cc.reset);
         }
     }
 
 //--View active orders (copied from Mario)
     //this can be improved, but this is currently just to get around the fact alfonso can't access mario's functions
     public void viewActiveOrders(){
-        System.out.println("Active Orders:\n--------------");
+        System.out.println(cc.blueB+"Active Orders:\n--------------"+cc.reset);
         String view = "";
         for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
             view += "\n#" + activeOrders.getActiveOrders().get(i).getId() + " '" + activeOrders.getActiveOrders().get(i).customer.name +
@@ -234,9 +235,9 @@ public class Alfonso extends Restaurant{
                 view += "Ordered in Person\n";
             }
             if(activeOrders.getActiveOrders().get(i).isReady()){
-                view += "-Ready-\n";
+                view += cc.green+"-Ready-\n"+cc.reset;
             }else{
-                view += "-Not Ready-\n";
+                view += cc.red+"-Not Ready-\n"+cc.reset;
             }
             view += "Order(s):\n";
             double sum = 0;
@@ -247,7 +248,7 @@ public class Alfonso extends Restaurant{
                 } else {
                     view += " -- ";
                 }
-                view += "\"" + activeOrders.getActiveOrders().get(i).getItems().get(j).getName() + "\" --- ";
+                view += cc.green+"\"" + activeOrders.getActiveOrders().get(i).getItems().get(j).getName() + "\""+cc.reset+" --- ";
                 for (int k = 0; k < activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients().length; k++) {
                     view += StringUtils.capitalize(activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients()[k].toLowerCase());
                     if (k < activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients().length - 2) {
@@ -259,12 +260,12 @@ public class Alfonso extends Restaurant{
                 view += " --- " + activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice() + "kr.\n";
                 sum += activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice();
             }
-            view += "Total: " + sum + "kr.\n";
+            view += cc.green+"Total: " + sum + "kr.\n"+cc.reset;
         }
         if (view.equals("")) {
-            view = "No active orders";
+            view = cc.red+"No active orders"+cc.reset;
         }
         System.out.println(view);
-        System.out.println("--------------");
+        System.out.println(cc.blueB+"--------------"+cc.reset);
     }
 }

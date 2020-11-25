@@ -7,6 +7,7 @@ import java.util.LinkedList;
 public class Database {
     final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static Connection connection;
+    ConsoleColour cc = new ConsoleColour();
 
     Database() {
         try {
@@ -34,9 +35,9 @@ public class Database {
                 }else{
                     System.out.print(" --- ");
                 }
-                System.out.print("\""+rs.getString("name"));
+                System.out.print(cc.green+"\""+rs.getString("name")+"\""+cc.reset);
                 String ing[] = rs.getString("ingredients").split(",");
-                System.out.print("\" -- ");
+                System.out.print(" -- ");
                 for (int i = 0; i < ing.length; i++) {
                     System.out.print(ing[i]);
                     if(i < ing.length-2){
@@ -45,7 +46,7 @@ public class Database {
                         System.out.print(", and ");
                     }
                 }
-                System.out.print(" -- "+rs.getString("price")+" kr.\n");
+                System.out.print(" -- "+cc.green+rs.getString("price")+" kr.\n"+cc.reset);
             }
 
             rs.close();
@@ -57,7 +58,7 @@ public class Database {
     }
 
     //not sure why it has to be static, but it throws errors if it isn't ... *shrug*
-    public static void populateArrayWithPizza(ArrayList<Pizza> pizzaArrayList){
+    public void populateArrayWithPizza(ArrayList<Pizza> pizzaArrayList){
         try{
             PreparedStatement pstmt = null;
             String sql = "SELECT * FROM pizza";
@@ -174,13 +175,13 @@ public class Database {
     }
 
     public void viewOrderHistory(LinkedList<Order> orderHistory){ //moved from Mario class, since it makes more sense to have it here -Kris-
-        System.out.println("Archived Orders:\n----------------");
+        System.out.println(cc.blueB+"Archived Orders:\n----------------"+cc.reset);
         String view = "";
         double sum = 0;
         for (int i = 0; i < orderHistory.size(); i++) {
             if(i > 0) {
                 if(orderHistory.get(i).getId() != orderHistory.get(i-1).getId()) { //checks if same unique id
-                    view += "\n" + orderHistory.get(i).getCreated_at() + "\n";
+                    view += cc.blue + "\n" + orderHistory.get(i).getCreated_at() + "\n" + cc.reset;
                     view += "#" + orderHistory.get(i).getId() + " '" +
                             StringUtils.capitalize(orderHistory.get(i).customer.name.toLowerCase()) +
                             "' (" + orderHistory.get(i).customer.number + ") - ";
@@ -190,14 +191,14 @@ public class Database {
                         view += "Ordered in Person\n";
                     }
                     if (orderHistory.get(i).isDelivered()) {
-                        view += "-Delivered-\n";
+                        view += cc.green+"-Delivered-\n"+cc.reset;
                     } else {
-                        view += "-Abandoned-\n";
+                        view += cc.red+"-Abandoned-\n"+cc.reset;
                     }
                     view += "Order(s):\n";
                 }
             }else{ //first time through
-                view += "\n" + orderHistory.get(i).getCreated_at() + "\n";
+                view += cc.blue + "\n" + orderHistory.get(i).getCreated_at() + "\n" + cc.reset;
                 view += "#" + orderHistory.get(i).getId() + " '" +
                         StringUtils.capitalize(orderHistory.get(i).customer.name.toLowerCase()) +
                         "' (" + orderHistory.get(i).customer.number + ") - ";
@@ -221,7 +222,7 @@ public class Database {
                 } else {
                     view += " -- ";
                 }
-                view += "\"" + orderHistory.get(i).getItems().get(j).getName() + "\" --- ";
+                view += cc.green+"\"" + orderHistory.get(i).getItems().get(j).getName() + "\"" +cc.reset+ " --- ";
                 for (int k = 0; k < orderHistory.get(i).getItems().get(j).getIngredients().length; k++) {
                     view += StringUtils.capitalize(orderHistory.get(i).getItems().get(j).getIngredients()[k].toLowerCase());
                     if (k < orderHistory.get(i).getItems().get(j).getIngredients().length - 2) {
@@ -230,7 +231,7 @@ public class Database {
                         view += ", and ";
                     }
                 }
-                view += " --- " + orderHistory.get(i).getItems().get(j).getPrice() + "kr.\n";
+                view += " --- " + cc.green + orderHistory.get(i).getItems().get(j).getPrice() + "kr.\n" + cc.reset;
                 sum += orderHistory.get(i).getItems().get(j).getPrice();
             }
 
@@ -240,11 +241,21 @@ public class Database {
             }
             if(i+1 < orderHistory.size()) {
                 if (orderHistory.get(i).getId() != orderHistory.get(i + 1).getId()) {
-                    view += "Total: " + sum + "kr.\n";
+                    if(sum == 0){
+                        view += cc.red;
+                    }else{
+                        view += cc.green;
+                    }
+                    view += "Total: " + sum + "kr.\n"+cc.reset;
                     sum = 0;
                 }
             }else{
-                view += "Total: " + sum + "kr.\n";
+                if(sum == 0){
+                    view += cc.red;
+                }else{
+                    view += cc.green;
+                }
+                view += "Total: " + sum + "kr.\n"+cc.reset;
                 sum = 0;
             }
         }
@@ -260,12 +271,17 @@ public class Database {
                 totalSum += orderHistory.get(i).getPrice();
             }
         }
-        System.out.println("Total sum of all past orders: "+totalSum+"kr.");
-        System.out.print("----------------\n");
+        System.out.println(cc.green+"Total sum of all past orders: "+totalSum+"kr."+cc.reset);
+        System.out.print(cc.blueB+"----------------\n"+cc.reset);
     }
 }
 
 //TODO
 /*
 - Maybe text colours using the ANSI code August made
+*/
+//FIXME
+/*
+- Found a strange bug where choosing 'NO' on "would you like to add another order" would trigger itself again and end up
+  adding another identical pizza order under a different unique id...6
 */

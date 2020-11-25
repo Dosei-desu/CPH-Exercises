@@ -9,6 +9,7 @@ public class Pizza {
     int id;
     String[] ingredients;
     double price;
+    ConsoleColour cc = new ConsoleColour();
 
     //menu pizza
     public Pizza(String name, int id, String ingredients, double price) {
@@ -62,10 +63,10 @@ public class Pizza {
         if(this.id < 10){
             pizzaString.append(" --- \"");
         }else{
-            pizzaString.append(" -- \"");
+            pizzaString.append(" -- "+cc.green+"\"");
         }
         pizzaString.append(this.name);
-        pizzaString.append("\" --- " );
+        pizzaString.append("\""+cc.reset+" --- " );
         for (int i = 0; i < ingredients.length; i++) {
             StringUtils.capitalize(ingredients[i]);
             pizzaString.append(ingredients[i]);
@@ -75,9 +76,9 @@ public class Pizza {
                 pizzaString.append(", and ");
             }
         }
-        pizzaString.append(" --- ");
+        pizzaString.append(" --- "+cc.green);
         pizzaString.append(this.price);
-        pizzaString.append("kr.");
+        pizzaString.append("kr."+cc.reset);
         return pizzaString.toString();
     }
 }

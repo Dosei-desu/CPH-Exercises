@@ -8,6 +8,7 @@ import java.util.*;
 public class Menu {
     ArrayList<Pizza> menuPizzas = new ArrayList<>();
     Database database = new Database();
+    ConsoleColour cc = new ConsoleColour();
 
     Menu(){
         populateMenuFromDatabase(); //using database to populate menuPizzas arraylist
@@ -58,11 +59,11 @@ public class Menu {
     }
 
     public void populateMenuFromDatabase(){
-        Database.populateArrayWithPizza(menuPizzas);
+        database.populateArrayWithPizza(menuPizzas);
     }
 //--View entire menu
     public void viewMenu(){
-        System.out.println("\"Mario's Pizzabar\" Menu:");
+        System.out.println(cc.blue+"\"Mario's Pizzabar\" Menu:"+cc.reset);
         database.viewMenu();
         System.out.println(""); //spacer
     }
@@ -116,7 +117,7 @@ public class Menu {
                 if (menuPizzaList.contains(ing[0]))
                 {
                     if (doOnce) {
-                        view += "Pizzas with " + ingredients + ":\n";
+                        view += "Pizzas with "+cc.green + ingredients + ":\n"+cc.reset;
                         doOnce = false;
                     }
                     view = printHelper(view, menuPizzas.get(i));
@@ -126,7 +127,7 @@ public class Menu {
                 if (menuPizzaList.contains(ing[0]) && menuPizzaList.contains(ing[1]))
                 {
                     if (doOnce) {
-                        view += "Pizzas with " + ingredients + ":\n";
+                        view += "Pizzas with "+cc.green + ingredients + ":\n"+cc.reset;
                         doOnce = false;
                     }
                     view = printHelper(view, menuPizzas.get(i));
@@ -136,7 +137,7 @@ public class Menu {
                 if (menuPizzaList.contains(ing[0]) && menuPizzaList.contains(ing[1]) && menuPizzaList.contains(ing[2]))
                 {
                     if (doOnce) {
-                        view += "Pizzas with " + ingredients + ":\n";
+                        view += "Pizzas with "+cc.green + ingredients + ":\n"+cc.reset;
                         doOnce = false;
                     }
                     view = printHelper(view, menuPizzas.get(i));
@@ -147,7 +148,7 @@ public class Menu {
                     menuPizzaList.contains(ing[3]))
                 {
                     if (doOnce) {
-                        view += "Pizzas with " + ingredients + ":\n";
+                        view += "Pizzas with "+cc.green + ingredients + ":\n"+cc.reset;
                         doOnce = false;
                     }
                     view = printHelper(view, menuPizzas.get(i));
@@ -158,7 +159,7 @@ public class Menu {
                     menuPizzaList.contains(ing[3]) && menuPizzaList.contains(ing[4]))
                 {
                     if (doOnce) {
-                        view += "Pizzas with " + ingredients + ":\n";
+                        view += "Pizzas with "+cc.green + ingredients + ":\n"+cc.reset;
                         doOnce = false;
                     }
                     view = printHelper(view, menuPizzas.get(i));
@@ -169,7 +170,7 @@ public class Menu {
                     menuPizzaList.contains(ing[3]) && menuPizzaList.contains(ing[4]) && menuPizzaList.contains(ing[5]))
                 {
                     if (doOnce) {
-                        view += "Pizzas with " + ingredients + ":\n";
+                        view += "Pizzas with "+cc.green + ingredients + ":\n"+cc.reset;
                         doOnce = false;
                     }
                     view = printHelper(view, menuPizzas.get(i));
@@ -181,7 +182,7 @@ public class Menu {
                     menuPizzaList.contains(ing[6]))
                 {
                     if (doOnce) {
-                        view += "Pizzas with " + ingredients + ":\n";
+                        view += "Pizzas with "+cc.green + ingredients + ":\n"+cc.reset;
                         doOnce = false;
                     }
                     view = printHelper(view, menuPizzas.get(i));
@@ -194,10 +195,10 @@ public class Menu {
         }
         //if ingredients don't match any pizza
         if(view == "" && ing.length <= 1){ //for one ingredient
-            view = "There are no pizzas with "+ingredients+".\n";
+            view = "There are no pizzas with "+cc.green+ingredients+".\n"+cc.reset;
         }
         if(view == "" && ing.length > 1 || ing.length > 7){ //for multiple ingredients or if there are more ingredients than is allowed (7)
-            view += "There are no pizzas with ";
+            view += "There are no pizzas with "+cc.green;
             for (int n = 0; n < ing.length; n++) {
                 view += ing[n];
                 if(n < ing.length-2) {
@@ -206,7 +207,7 @@ public class Menu {
                     view += ", and ";
                 }
             }
-            view += ".\n";
+            view += ".\n"+cc.reset;
         }
         if(view.contains("There are no pizzas")){
             //used the "contains()" function to basically just search for the beginning of the failure state message
@@ -228,7 +229,7 @@ public class Menu {
         } else {
             view += " -- \"";
         }
-        view += menuPizzas.getName() + "\"\n";
+        view += cc.green+menuPizzas.getName() + "\"\n"+cc.reset;
         return view;
     }
 
@@ -246,11 +247,13 @@ public class Menu {
             }
         }
 //------//
-        System.out.println("Would you like to make a custom pizza with: "+ingClone+"?\n1-'YES' | 2-'NO'");
+        System.out.println("Would you like to make a custom pizza with: "+cc.green+ingClone+"?"+cc.reset +
+                           "\n1-"+cc.green+"'YES'"+cc.reset+" | 2-"+cc.red+"'NO'"+cc.reset);
         int num = input.nextInt();
         if(num == 1){
             customerPizza.add(new Pizza(ingredients));
-            System.out.println("0 --- \"Custom Pizza\" --- "+ingClone+" --- 85.0kr.\n");
+            System.out.println("0 --- "+cc.green+"\"Custom Pizza\""+cc.reset+" --- "+
+                               ingClone+" --- "+cc.green+"85.0kr.\n"+cc.reset);
         }
     }
 }

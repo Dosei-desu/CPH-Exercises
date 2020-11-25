@@ -11,6 +11,7 @@ public class Mario extends Restaurant{
     ActiveOrders activeOrders;
     OrderHistory orderHistory;
     Statistics statistics;
+    ConsoleColour cc = new ConsoleColour();
 
 //--Constructor (unlike Alfonso's, this one includes OrderHistory, because Mario needs to access its functionality)
     Mario(Menu menu, ActiveOrders activeOrders, OrderHistory orderHistory){
@@ -32,7 +33,7 @@ public class Mario extends Restaurant{
 
 //--View Active Orders
     public void viewActiveOrders(){ //moved from Restaurant, to give Mario some kind of actual purpose
-        System.out.println("Active Orders:\n--------------");
+        System.out.println(cc.blueB+"Active Orders:\n--------------"+cc.reset);
         String view = "";
         for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
             //only prints active orders that aren't tagged "ready" (to prevent ready orders from showing up on the list)
@@ -53,7 +54,7 @@ public class Mario extends Restaurant{
                     } else {
                         view += " -- ";
                     }
-                    view += "\"" + activeOrders.getActiveOrders().get(i).getItems().get(j).getName() + "\" --- ";
+                    view += cc.green+"\"" + activeOrders.getActiveOrders().get(i).getItems().get(j).getName() + "\""+cc.reset+" --- ";
                     for (int k = 0; k < activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients().length; k++) {
                         view += StringUtils.capitalize(activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients()[k].toLowerCase());
                         if (k < activeOrders.getActiveOrders().get(i).getItems().get(j).getIngredients().length - 2) {
@@ -62,17 +63,17 @@ public class Mario extends Restaurant{
                             view += ", and ";
                         }
                     }
-                    view += " --- " + activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice() + "kr.\n";
+                    view += " --- " + cc.green + activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice() + "kr.\n" + cc.reset;
                     sum += activeOrders.getActiveOrders().get(i).getItems().get(j).getPrice();
                 }
-                view += "Total: " + sum + "kr.\n";
+                view += cc.green+"Total: " + sum + "kr.\n"+cc.reset;
             }
         }
         if (view.equals("")) {
-            view = "No active orders";
+            view = cc.redB+"No active orders"+cc.reset;
         }
         System.out.println(view);
-        System.out.println("--------------");
+        System.out.println(cc.blueB+"--------------"+cc.reset);
     }
 
 //--Make Orders (i.e. select an order to "make" (i.e.i.e. set as "ready"))
@@ -85,9 +86,9 @@ public class Mario extends Restaurant{
                 for (int i = 0; i < activeOrders.getActiveOrders().size(); i++) {
                     if (id == activeOrders.getActiveOrders().get(i).getId()) {
                         activeOrders.getActiveOrders().get(i).setReady(true);
-                        System.out.println("Order #" + id + " has been made\n");
+                        System.out.println(cc.green+"Order #" + id + " has been made\n"+cc.reset);
                     } else {
-                        System.out.println("Order #" + id + " doesn't exist\n");
+                        System.out.println(cc.red+"Order #" + id + " doesn't exist\n"+cc.reset);
                     }
                 }
             }else{
@@ -95,7 +96,7 @@ public class Mario extends Restaurant{
             }
         }
         catch (InputMismatchException ex){
-            System.out.println("Input mismatch error!\n");
+            System.out.println(cc.red+"Input mismatch error!\n"+cc.reset);
             input.nextLine();
             makeOrders();
         }

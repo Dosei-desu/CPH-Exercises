@@ -10,11 +10,11 @@ import java.util.LinkedList;
 
 public class Order {
     int id;
-    long created;
     Timestamp created_at;
     boolean ready, delivered, remote;
     LinkedList<Pizza> items;
     Customer customer;
+    //long created; //old
 
     Order(int _id, boolean _remote, LinkedList<Pizza> _items, Customer _customer) {
         this.id = _id;
@@ -69,13 +69,6 @@ public class Order {
         this.created_at = created_at;
     }
 
-    //not in use
-    public String getCreated() {
-        Date currentDate = new Date(this.created);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss");
-        String date = dateFormat.format(currentDate);
-        return date;
-    }
 
     public boolean isRemote() {
         return remote;
@@ -100,4 +93,15 @@ public class Order {
     public LinkedList<Pizza> getItems() {
         return items;
     }
+
+    //not in use
+/*
+    public String getCreated() {
+        Date currentDate = new Date(this.created);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss");
+        String date = dateFormat.format(currentDate);
+        return date;
+    }
+
+*/
 }

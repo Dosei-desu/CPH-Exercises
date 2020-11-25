@@ -1,4 +1,4 @@
--- CREATE DATABSE marios_pizzabar;
+-- CREATE DATABASE marios_pizzabar;
 USE marios_pizzabar;
 
 /*
@@ -6,7 +6,7 @@ CREATE TABLE Order_history(
 -- Id becomes an auto-incrementing primary key
 	id int NOT NULL AUTO_INCREMENT,
 -- timestamp
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,`pizza_ingredients (old)`
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 -- unique id for customer
 	unique_id varchar(4) NOT NULL,
 	delivered BOOLEAN NOT NULL,

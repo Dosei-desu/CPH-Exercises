@@ -14,6 +14,7 @@ public class Statistics {
     OrderHistory orderHistory;
     List<String> orderHistoryList = new ArrayList<>();
     List<String> orderHistoryIngredientsList = new ArrayList<>();
+    ConsoleColour cc = new ConsoleColour();
 
     Statistics(OrderHistory orderHistory){
         this.orderHistory = orderHistory;
@@ -58,7 +59,7 @@ public class Statistics {
 
     public void stats(){ //find names and count them, then calculate % occurrence based on that
         if(orderHistoryList.size() > 0) {
-            System.out.println("Occurrence statistics of delivered orders\n-----------------------------------------");
+            System.out.println(cc.blueB+"Occurrence statistics of delivered orders\n-----------------------------------------"+cc.reset);
             for (int i = 0; i < orderHistoryList.size(); i++) {
                 if (i > 0) {
                     //ensures no duplicates (easy because of the sorting done above)
@@ -68,23 +69,23 @@ public class Statistics {
                         double count = Collections.frequency(orderHistoryList, orderHistoryList.get(i));
                         //the 'String.format("%.1f",number)' limits the number of decimal places
                         System.out.println(
-                                "\"" + orderHistoryList.get(i) + "\" makes up " +
+                                cc.green+"\"" + orderHistoryList.get(i) + "\""+cc.reset+" makes up "+cc.green +
                                 (String.format("%.1f", (count / orderHistoryList.size()) * 100)) +
-                                "% of all orders"
+                                "%"+cc.reset+" of all orders"
                         );
                     }
                 } else {
                     //same as above, but without the "if()" statement (handles the cases when there is only 1 item on the list)
                     double count = Collections.frequency(orderHistoryList, orderHistoryList.get(i));
                     System.out.println(
-                            "\"" + orderHistoryList.get(i) + "\" makes up " +
+                            cc.green+"\"" + orderHistoryList.get(i) + "\""+cc.reset+" makes up "+cc.green +
                             (String.format("%.1f", (count / orderHistoryList.size()) * 100)) +
-                            "% of all orders"
+                            "%"+cc.reset+" of all orders"
                     );
                 }
             }
 
-            System.out.println("\nOccurrence statistics of most popular toppings\n-----------------------------------------");
+            System.out.println(cc.blueB+"\nOccurrence statistics of most popular toppings\n-----------------------------------------"+cc.reset);
             for (int i = 0; i < orderHistoryIngredientsList.size(); i++) {
                 if (i > 0) {
                     //ensures no duplicates (easy because of the sorting done above)
@@ -99,17 +100,17 @@ public class Statistics {
                         double count = Collections.frequency(orderHistoryIngredientsList, orderHistoryIngredientsList.get(i));
                         //the 'String.format("%.1f",number)' limits the number of decimal places
                         System.out.println(
-                                "\"" + orderHistoryIngredientsList.get(i) + "\" makes up " +
+                                cc.green+"\"" + orderHistoryIngredientsList.get(i) + "\""+cc.reset+" makes up "+cc.green +
                                 (String.format("%.1f", (count / orderHistoryIngredientsList.size()) * 100)) +
-                                "% of all toppings"
+                                "%"+cc.reset+" of all toppings"
                         );
                     }
                 }
             }
 
-            System.out.println("-----------------------------------------\n");
+            System.out.println(cc.blueB+"-----------------------------------------\n"+cc.reset);
         }else{
-            System.out.println("No statistics available\n");
+            System.out.println(cc.red+"No statistics available\n"+cc.reset);
         }
     }
 }

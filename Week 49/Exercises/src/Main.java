@@ -188,15 +188,21 @@ public class Main {
     */
 
     public static void quadrantMethod(){
+        System.out.println("Enter in a number followed by a symbol:");
         Scanner input = new Scanner(System.in);
         try {
             int number = input.nextInt();
+            String sign = input.next();
             if(number < 0 || number > 40){
                 System.out.println("Cannot print to screen!");
             } else {
                 for (int i = 0; i < number; i++) {
                     for (int j = 0; j < number; j++) {
-                        System.out.print("*");
+                        if(sign.equals("") || sign.equals(" ")) {
+                            System.out.print("*");
+                        }else {
+                            System.out.print(sign);
+                        }
                         if (j < number - 1) {
                             System.out.print("  ");
                         }

@@ -2,238 +2,448 @@ import processing.core.PApplet;
 
 public class Arena01 extends PApplet { //has to also extend the processing app
     private PApplet sketch;
-    private float x, y;
+    private float x, y, pX, pY, pSize;
+    int lArraySize = 143;
+    float[] lX1 = new float[lArraySize];
+    float[] lX2 = new float[lArraySize];
+    float[] lY1 = new float[lArraySize];
+    float[] lY2 = new float[lArraySize];
 
-    Arena01(PApplet sketch, float x, float y){
+    Arena01(PApplet sketch, float x, float y, float pX, float pY, float pSize){
         this.sketch = sketch; //necessary to define what sketch is being used, without this, the class would require
                               //a draw, setup, settings, and so on
         this.x = x;
         this.y = y;
+        this.pX = pX;
+        this.pY = pY;
+        this.pSize = pSize;
     }
 
-    public void render(){ //8x8 cells each 80x80 pixels, with the player taking up 40x40 roughly
-        //formatting
+    public boolean collision(float pX, float pY){
+        for (int n = 0; n < lArraySize; ++n) {
+            if(lineCircle(lX1[n], lY1[n], lX2[n], lY2[n], pX, pY, pSize/2)){
+                System.out.println("Collision!");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //collision detection:
+    boolean lineCircle(float x1, float y1, float x2, float y2, float px, float py, float pSize) {
+        //detects if either is inside the circle
+        boolean inside1 = pointCircle(x1, y1, px, py, pSize);
+        boolean inside2 = pointCircle(x2, y2, px, py, pSize);
+        if (inside1 || inside2) {
+            return true;
+        }
+
+        // get length of the line
+        float distX = x1 - x2;
+        float distY = y1 - y2;
+        float len = sqrt( (distX*distX) + (distY*distY) );
+
+        // get dot product of the line and circle
+        float dot = (((px-x1)*(x2-x1)) + ((py-y1)*(y2-y1))) / pow(len, 2);
+
+        // find the closest point on the line
+        float closestX = x1 + (dot * (x2-x1));
+        float closestY = y1 + (dot * (y2-y1));
+
+        // is this point actually on the line segment?
+        // if so keep going, but if not, return false
+        boolean onSegment = linePoint(x1, y1, x2, y2, closestX, closestY);
+        if (!onSegment) return false;
+
+        // optionally, draw a circle at the closest
+        // point on the line
+        //fill(0,0,0,0); //invisible, but can be changed to something like fill(0,255,0,255); to debug collisions
+        //noStroke();
+        //ellipse(closestX, closestY, 5, 5);
+
+        // get distance to closest point
+        distX = closestX - px;
+        distY = closestY - py;
+        float distance = sqrt( (distX*distX) + (distY*distY) );
+
+        if (distance <= pSize) {
+            return true;
+        }
+        return false;
+    }
+
+    boolean pointCircle(float pointx, float pointy, float px, float py, float pSize) {
+        // get distance between the point and circle's center
+        // using the Pythagorean Theorem
+        float distX = pointx - px;
+        float distY = pointy - py;
+        float distance = sqrt((distX*distX) + (distY*distY));
+
+        // if the distance is less than the circle's
+        // radius the point is inside!
+        if (distance <= pSize) {
+            return true;
+        }
+        return false;
+    }
+
+    boolean linePoint(float x1, float y1, float x2, float y2, float pointx, float pointy) {
+        // get distance from the point to the two ends of the line
+        float d1 = dist(pointx,pointy, x1,y1);
+        float d2 = dist(pointx,pointy, x2,y2);
+
+        // get the length of the line
+        float lineLen = dist(x1,y1, x2,y2);
+
+        // since floats are so minutely accurate, add
+        // a little buffer zone that will give collision
+        float buffer = (float)0.1;    // higher # = less accurate
+
+        // if the two distances are equal to the line's
+        // length, the point is on the line!
+        // note we use the buffer here to give a range,
+        // rather than one #
+        if (d1+d2 >= lineLen-buffer && d1+d2 <= lineLen+buffer) {
+            return true;
+        }
+        return false;
+    }
+
+    public void render(){
+        //8x8 cells each 80x80 pixels, with the player taking up 30x30 roughly
+
+//----------//formatting
         sketch.noFill();
         sketch.stroke(250,50,50);
         sketch.strokeWeight(4);
-        //perimeter
+
+//----------//array stuff
+        int n = 0;
+
+//----------//perimeter
         sketch.line(x-320,y-270,x+320,y-270);
-        sketch.beginShape();
-        sketch.vertex(x-320,y+5);
-        sketch.vertex(x-200,y+5);
-        sketch.vertex(x-200,y-75);
-        sketch.vertex(x-310,y-75);
-        sketch.vertex(x-310,y-260);
-        sketch.vertex(x-10,y-260);
-        sketch.vertex(x-10,y-180);
-        sketch.vertex(x+10,y-180);
-        sketch.vertex(x+10,y-260);
-        sketch.vertex(x+310,y-260);
-        sketch.vertex(x+310,y-75);
-        sketch.vertex(x+200,y-75);
-        sketch.vertex(x+200,y+5);
-        sketch.vertex(x+320,y+5);
-        sketch.vertex(x+320,y+50);
-        sketch.vertex(x+200,y+50);
-        sketch.vertex(x+200,y+130);
-        sketch.vertex(x+310,y+130);
-        sketch.vertex(x+310,y+235);
-        sketch.vertex(x+265,y+235);
-        sketch.vertex(x+265,y+255);
-        sketch.vertex(x+310,y+255);
-        sketch.vertex(x+310,y+360);
-        sketch.vertex(x-310,y+360);
-        sketch.vertex(x-310,y+255);
-        sketch.vertex(x-265,y+255);
-        sketch.vertex(x-265,y+235);
-        sketch.vertex(x-310,y+235);
-        sketch.vertex(x-310,y+130);
-        sketch.vertex(x-200,y+130);
-        sketch.vertex(x-200,y+50);
-        sketch.vertex(x-320,y+50);
-        sketch.endShape(CLOSE);
-        //top half
-            //top row
+        lX1[n] = x-320; lY1[n] = y+5; lX2[n] = x-200; lY2[n] = y+5;
+        n++;
+        lX1[n] = x-200; lY1[n] = y+5; lX2[n] = x-200; lY2[n] = y-75;
+        n++;
+        lX1[n] = x-200; lY1[n] = y-75; lX2[n] = x-310; lY2[n] = y-75;
+        n++;
+        lX1[n] = x-310; lY1[n] = y-75; lX2[n] = x-310; lY2[n] = y-260;
+        n++;
+        lX1[n] = x-310; lY1[n] = y-260; lX2[n] = x-10; lY2[n] = y-260;
+        n++;
+        lX1[n] = x-10; lY1[n] = y-260; lX2[n] = x-10; lY2[n] = y-180;
+        n++;
+        lX1[n] = x-10; lY1[n] = y-180; lX2[n] = x+10; lY2[n] = y-180;
+        n++;
+        lX1[n] = x+10; lY1[n] = y-180; lX2[n] = x+10; lY2[n] = y-260;
+        n++;
+        lX1[n] = x+10; lY1[n] = y-260; lX2[n] = x+310; lY2[n] = y-260;
+        n++;
+        lX1[n] = x+310; lY1[n] = y-260; lX2[n] = x+310; lY2[n] = y-75;
+        n++;
+        lX1[n] = x+310; lY1[n] = y-75; lX2[n] = x+200; lY2[n] = y-75;
+        n++;
+        lX1[n] = x+200; lY1[n] = y-75; lX2[n] = x+200; lY2[n] = y+5;
+        n++;
+        lX1[n] = x+200; lY1[n] = y+5; lX2[n] = x+320; lY2[n] = y+5;
+        n++;
+        lX1[n] = x+320; lY1[n] = y+50; lX2[n] = x+200; lY2[n] = y+50;
+        n++;
+        lX1[n] = x+200; lY1[n] = y+50; lX2[n] = x+200; lY2[n] = y+130;
+        n++;
+        lX1[n] = x+200; lY1[n] = y+130; lX2[n] = x+310; lY2[n] = y+130;
+        n++;
+        lX1[n] = x+310; lY1[n] = y+130; lX2[n] = x+310; lY2[n] = y+235;
+        n++;
+        lX1[n] = x+310; lY1[n] = y+235; lX2[n] = x+265; lY2[n] = y+235;
+        n++;
+        lX1[n] = x+265; lY1[n] = y+235; lX2[n] = x+265; lY2[n] = y+255;
+        n++;
+        lX1[n] = x+265; lY1[n] = y+255; lX2[n] = x+310; lY2[n] = y+255;
+        n++;
+        lX1[n] = x+310; lY1[n] = y+255; lX2[n] = x+310; lY2[n] = y+360;
+        n++;
+        lX1[n] = x+310; lY1[n] = y+360; lX2[n] = x-310; lY2[n] = y+360;
+        n++;
+        lX1[n] = x-310; lY1[n] = y+360; lX2[n] = x-310; lY2[n] = y+255;
+        n++;
+        lX1[n] = x-310; lY1[n] = y+255; lX2[n] = x-265; lY2[n] = y+255;
+        n++;
+        lX1[n] = x-265; lY1[n] = y+255; lX2[n] = x-265; lY2[n] = y+235;
+        n++;
+        lX1[n] = x-265; lY1[n] = y+235; lX2[n] = x-310; lY2[n] = y+235;
+        n++;
+        lX1[n] = x-310; lY1[n] = y+235; lX2[n] = x-310; lY2[n] = y+130;
+        n++;
+        lX1[n] = x-310; lY1[n] = y+130; lX2[n] = x-200; lY2[n] = y+130;
+        n++;
+        lX1[n] = x-200; lY1[n] = y+130; lX2[n] = x-200; lY2[n] = y+50;
+        n++;
+        lX1[n] = x-200; lY1[n] = y+50; lX2[n] = x-320; lY2[n] = y+50;
+
+//----------//top row
                 //box 1
-        sketch.beginShape();
-        sketch.vertex(x-260,y-220);
-        sketch.vertex(x-200,y-220);
-        sketch.vertex(x-200,y-180);
-        sketch.vertex(x-260,y-180);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-260; lY1[n] = y-220; lX2[n] = x-200; lY2[n] = y-220;
+        n++;
+        lX1[n] = x-200; lY1[n] = y-220; lX2[n] = x-200; lY2[n] = y-180;
+        n++;
+        lX1[n] = x-200; lY1[n] = y-180; lX2[n] = x-260; lY2[n] = y-180;
+        n++;
+        lX1[n] = x-260; lY1[n] = y-180; lX2[n] = x-260; lY2[n] = y-220;
                 //box 2
-        sketch.beginShape();
-        sketch.vertex(x-145,y-220);
-        sketch.vertex(x-60,y-220);
-        sketch.vertex(x-60,y-180);
-        sketch.vertex(x-145,y-180);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-145; lY1[n] = y-220; lX2[n] = x-60; lY2[n] = y-220;
+        n++;
+        lX1[n] = x-60; lY1[n] = y-220; lX2[n] = x-60; lY2[n] = y-180;
+        n++;
+        lX1[n] = x-60; lY1[n] = y-180; lX2[n] = x-145; lY2[n] = y-180;
+        n++;
+        lX1[n] = x-145; lY1[n] = y-180; lX2[n] = x-145; lY2[n] = y-220;
                 //box 3
-        sketch.beginShape();
-        sketch.vertex(x+145,y-220);
-        sketch.vertex(x+60,y-220);
-        sketch.vertex(x+60,y-180);
-        sketch.vertex(x+145,y-180);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x+145; lY1[n] = y-220; lX2[n] = x+60; lY2[n] = y-220;
+        n++;
+        lX1[n] = x+60; lY1[n] = y-220; lX2[n] = x+60; lY2[n] = y-180;
+        n++;
+        lX1[n] = x+60; lY1[n] = y-180; lX2[n] = x+145; lY2[n] = y-180;
+        n++;
+        lX1[n] = x+145; lY1[n] = y-180; lX2[n] = x+145; lY2[n] = y-220;
                 //box 4
-        sketch.beginShape();
-        sketch.vertex(x+260,y-220);
-        sketch.vertex(x+200,y-220);
-        sketch.vertex(x+200,y-180);
-        sketch.vertex(x+260,y-180);
-        sketch.endShape(CLOSE);
-            //second row
+        n++;
+        lX1[n] = x+260; lY1[n] = y-220; lX2[n] = x+200; lY2[n] = y-220;
+        n++;
+        lX1[n] = x+200; lY1[n] = y-220; lX2[n] = x+200; lY2[n] = y-180;
+        n++;
+        lX1[n] = x+200; lY1[n] = y-180; lX2[n] = x+260; lY2[n] = y-180;
+        n++;
+        lX1[n] = x+260; lY1[n] = y-180; lX2[n] = x+260; lY2[n] = y-220;
+
+//----------//second row
                 //box 1
-        sketch.beginShape();
-        sketch.vertex(x-260,y-135);
-        sketch.vertex(x-200,y-135);
-        sketch.vertex(x-200,y-115);
-        sketch.vertex(x-260,y-115);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-260; lY1[n] = y-135; lX2[n] = x-200; lY2[n] = y-135;
+        n++;
+        lX1[n] = x-200; lY1[n] = y-135; lX2[n] = x-200; lY2[n] = y-115;
+        n++;
+        lX1[n] = x-200; lY1[n] = y-115; lX2[n] = x-260; lY2[n] = y-115;
+        n++;
+        lX1[n] = x-260; lY1[n] = y-115; lX2[n] = x-260; lY2[n] = y-135;
                 //t-shape 1
-        sketch.beginShape();
-        sketch.vertex(x-145,y-135);
-        sketch.vertex(x-125,y-135);
-        sketch.vertex(x-125,y-75);
-        sketch.vertex(x-60,y-75);
-        sketch.vertex(x-60,y-55);
-        sketch.vertex(x-125,y-55);
-        sketch.vertex(x-125,y+5);
-        sketch.vertex(x-145,y+5);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-145; lY1[n] = y-135; lX2[n] = x-125; lY2[n] = y-135;
+        n++;
+        lX1[n] = x-125; lY1[n] = y-135; lX2[n] = x-125; lY2[n] = y-75;
+        n++;
+        lX1[n] = x-125; lY1[n] = y-75; lX2[n] = x-60; lY2[n] = y-75;
+        n++;
+        lX1[n] = x-60; lY1[n] = y-75; lX2[n] = x-60; lY2[n] = y-55;
+        n++;
+        lX1[n] = x-60; lY1[n] = y-55; lX2[n] = x-125; lY2[n] = y-55;
+        n++;
+        lX1[n] = x-125; lY1[n] = y-55; lX2[n] = x-125; lY2[n] = y+5;
+        n++;
+        lX1[n] = x-125; lY1[n] = y+5; lX2[n] = x-145; lY2[n] = y+5;
+        n++;
+        lX1[n] = x-145; lY1[n] = y+5; lX2[n] = x-145; lY2[n] = y-135;
                 //t-shape 2
-        sketch.beginShape();
-        sketch.vertex(x-75,y-135);
-        sketch.vertex(x+75,y-135);
-        sketch.vertex(x+75,y-115);
-        sketch.vertex(x+10,y-115);
-        sketch.vertex(x+10,y-55);
-        sketch.vertex(x-10,y-55);
-        sketch.vertex(x-10,y-115);
-        sketch.vertex(x-75,y-115);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-75; lY1[n] = y-135; lX2[n] = x+75; lY2[n] = y-135;
+        n++;
+        lX1[n] = x+75; lY1[n] = y-135; lX2[n] = x+75; lY2[n] = y-115;
+        n++;
+        lX1[n] = x+75; lY1[n] = y-115; lX2[n] = x+10; lY2[n] = y-115;
+        n++;
+        lX1[n] = x+10; lY1[n] = y-115; lX2[n] = x+10; lY2[n] = y-55;
+        n++;
+        lX1[n] = x+10; lY1[n] = y-55; lX2[n] = x-10; lY2[n] = y-55;
+        n++;
+        lX1[n] = x-10; lY1[n] = y-55; lX2[n] = x-10; lY2[n] = y-115;
+        n++;
+        lX1[n] = x-10; lY1[n] = y-115; lX2[n] = x-75; lY2[n] = y-115;
+        n++;
+        lX1[n] = x-75; lY1[n] = y-115; lX2[n] = x-75; lY2[n] = y-135;
                 //t-shape 3
-        sketch.beginShape();
-        sketch.vertex(x+145,y-135);
-        sketch.vertex(x+125,y-135);
-        sketch.vertex(x+125,y-75);
-        sketch.vertex(x+60,y-75);
-        sketch.vertex(x+60,y-55);
-        sketch.vertex(x+125,y-55);
-        sketch.vertex(x+125,y+5);
-        sketch.vertex(x+145,y+5);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x+145; lY1[n] = y-135; lX2[n] = x+125; lY2[n] = y-135;
+        n++;
+        lX1[n] = x+125; lY1[n] = y-135; lX2[n] = x+125; lY2[n] = y-75;
+        n++;
+        lX1[n] = x+125; lY1[n] = y-75; lX2[n] = x+60; lY2[n] = y-75;
+        n++;
+        lX1[n] = x+60; lY1[n] = y-75; lX2[n] = x+60; lY2[n] = y-55;
+        n++;
+        lX1[n] = x+60; lY1[n] = y-55; lX2[n] = x+125; lY2[n] = y-55;
+        n++;
+        lX1[n] = x+125; lY1[n] = y-55; lX2[n] = x+125; lY2[n] = y+5;
+        n++;
+        lX1[n] = x+125; lY1[n] = y+5; lX2[n] = x+145; lY2[n] = y+5;
+        n++;
+        lX1[n] = x+145; lY1[n] = y+5; lX2[n] = x+145; lY2[n] = y-135;
                 //box 1
-        sketch.beginShape();
-        sketch.vertex(x+260,y-135);
-        sketch.vertex(x+200,y-135);
-        sketch.vertex(x+200,y-115);
-        sketch.vertex(x+260,y-115);
-        sketch.endShape(CLOSE);
-            //middle box
-        sketch.beginShape();
-        sketch.vertex(x-80,y-10);
-        sketch.vertex(x+75,y-10);
-        sketch.vertex(x+75,y+70);
-        sketch.vertex(x-80,y+70);
-        sketch.endShape(CLOSE);
-        sketch.stroke(0);
-        sketch.strokeWeight(6);
-        sketch.line(x-20,y-10,x+20,y-10);
-        sketch.strokeWeight(4);
-        sketch.stroke(250,50,50);
-            //third row
+        n++;
+        lX1[n] = x+260; lY1[n] = y-135; lX2[n] = x+200; lY2[n] = y-135;
+        n++;
+        lX1[n] = x+200; lY1[n] = y-135; lX2[n] = x+200; lY2[n] = y-115;
+        n++;
+        lX1[n] = x+200; lY1[n] = y-115; lX2[n] = x+260; lY2[n] = y-115;
+        n++;
+        lX1[n] = x+260; lY1[n] = y-115; lX2[n] = x+260; lY2[n] = y-135;
+
+//----------//middle box
+        n++;
+        lX1[n] = x-20; lY1[n] = y-10; lX2[n] = x-80; lY2[n] = y-10;
+        n++;
+        lX1[n] = x-80; lY1[n] = y-10; lX2[n] = x-80; lY2[n] = y+70;
+        n++;
+        lX1[n] = x-80; lY1[n] = y+70; lX2[n] = x+75; lY2[n] = y+70;
+        n++;
+        lX1[n] = x+75; lY1[n] = y+70; lX2[n] = x+75; lY2[n] = y-10;
+        n++;
+        lX1[n] = x+75; lY1[n] = y-10; lX2[n] = x+20; lY2[n] = y-10;
+
+//----------//third row
                 //box 1
-        sketch.beginShape();
-        sketch.vertex(x-145,y+50);
-        sketch.vertex(x-125,y+50);
-        sketch.vertex(x-125,y+130);
-        sketch.vertex(x-145,y+130);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-145; lY1[n] = y+50; lX2[n] = x-125; lY2[n] = y+50;
+        n++;
+        lX1[n] = x-125; lY1[n] = y+50; lX2[n] = x-125; lY2[n] = y+130;
+        n++;
+        lX1[n] = x-125; lY1[n] = y+130; lX2[n] = x-145; lY2[n] = y+130;
+        n++;
+        lX1[n] = x-145; lY1[n] = y+130; lX2[n] = x-145; lY2[n] = y+50;
                 //t-shape 1
-        sketch.beginShape();
-        sketch.vertex(x-75,y+110);
-        sketch.vertex(x+75,y+110);
-        sketch.vertex(x+75,y+130);
-        sketch.vertex(x+10,y+130);
-        sketch.vertex(x+10,y+195);
-        sketch.vertex(x-10,y+195);
-        sketch.vertex(x-10,y+130);
-        sketch.vertex(x-75,y+130);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-75; lY1[n] = y+110; lX2[n] = x+75; lY2[n] = y+110;
+        n++;
+        lX1[n] = x+75; lY1[n] = y+110; lX2[n] = x+75; lY2[n] = y+130;
+        n++;
+        lX1[n] = x+75; lY1[n] = y+130; lX2[n] = x+10; lY2[n] = y+130;
+        n++;
+        lX1[n] = x+10; lY1[n] = y+130; lX2[n] = x+10; lY2[n] = y+195;
+        n++;
+        lX1[n] = x+10; lY1[n] = y+195; lX2[n] = x-10; lY2[n] = y+195;
+        n++;
+        lX1[n] = x-10; lY1[n] = y+195; lX2[n] = x-10; lY2[n] = y+130;
+        n++;
+        lX1[n] = x-10; lY1[n] = y+130; lX2[n] = x-75; lY2[n] = y+130;
+        n++;
+        lX1[n] = x-75; lY1[n] = y+130; lX2[n] = x-75; lY2[n] = y+110;
                 //box 2
-        sketch.beginShape();
-        sketch.vertex(x+145,y+50);
-        sketch.vertex(x+125,y+50);
-        sketch.vertex(x+125,y+130);
-        sketch.vertex(x+145,y+130);
-        sketch.endShape(CLOSE);
-            //fourth row
+        n++;
+        lX1[n] = x+145; lY1[n] = y+50; lX2[n] = x+125; lY2[n] = y+50;
+        n++;
+        lX1[n] = x+125; lY1[n] = y+50; lX2[n] = x+125; lY2[n] = y+130;
+        n++;
+        lX1[n] = x+125; lY1[n] = y+130; lX2[n] = x+145; lY2[n] = y+130;
+        n++;
+        lX1[n] = x+145; lY1[n] = y+130; lX2[n] = x+145; lY2[n] = y+50;
+
+//----------//fourth row
                 //l-shape 1
-        sketch.beginShape();
-        sketch.vertex(x-260,y+175);
-        sketch.vertex(x-200,y+175);
-        sketch.vertex(x-200,y+255);
-        sketch.vertex(x-220,y+255);
-        sketch.vertex(x-220,y+195);
-        sketch.vertex(x-260,y+195);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-260; lY1[n] = y+175; lX2[n] = x-200; lY2[n] = y+175;
+        n++;
+        lX1[n] = x-200; lY1[n] = y+175; lX2[n] = x-200; lY2[n] = y+255;
+        n++;
+        lX1[n] = x-200; lY1[n] = y+255; lX2[n] = x-220; lY2[n] = y+255;
+        n++;
+        lX1[n] = x-220; lY1[n] = y+255; lX2[n] = x-220; lY2[n] = y+195;
+        n++;
+        lX1[n] = x-220; lY1[n] = y+195; lX2[n] = x-260; lY2[n] = y+195;
+        n++;
+        lX1[n] = x-260; lY1[n] = y+195; lX2[n] = x-260; lY2[n] = y+175;
                 //box 1
-        sketch.beginShape();
-        sketch.vertex(x-145,y+175);
-        sketch.vertex(x-60,y+175);
-        sketch.vertex(x-60,y+195);
-        sketch.vertex(x-145,y+195);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-145; lY1[n] = y+175; lX2[n] = x-60; lY2[n] = y+175;
+        n++;
+        lX1[n] = x-60; lY1[n] = y+175; lX2[n] = x-60; lY2[n] = y+195;
+        n++;
+        lX1[n] = x-60; lY1[n] = y+195; lX2[n] = x-145; lY2[n] = y+195;
+        n++;
+        lX1[n] = x-145; lY1[n] = y+195; lX2[n] = x-145; lY2[n] = y+175;
                 //box 2
-        sketch.beginShape();
-        sketch.vertex(x+145,y+175);
-        sketch.vertex(x+60,y+175);
-        sketch.vertex(x+60,y+195);
-        sketch.vertex(x+145,y+195);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x+145; lY1[n] = y+175; lX2[n] = x+60; lY2[n] = y+175;
+        n++;
+        lX1[n] = x+60; lY1[n] = y+175; lX2[n] = x+60; lY2[n] = y+195;
+        n++;
+        lX1[n] = x+60; lY1[n] = y+195; lX2[n] = x+145; lY2[n] = y+195;
+        n++;
+        lX1[n] = x+145; lY1[n] = y+195; lX2[n] = x+145; lY2[n] = y+175;
                 //l-shape 2
-        sketch.beginShape();
-        sketch.vertex(x+260,y+175);
-        sketch.vertex(x+200,y+175);
-        sketch.vertex(x+200,y+255);
-        sketch.vertex(x+220,y+255);
-        sketch.vertex(x+220,y+195);
-        sketch.vertex(x+260,y+195);
-        sketch.endShape(CLOSE);
-            //bottom row
+        n++;
+        lX1[n] = x+260; lY1[n] = y+175; lX2[n] = x+200; lY2[n] = y+175;
+        n++;
+        lX1[n] = x+200; lY1[n] = y+175; lX2[n] = x+200; lY2[n] = y+255;
+        n++;
+        lX1[n] = x+200; lY1[n] = y+255; lX2[n] = x+220; lY2[n] = y+255;
+        n++;
+        lX1[n] = x+220; lY1[n] = y+255; lX2[n] = x+220; lY2[n] = y+195;
+        n++;
+        lX1[n] = x+220; lY1[n] = y+195; lX2[n] = x+260; lY2[n] = y+195;
+        n++;
+        lX1[n] = x+260; lY1[n] = y+195; lX2[n] = x+260; lY2[n] = y+175;
+
+//----------//bottom row
                 //t-shape 1
-        sketch.beginShape();
-        sketch.vertex(x-260,y+300);
-        sketch.vertex(x-145,y+300);
-        sketch.vertex(x-145,y+235);
-        sketch.vertex(x-125,y+235);
-        sketch.vertex(x-125,y+300);
-        sketch.vertex(x-60,y+300);
-        sketch.vertex(x-60,y+320);
-        sketch.vertex(x-260,y+320);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-260; lY1[n] = y+300; lX2[n] = x-145; lY2[n] = y+300;
+        n++;
+        lX1[n] = x-145; lY1[n] = y+300; lX2[n] = x-145; lY2[n] = y+235;
+        n++;
+        lX1[n] = x-145; lY1[n] = y+235; lX2[n] = x-125; lY2[n] = y+235;
+        n++;
+        lX1[n] = x-125; lY1[n] = y+235; lX2[n] = x-125; lY2[n] = y+300;
+        n++;
+        lX1[n] = x-125; lY1[n] = y+300; lX2[n] = x-60; lY2[n] = y+300;
+        n++;
+        lX1[n] = x-60; lY1[n] = y+300; lX2[n] = x-60; lY2[n] = y+320;
+        n++;
+        lX1[n] = x-60; lY1[n] = y+320; lX2[n] = x-260; lY2[n] = y+320;
+        n++;
+        lX1[n] = x-260; lY1[n] = y+320; lX2[n] = x-260; lY2[n] = y+300;
                 //t-shape 2
-        sketch.beginShape();
-        sketch.vertex(x-75,y+235);
-        sketch.vertex(x+75,y+235);
-        sketch.vertex(x+75,y+255);
-        sketch.vertex(x+10,y+255);
-        sketch.vertex(x+10,y+320);
-        sketch.vertex(x-10,y+320);
-        sketch.vertex(x-10,y+255);
-        sketch.vertex(x-75,y+255);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x-75; lY1[n] = y+235; lX2[n] = x+75; lY2[n] = y+235;
+        n++;
+        lX1[n] = x+75; lY1[n] = y+235; lX2[n] = x+75; lY2[n] = y+255;
+        n++;
+        lX1[n] = x+75; lY1[n] = y+255; lX2[n] = x+10; lY2[n] = y+255;
+        n++;
+        lX1[n] = x+10; lY1[n] = y+255; lX2[n] = x+10; lY2[n] = y+320;
+        n++;
+        lX1[n] = x+10; lY1[n] = y+320; lX2[n] = x-10; lY2[n] = y+320;
+        n++;
+        lX1[n] = x-10; lY1[n] = y+320; lX2[n] = x-10; lY2[n] = y+255;
+        n++;
+        lX1[n] = x-10; lY1[n] = y+255; lX2[n] = x-75; lY2[n] = y+255;
+        n++;
+        lX1[n] = x-75; lY1[n] = y+255; lX2[n] = x-75; lY2[n] = y+235;
                 //t-shape 3
-        sketch.beginShape();
-        sketch.vertex(x+260,y+300);
-        sketch.vertex(x+145,y+300);
-        sketch.vertex(x+145,y+235);
-        sketch.vertex(x+125,y+235);
-        sketch.vertex(x+125,y+300);
-        sketch.vertex(x+60,y+300);
-        sketch.vertex(x+60,y+320);
-        sketch.vertex(x+260,y+320);
-        sketch.endShape(CLOSE);
+        n++;
+        lX1[n] = x+260; lY1[n] = y+300; lX2[n] = x+145; lY2[n] = y+300;
+        n++;
+        lX1[n] = x+145; lY1[n] = y+300; lX2[n] = x+145; lY2[n] = y+235;
+        n++;
+        lX1[n] = x+145; lY1[n] = y+235; lX2[n] = x+125; lY2[n] = y+235;
+        n++;
+        lX1[n] = x+125; lY1[n] = y+235; lX2[n] = x+125; lY2[n] = y+300;
+        n++;
+        lX1[n] = x+125; lY1[n] = y+300; lX2[n] = x+60; lY2[n] = y+300;
+        n++;
+        lX1[n] = x+60; lY1[n] = y+300; lX2[n] = x+60; lY2[n] = y+320;
+        n++;
+        lX1[n] = x+60; lY1[n] = y+320; lX2[n] = x+260; lY2[n] = y+320;
+        n++;
+        lX1[n] = x+260; lY1[n] = y+320; lX2[n] = x+260; lY2[n] = y+300;
+
+        //actual render bit:
+        for (int i = 0; i < lArraySize; ++i) {
+            sketch.stroke(250,50,50);
+            sketch.strokeWeight(4);
+            sketch.line(lX1[i], lY1[i], lX2[i], lY2[i]);
+        }
     }
 }

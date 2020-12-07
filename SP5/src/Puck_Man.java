@@ -6,9 +6,11 @@ public class Puck_Man extends PApplet {
 //--variables
     boolean paused = false;
         //player
-    float playerX = 265, playerY = 585;
+    float playerX = 265, playerY = 585, playerSize = 35;
+    boolean aDown = false, sDown = false, dDown = false, wDown = false;
+    float playerSpeed = 3;
         //arenas
-    Arena01 pManArena01 = new Arena01(this,320,370);
+    Arena01 pManArena01 = new Arena01(this,320,370,playerX,playerY,playerSize);
     //since this^ is defined prior to the Size() initialisation, width and height won't work
         //arena debug image
     PImage debugArena;
@@ -32,8 +34,9 @@ public class Puck_Man extends PApplet {
         //background
         background(0);
         dBug();
-
-        pacMan(playerX,playerY,30);
+        collision();
+        pacMan(playerX,playerY,playerSize);
+        controls();
 
         pManArena01.render();
     }
@@ -48,7 +51,7 @@ public class Puck_Man extends PApplet {
 //--player model
     public void pacMan(float x, float y, float diameter){
         fill(255,255,0);
-        strokeWeight(3);
+        strokeWeight(2);
         stroke(0);
         ellipse(x,y,diameter,diameter);
         line(x-diameter/2,y,x,y);
@@ -61,8 +64,44 @@ public class Puck_Man extends PApplet {
         }
     }
 
+//--collision
+    void collision(){
+        if(pManArena01.collision(playerX,playerY)) {
+            playerSpeed *= -1;
+        }
+    }
+
+//--controls
+    void controls(){
+        if(aDown){
+            playerX -= playerSpeed;
+        }
+        if(dDown){
+            playerX += playerSpeed;
+        }
+        if(wDown){
+            playerY -= playerSpeed;
+        }
+        if(sDown){
+            playerY += playerSpeed;
+        }
+    }
+
 //--keybinds
     public void keyPressed(){
+        //controls
+        if (key == 'A' || key == 'a' || keyCode == LEFT){
+            aDown = true; sDown = false; dDown = false; wDown = false;
+        }
+        else if(key == 'D' || key == 'd' || keyCode == RIGHT){
+            aDown = false; sDown = false; dDown = true; wDown = false;
+        }
+        else if(key == 'W' || key == 'w' || keyCode == UP){
+            aDown = false; sDown = false; dDown = false; wDown = true;
+        }
+        else if(key == 'S' || key == 's' || keyCode == DOWN){
+            aDown = false; sDown = true; dDown = false; wDown = false;
+        }
         //shutdown
         if(key == ESC) {
             stop();
@@ -99,8 +138,13 @@ public class Puck_Man extends PApplet {
         //debug
         if(debug) {
             if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-                System.out.println("X: " + (mouseX - width / 2) + "\nY: " + (mouseY - height / 2));
+                System.out.println("X: " + (mouseX) + "\nY: " + (mouseY));
             }
         }
     }
 }
+
+//FIXME
+/**
+* It is possible to clip through obstacles, no doubt because of the way the controls are set up, so that needs a rework
+*/

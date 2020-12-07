@@ -1,6 +1,5 @@
 //this is ribary!
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
 */
 
 //A custom comparator used to sort books by name
-// (necessary since Book is a complex data type and regular sort does not work)
+//(necessary since Book is a complex data type and regular sort does not work)
 class SortByTitle implements Comparator<Book> {
     @Override
     public int compare(Book a, Book b) {
@@ -28,6 +27,7 @@ public class Library {
 
     public void viewBooks(){
         libraryList.sort(new SortByTitle());
+
         for (Book book : libraryList) {
             System.out.println(book.toString());
             System.out.println(""); //spacer

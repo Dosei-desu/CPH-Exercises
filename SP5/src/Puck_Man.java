@@ -1,44 +1,41 @@
 import processing.core.PApplet;
 import processing.core.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Puck_Man extends PApplet {
 
 //--variables
     boolean paused = false;
         //player
-    float playerX = 265, playerY = 585, playerSize = 35;
-    boolean aDown = false, sDown = false, dDown = false, wDown = false;
-    float playerSpeed = 3;
+    Puck puck = new Puck(6,18);
+        //ghost
+    PImage ghost;
         //arenas
-    Arena01 pManArena01 = new Arena01(this,320,370,playerX,playerY,playerSize);
+    Arena01 arena_01 = new Arena01(this, puck);
     //since this^ is defined prior to the Size() initialisation, width and height won't work
         //arena debug image
-    PImage debugArena;
     boolean debug = false;
 
 //--settings
     public void settings(){
         //for some reason, the sketch doesn't work if size() is in Setup() instead of Settings()
-        size(640,740);
+        size(640,736);
     }
 
 //--setup
     public void setup(){ //draw is necessary, since some methods don't work in Settings()
         //noCursor();
-        //arena debug image
-        debugArena = loadImage("Pac-Man arena reference (with grid).jpg");
+        ghost = loadImage("ghost.png");
     }
 
 //--draw
     public void draw(){
         //background
         background(0);
-        dBug();
-        collision();
-        pacMan(playerX,playerY,playerSize);
-        controls();
-
-        pManArena01.render();
+        arena_01.update();
+        gameBoard();
     }
 
 //--necessary to run the PApplet
@@ -48,59 +45,112 @@ public class Puck_Man extends PApplet {
         PApplet.runSketch(processingArgs, mySketch);
     }
 
-//--player model
-    public void pacMan(float x, float y, float diameter){
-        fill(255,255,0);
-        strokeWeight(2);
-        stroke(0);
-        ellipse(x,y,diameter,diameter);
-        line(x-diameter/2,y,x,y);
+//--scoreboard
+    public void scoreboard(int orbCounter){
+        int score = (171-orbCounter)*50;
+        textAlign(CORNER,CENTER);
+        textSize(30);
+        fill(150,50,50);
+        text("Highscore: "+score,45,45);
     }
 
-//--debug stuff
-    public void dBug(){
-        if(debug) {
-            image(debugArena, 0, 100, width, width); //for debugging arena
-        }
-    }
+//--game board for spawning visuals
+    public void gameBoard() {
+        int orbCounter = 0;
+        int[][] board = arena_01.getBoard();
+        for (int y = 0; y < arena_01.getHeight(); y++) {
+            for (int x = 0; x < arena_01.getWidth(); x++) {
+                if (board[x][y] == -1) {
+                    fill(150,50,50);
+                } else if (board[x][y] >= 0) {
+                    fill(0);
+                }
+                //stroke(255, 50); //shows grid
+                noStroke();
+                rectMode(CORNER);
+                rect(x * 32, y * 32, 32, 32);
 
-//--collision
-    void collision(){
-        if(pManArena01.collision(playerX,playerY)) {
-            playerSpeed *= -1;
+                //spawns the little pebbles or whatever they are
+                if(y > 2 && board[x][y] == 0){
+                    orbCounter++;
+                    ellipseMode(CORNER);
+                    fill(225, 198, 153); //beige
+                    ellipse((x * 32) + 12, (y * 32) + 12, 8, 8);
+                }
+                //spawns player visuals
+                if(board[x][y] == 1){
+                    ellipseMode(CORNER);
+                    fill(200, 200, 50); //yellow ish
+                    ellipse((x * 32) + 2,(y * 32 ) + 2, 30, 30);
+                }
+                //ghosts
+                if(board[x][y] == 3){
+                    fill(0);
+                    image(ghost,(x * 32 ) + 2,(y * 32 ) + 2,28,28);
+                }
+            }
         }
-    }
-
-//--controls
-    void controls(){
-        if(aDown){
-            playerX -= playerSpeed;
+        //who knew it could be so fucking simple to make a win state... jesus christ...
+        if(orbCounter == 0){
+            System.out.println("Win");
         }
-        if(dDown){
-            playerX += playerSpeed;
-        }
-        if(wDown){
-            playerY -= playerSpeed;
-        }
-        if(sDown){
-            playerY += playerSpeed;
-        }
+        rectMode(CORNER);
+        fill(0);
+        noStroke();
+        rect(0,0,width,95);
+        scoreboard(orbCounter);
     }
 
 //--keybinds
     public void keyPressed(){
+        boolean moveOnce = true;
         //controls
-        if (key == 'A' || key == 'a' || keyCode == LEFT){
-            aDown = true; sDown = false; dDown = false; wDown = false;
-        }
-        else if(key == 'D' || key == 'd' || keyCode == RIGHT){
-            aDown = false; sDown = false; dDown = true; wDown = false;
-        }
-        else if(key == 'W' || key == 'w' || keyCode == UP){
-            aDown = false; sDown = false; dDown = false; wDown = true;
-        }
-        else if(key == 'S' || key == 's' || keyCode == DOWN){
-            aDown = false; sDown = true; dDown = false; wDown = false;
+        int[][] board = arena_01.getBoard();
+        for (int y = 0; y < arena_01.getHeight(); y++) {
+            for (int x = 0; x < arena_01.getWidth(); x++) {
+                if (!paused) {
+                    if (key == 'A' || key == 'a' || keyCode == LEFT) {
+                        //left exit teleporter
+                        if (puck.getX() == 0 && puck.getY() == 12) {
+                            puck.setX(18);
+                        }
+                        if (board[puck.getX() - 1][puck.getY()] != -1) { //checks if the block you are moving to isn't a wall
+                            if (moveOnce) {
+                                puck.moveX(-1);
+                                moveOnce = false;
+                            }
+                        }
+                    }
+                    if (key == 'D' || key == 'd' || keyCode == RIGHT) {
+                        //left exit teleporter
+                        if (puck.getX() == 19 && puck.getY() == 12) {
+                            puck.setX(1);
+                        }
+                        if (board[puck.getX() + 1][puck.getY()] != -1) {
+                            if (moveOnce) {
+                                puck.moveX(1);
+                                moveOnce = false;
+                            }
+                        }
+                    }
+                    if (key == 'W' || key == 'w' || keyCode == UP) {
+                        if (board[puck.getX()][puck.getY() - 1] != -1) {
+                            if (moveOnce) {
+                                puck.moveY(-1);
+                                moveOnce = false;
+                            }
+                        }
+                    }
+                    if (key == 'S' || key == 's' || keyCode == DOWN) {
+                        if (board[puck.getX()][puck.getY() + 1] != -1) {
+                            if (moveOnce) {
+                                puck.moveY(1);
+                                moveOnce = false;
+                            }
+                        }
+                    }
+                }
+            }
         }
         //shutdown
         if(key == ESC) {
@@ -109,7 +159,7 @@ public class Puck_Man extends PApplet {
         //pause
         if(key == 'P' || key == 'p') {
             if (!paused) {
-                fill(250,50,50);
+                fill(250,250,50);
                 textSize(35);
                 textAlign(CENTER,CENTER);
                 text("PAUSED",width/2,height/2+85);
@@ -121,11 +171,7 @@ public class Puck_Man extends PApplet {
             }
         }
         if(key == 'M' || key == 'm'){
-            if(!debug){
-                debug = true;
-            }else{
-                debug = false;
-            }
+            debug = !debug;
         }
     }
 
@@ -144,7 +190,13 @@ public class Puck_Man extends PApplet {
     }
 }
 
+//TODO
+/**
+ * Add enenenmies that track player
+ * Add "fruit" (maybe trapped inside ghost cage)
+ */
+
 //FIXME
 /**
-* It is possible to clip through obstacles, no doubt because of the way the controls are set up, so that needs a rework
-*/
+ *
+ */

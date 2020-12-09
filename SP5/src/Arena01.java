@@ -1,449 +1,317 @@
 import processing.core.PApplet;
 
-public class Arena01 extends PApplet { //has to also extend the processing app
-    private PApplet sketch;
-    private float x, y, pX, pY, pSize;
-    int lArraySize = 143;
-    float[] lX1 = new float[lArraySize];
-    float[] lX2 = new float[lArraySize];
-    float[] lY1 = new float[lArraySize];
-    float[] lY2 = new float[lArraySize];
+import java.util.Arrays;
 
-    Arena01(PApplet sketch, float x, float y, float pX, float pY, float pSize){
+public class Arena01 extends PApplet { //has to also extend the processing app
+    private final PApplet sketch; //not currently in use, but required to access processing library
+    private Puck puck;
+    private Puck[] ghosts = new Puck[4];
+    private final int w = 20, h = 23;
+    private int[][] board;
+    private int previousX, previousY;
+    private final int[] ghostPreviousX = new int[ghosts.length],
+                        ghostPreviousY = new int[ghosts.length],
+                        previousBoardValue = new int[ghosts.length];
+    private int[] moveCounter = {0,0,0,0};
+
+    Arena01(PApplet sketch, Puck puck){
         this.sketch = sketch; //necessary to define what sketch is being used, without this, the class would require
                               //a draw, setup, settings, and so on
-        this.x = x;
-        this.y = y;
-        this.pX = pX;
-        this.pY = pY;
-        this.pSize = pSize;
+        this.puck = puck;
+        board = new int[w][h];
+
+        this.ghosts[0] = new Puck(9,12);
+        this.ghosts[1] = new Puck(10,12);
+        this.ghosts[2] = new Puck(9,13);
+        this.ghosts[3] = new Puck(10,13);
+        for (int i = 0; i < previousBoardValue.length; i++) {
+            previousBoardValue[i] = 0;
+        }
+        clearBoard();
+        populateBoard();
     }
 
-    public boolean collision(float pX, float pY){
-        for (int n = 0; n < lArraySize; ++n) {
-            if(lineCircle(lX1[n], lY1[n], lX2[n], lY2[n], pX, pY, pSize/2)){
-                System.out.println("Collision!");
-                return true;
+    public void update(){
+        //System.out.println("current" + puck.getX() + " : " + puck.getY()); //debug player coordinates
+        updateBoard();
+        ghostAI();
+    }
+
+    public int[][] getBoard()
+    {
+        return board;
+    }
+
+    public int getWidth(){
+        return w;
+    }
+
+    public int getHeight(){
+        return h;
+    }
+
+    private void clearBoard(){
+        for(int y = 0; y < h; ++y)
+        {
+            for(int x = 0; x < w; ++x)
+            {
+                if(y > 2)
+                board[x][y] = -1;
             }
         }
-        return false;
     }
 
-    //collision detection:
-    boolean lineCircle(float x1, float y1, float x2, float y2, float px, float py, float pSize) {
-        //detects if either is inside the circle
-        boolean inside1 = pointCircle(x1, y1, px, py, pSize);
-        boolean inside2 = pointCircle(x2, y2, px, py, pSize);
-        if (inside1 || inside2) {
-            return true;
+    private void updateBoard(){
+        //player coordinates
+        board[previousX][previousY] = 2; //eats pellet
+        previousX = puck.getX();
+        previousY = puck.getY();
+        board[puck.getX()][puck.getY()] = 1;
+        for (int i = 0; i < ghosts.length; i++) {
+            board[ghostPreviousX[i]][ghostPreviousY[i]] = previousBoardValue[i];
+            ghostPreviousX[i] = ghosts[i].getX();
+            ghostPreviousY[i] = ghosts[i].getY();
+            previousBoardValue[i] = board[ghosts[i].getX()][ghosts[i].getY()];
+            board[ghosts[i].getX()][ghosts[i].getY()] = 3;
         }
-
-        // get length of the line
-        float distX = x1 - x2;
-        float distY = y1 - y2;
-        float len = sqrt( (distX*distX) + (distY*distY) );
-
-        // get dot product of the line and circle
-        float dot = (((px-x1)*(x2-x1)) + ((py-y1)*(y2-y1))) / pow(len, 2);
-
-        // find the closest point on the line
-        float closestX = x1 + (dot * (x2-x1));
-        float closestY = y1 + (dot * (y2-y1));
-
-        // is this point actually on the line segment?
-        // if so keep going, but if not, return false
-        boolean onSegment = linePoint(x1, y1, x2, y2, closestX, closestY);
-        if (!onSegment) return false;
-
-        // optionally, draw a circle at the closest
-        // point on the line
-        //fill(0,0,0,0); //invisible, but can be changed to something like fill(0,255,0,255); to debug collisions
-        //noStroke();
-        //ellipse(closestX, closestY, 5, 5);
-
-        // get distance to closest point
-        distX = closestX - px;
-        distY = closestY - py;
-        float distance = sqrt( (distX*distX) + (distY*distY) );
-
-        if (distance <= pSize) {
-            return true;
-        }
-        return false;
     }
 
-    boolean pointCircle(float pointx, float pointy, float px, float py, float pSize) {
-        // get distance between the point and circle's center
-        // using the Pythagorean Theorem
-        float distX = pointx - px;
-        float distY = pointy - py;
-        float distance = sqrt((distX*distX) + (distY*distY));
+    public void ghostAI(){
+        int ghostSpeed = 4; //less = more speed
+        //decided to do it on-rails because the alternative was beyond my ability, and in a sense, it gives the game
+        //a different kind of spin, more akin to games like SuperHot, where enemies only move when you do
+        //ghost one
+        if(sketch.keyPressed) {
+            int num = 0;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); }
 
-        // if the distance is less than the circle's
-        // radius the point is inside!
-        if (distance <= pSize) {
-            return true;
+            if(moveCounter[0] > 32 * ghostSpeed){
+                moveCounter[0] = 4*ghostSpeed;
+            }
+
+            moveCounter[0]++;
         }
-        return false;
+        //ghost two
+        if(sketch.keyPressed) {
+            int num = 0;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); }
+
+            if(moveCounter[1] > 32 * ghostSpeed){
+                moveCounter[1] = 4*ghostSpeed;
+            }
+
+            moveCounter[1]++;
+        }
+        //ghost three
+        if(sketch.keyPressed) {
+            int num = 0;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+
+            if(moveCounter[2] > 41*ghostSpeed){
+                moveCounter[2] = 13*ghostSpeed;
+            }
+
+            moveCounter[2]++;
+        }
+        //ghost four
+        if(sketch.keyPressed) {
+            int num = 0;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+
+            if(moveCounter[3] > 41*ghostSpeed){
+                moveCounter[3] = 13*ghostSpeed;
+            }
+
+            moveCounter[3]++;
+        }
     }
 
-    boolean linePoint(float x1, float y1, float x2, float y2, float pointx, float pointy) {
-        // get distance from the point to the two ends of the line
-        float d1 = dist(pointx,pointy, x1,y1);
-        float d2 = dist(pointx,pointy, x2,y2);
-
-        // get the length of the line
-        float lineLen = dist(x1,y1, x2,y2);
-
-        // since floats are so minutely accurate, add
-        // a little buffer zone that will give collision
-        float buffer = (float)0.1;    // higher # = less accurate
-
-        // if the two distances are equal to the line's
-        // length, the point is on the line!
-        // note we use the buffer here to give a range,
-        // rather than one #
-        if (d1+d2 >= lineLen-buffer && d1+d2 <= lineLen+buffer) {
-            return true;
-        }
-        return false;
-    }
-
-    public void render(){
-        //8x8 cells each 80x80 pixels, with the player taking up 30x30 roughly
-
-//----------//formatting
-        sketch.noFill();
-        sketch.stroke(250,50,50);
-        sketch.strokeWeight(4);
-
-//----------//array stuff
-        int n = 0;
-
-//----------//perimeter
-        sketch.line(x-320,y-270,x+320,y-270);
-        lX1[n] = x-320; lY1[n] = y+5; lX2[n] = x-200; lY2[n] = y+5;
-        n++;
-        lX1[n] = x-200; lY1[n] = y+5; lX2[n] = x-200; lY2[n] = y-75;
-        n++;
-        lX1[n] = x-200; lY1[n] = y-75; lX2[n] = x-310; lY2[n] = y-75;
-        n++;
-        lX1[n] = x-310; lY1[n] = y-75; lX2[n] = x-310; lY2[n] = y-260;
-        n++;
-        lX1[n] = x-310; lY1[n] = y-260; lX2[n] = x-10; lY2[n] = y-260;
-        n++;
-        lX1[n] = x-10; lY1[n] = y-260; lX2[n] = x-10; lY2[n] = y-180;
-        n++;
-        lX1[n] = x-10; lY1[n] = y-180; lX2[n] = x+10; lY2[n] = y-180;
-        n++;
-        lX1[n] = x+10; lY1[n] = y-180; lX2[n] = x+10; lY2[n] = y-260;
-        n++;
-        lX1[n] = x+10; lY1[n] = y-260; lX2[n] = x+310; lY2[n] = y-260;
-        n++;
-        lX1[n] = x+310; lY1[n] = y-260; lX2[n] = x+310; lY2[n] = y-75;
-        n++;
-        lX1[n] = x+310; lY1[n] = y-75; lX2[n] = x+200; lY2[n] = y-75;
-        n++;
-        lX1[n] = x+200; lY1[n] = y-75; lX2[n] = x+200; lY2[n] = y+5;
-        n++;
-        lX1[n] = x+200; lY1[n] = y+5; lX2[n] = x+320; lY2[n] = y+5;
-        n++;
-        lX1[n] = x+320; lY1[n] = y+50; lX2[n] = x+200; lY2[n] = y+50;
-        n++;
-        lX1[n] = x+200; lY1[n] = y+50; lX2[n] = x+200; lY2[n] = y+130;
-        n++;
-        lX1[n] = x+200; lY1[n] = y+130; lX2[n] = x+310; lY2[n] = y+130;
-        n++;
-        lX1[n] = x+310; lY1[n] = y+130; lX2[n] = x+310; lY2[n] = y+235;
-        n++;
-        lX1[n] = x+310; lY1[n] = y+235; lX2[n] = x+265; lY2[n] = y+235;
-        n++;
-        lX1[n] = x+265; lY1[n] = y+235; lX2[n] = x+265; lY2[n] = y+255;
-        n++;
-        lX1[n] = x+265; lY1[n] = y+255; lX2[n] = x+310; lY2[n] = y+255;
-        n++;
-        lX1[n] = x+310; lY1[n] = y+255; lX2[n] = x+310; lY2[n] = y+360;
-        n++;
-        lX1[n] = x+310; lY1[n] = y+360; lX2[n] = x-310; lY2[n] = y+360;
-        n++;
-        lX1[n] = x-310; lY1[n] = y+360; lX2[n] = x-310; lY2[n] = y+255;
-        n++;
-        lX1[n] = x-310; lY1[n] = y+255; lX2[n] = x-265; lY2[n] = y+255;
-        n++;
-        lX1[n] = x-265; lY1[n] = y+255; lX2[n] = x-265; lY2[n] = y+235;
-        n++;
-        lX1[n] = x-265; lY1[n] = y+235; lX2[n] = x-310; lY2[n] = y+235;
-        n++;
-        lX1[n] = x-310; lY1[n] = y+235; lX2[n] = x-310; lY2[n] = y+130;
-        n++;
-        lX1[n] = x-310; lY1[n] = y+130; lX2[n] = x-200; lY2[n] = y+130;
-        n++;
-        lX1[n] = x-200; lY1[n] = y+130; lX2[n] = x-200; lY2[n] = y+50;
-        n++;
-        lX1[n] = x-200; lY1[n] = y+50; lX2[n] = x-320; lY2[n] = y+50;
-
-//----------//top row
-                //box 1
-        n++;
-        lX1[n] = x-260; lY1[n] = y-220; lX2[n] = x-200; lY2[n] = y-220;
-        n++;
-        lX1[n] = x-200; lY1[n] = y-220; lX2[n] = x-200; lY2[n] = y-180;
-        n++;
-        lX1[n] = x-200; lY1[n] = y-180; lX2[n] = x-260; lY2[n] = y-180;
-        n++;
-        lX1[n] = x-260; lY1[n] = y-180; lX2[n] = x-260; lY2[n] = y-220;
-                //box 2
-        n++;
-        lX1[n] = x-145; lY1[n] = y-220; lX2[n] = x-60; lY2[n] = y-220;
-        n++;
-        lX1[n] = x-60; lY1[n] = y-220; lX2[n] = x-60; lY2[n] = y-180;
-        n++;
-        lX1[n] = x-60; lY1[n] = y-180; lX2[n] = x-145; lY2[n] = y-180;
-        n++;
-        lX1[n] = x-145; lY1[n] = y-180; lX2[n] = x-145; lY2[n] = y-220;
-                //box 3
-        n++;
-        lX1[n] = x+145; lY1[n] = y-220; lX2[n] = x+60; lY2[n] = y-220;
-        n++;
-        lX1[n] = x+60; lY1[n] = y-220; lX2[n] = x+60; lY2[n] = y-180;
-        n++;
-        lX1[n] = x+60; lY1[n] = y-180; lX2[n] = x+145; lY2[n] = y-180;
-        n++;
-        lX1[n] = x+145; lY1[n] = y-180; lX2[n] = x+145; lY2[n] = y-220;
-                //box 4
-        n++;
-        lX1[n] = x+260; lY1[n] = y-220; lX2[n] = x+200; lY2[n] = y-220;
-        n++;
-        lX1[n] = x+200; lY1[n] = y-220; lX2[n] = x+200; lY2[n] = y-180;
-        n++;
-        lX1[n] = x+200; lY1[n] = y-180; lX2[n] = x+260; lY2[n] = y-180;
-        n++;
-        lX1[n] = x+260; lY1[n] = y-180; lX2[n] = x+260; lY2[n] = y-220;
-
-//----------//second row
-                //box 1
-        n++;
-        lX1[n] = x-260; lY1[n] = y-135; lX2[n] = x-200; lY2[n] = y-135;
-        n++;
-        lX1[n] = x-200; lY1[n] = y-135; lX2[n] = x-200; lY2[n] = y-115;
-        n++;
-        lX1[n] = x-200; lY1[n] = y-115; lX2[n] = x-260; lY2[n] = y-115;
-        n++;
-        lX1[n] = x-260; lY1[n] = y-115; lX2[n] = x-260; lY2[n] = y-135;
-                //t-shape 1
-        n++;
-        lX1[n] = x-145; lY1[n] = y-135; lX2[n] = x-125; lY2[n] = y-135;
-        n++;
-        lX1[n] = x-125; lY1[n] = y-135; lX2[n] = x-125; lY2[n] = y-75;
-        n++;
-        lX1[n] = x-125; lY1[n] = y-75; lX2[n] = x-60; lY2[n] = y-75;
-        n++;
-        lX1[n] = x-60; lY1[n] = y-75; lX2[n] = x-60; lY2[n] = y-55;
-        n++;
-        lX1[n] = x-60; lY1[n] = y-55; lX2[n] = x-125; lY2[n] = y-55;
-        n++;
-        lX1[n] = x-125; lY1[n] = y-55; lX2[n] = x-125; lY2[n] = y+5;
-        n++;
-        lX1[n] = x-125; lY1[n] = y+5; lX2[n] = x-145; lY2[n] = y+5;
-        n++;
-        lX1[n] = x-145; lY1[n] = y+5; lX2[n] = x-145; lY2[n] = y-135;
-                //t-shape 2
-        n++;
-        lX1[n] = x-75; lY1[n] = y-135; lX2[n] = x+75; lY2[n] = y-135;
-        n++;
-        lX1[n] = x+75; lY1[n] = y-135; lX2[n] = x+75; lY2[n] = y-115;
-        n++;
-        lX1[n] = x+75; lY1[n] = y-115; lX2[n] = x+10; lY2[n] = y-115;
-        n++;
-        lX1[n] = x+10; lY1[n] = y-115; lX2[n] = x+10; lY2[n] = y-55;
-        n++;
-        lX1[n] = x+10; lY1[n] = y-55; lX2[n] = x-10; lY2[n] = y-55;
-        n++;
-        lX1[n] = x-10; lY1[n] = y-55; lX2[n] = x-10; lY2[n] = y-115;
-        n++;
-        lX1[n] = x-10; lY1[n] = y-115; lX2[n] = x-75; lY2[n] = y-115;
-        n++;
-        lX1[n] = x-75; lY1[n] = y-115; lX2[n] = x-75; lY2[n] = y-135;
-                //t-shape 3
-        n++;
-        lX1[n] = x+145; lY1[n] = y-135; lX2[n] = x+125; lY2[n] = y-135;
-        n++;
-        lX1[n] = x+125; lY1[n] = y-135; lX2[n] = x+125; lY2[n] = y-75;
-        n++;
-        lX1[n] = x+125; lY1[n] = y-75; lX2[n] = x+60; lY2[n] = y-75;
-        n++;
-        lX1[n] = x+60; lY1[n] = y-75; lX2[n] = x+60; lY2[n] = y-55;
-        n++;
-        lX1[n] = x+60; lY1[n] = y-55; lX2[n] = x+125; lY2[n] = y-55;
-        n++;
-        lX1[n] = x+125; lY1[n] = y-55; lX2[n] = x+125; lY2[n] = y+5;
-        n++;
-        lX1[n] = x+125; lY1[n] = y+5; lX2[n] = x+145; lY2[n] = y+5;
-        n++;
-        lX1[n] = x+145; lY1[n] = y+5; lX2[n] = x+145; lY2[n] = y-135;
-                //box 1
-        n++;
-        lX1[n] = x+260; lY1[n] = y-135; lX2[n] = x+200; lY2[n] = y-135;
-        n++;
-        lX1[n] = x+200; lY1[n] = y-135; lX2[n] = x+200; lY2[n] = y-115;
-        n++;
-        lX1[n] = x+200; lY1[n] = y-115; lX2[n] = x+260; lY2[n] = y-115;
-        n++;
-        lX1[n] = x+260; lY1[n] = y-115; lX2[n] = x+260; lY2[n] = y-135;
-
-//----------//middle box
-        n++;
-        lX1[n] = x-20; lY1[n] = y-10; lX2[n] = x-80; lY2[n] = y-10;
-        n++;
-        lX1[n] = x-80; lY1[n] = y-10; lX2[n] = x-80; lY2[n] = y+70;
-        n++;
-        lX1[n] = x-80; lY1[n] = y+70; lX2[n] = x+75; lY2[n] = y+70;
-        n++;
-        lX1[n] = x+75; lY1[n] = y+70; lX2[n] = x+75; lY2[n] = y-10;
-        n++;
-        lX1[n] = x+75; lY1[n] = y-10; lX2[n] = x+20; lY2[n] = y-10;
-
-//----------//third row
-                //box 1
-        n++;
-        lX1[n] = x-145; lY1[n] = y+50; lX2[n] = x-125; lY2[n] = y+50;
-        n++;
-        lX1[n] = x-125; lY1[n] = y+50; lX2[n] = x-125; lY2[n] = y+130;
-        n++;
-        lX1[n] = x-125; lY1[n] = y+130; lX2[n] = x-145; lY2[n] = y+130;
-        n++;
-        lX1[n] = x-145; lY1[n] = y+130; lX2[n] = x-145; lY2[n] = y+50;
-                //t-shape 1
-        n++;
-        lX1[n] = x-75; lY1[n] = y+110; lX2[n] = x+75; lY2[n] = y+110;
-        n++;
-        lX1[n] = x+75; lY1[n] = y+110; lX2[n] = x+75; lY2[n] = y+130;
-        n++;
-        lX1[n] = x+75; lY1[n] = y+130; lX2[n] = x+10; lY2[n] = y+130;
-        n++;
-        lX1[n] = x+10; lY1[n] = y+130; lX2[n] = x+10; lY2[n] = y+195;
-        n++;
-        lX1[n] = x+10; lY1[n] = y+195; lX2[n] = x-10; lY2[n] = y+195;
-        n++;
-        lX1[n] = x-10; lY1[n] = y+195; lX2[n] = x-10; lY2[n] = y+130;
-        n++;
-        lX1[n] = x-10; lY1[n] = y+130; lX2[n] = x-75; lY2[n] = y+130;
-        n++;
-        lX1[n] = x-75; lY1[n] = y+130; lX2[n] = x-75; lY2[n] = y+110;
-                //box 2
-        n++;
-        lX1[n] = x+145; lY1[n] = y+50; lX2[n] = x+125; lY2[n] = y+50;
-        n++;
-        lX1[n] = x+125; lY1[n] = y+50; lX2[n] = x+125; lY2[n] = y+130;
-        n++;
-        lX1[n] = x+125; lY1[n] = y+130; lX2[n] = x+145; lY2[n] = y+130;
-        n++;
-        lX1[n] = x+145; lY1[n] = y+130; lX2[n] = x+145; lY2[n] = y+50;
-
-//----------//fourth row
-                //l-shape 1
-        n++;
-        lX1[n] = x-260; lY1[n] = y+175; lX2[n] = x-200; lY2[n] = y+175;
-        n++;
-        lX1[n] = x-200; lY1[n] = y+175; lX2[n] = x-200; lY2[n] = y+255;
-        n++;
-        lX1[n] = x-200; lY1[n] = y+255; lX2[n] = x-220; lY2[n] = y+255;
-        n++;
-        lX1[n] = x-220; lY1[n] = y+255; lX2[n] = x-220; lY2[n] = y+195;
-        n++;
-        lX1[n] = x-220; lY1[n] = y+195; lX2[n] = x-260; lY2[n] = y+195;
-        n++;
-        lX1[n] = x-260; lY1[n] = y+195; lX2[n] = x-260; lY2[n] = y+175;
-                //box 1
-        n++;
-        lX1[n] = x-145; lY1[n] = y+175; lX2[n] = x-60; lY2[n] = y+175;
-        n++;
-        lX1[n] = x-60; lY1[n] = y+175; lX2[n] = x-60; lY2[n] = y+195;
-        n++;
-        lX1[n] = x-60; lY1[n] = y+195; lX2[n] = x-145; lY2[n] = y+195;
-        n++;
-        lX1[n] = x-145; lY1[n] = y+195; lX2[n] = x-145; lY2[n] = y+175;
-                //box 2
-        n++;
-        lX1[n] = x+145; lY1[n] = y+175; lX2[n] = x+60; lY2[n] = y+175;
-        n++;
-        lX1[n] = x+60; lY1[n] = y+175; lX2[n] = x+60; lY2[n] = y+195;
-        n++;
-        lX1[n] = x+60; lY1[n] = y+195; lX2[n] = x+145; lY2[n] = y+195;
-        n++;
-        lX1[n] = x+145; lY1[n] = y+195; lX2[n] = x+145; lY2[n] = y+175;
-                //l-shape 2
-        n++;
-        lX1[n] = x+260; lY1[n] = y+175; lX2[n] = x+200; lY2[n] = y+175;
-        n++;
-        lX1[n] = x+200; lY1[n] = y+175; lX2[n] = x+200; lY2[n] = y+255;
-        n++;
-        lX1[n] = x+200; lY1[n] = y+255; lX2[n] = x+220; lY2[n] = y+255;
-        n++;
-        lX1[n] = x+220; lY1[n] = y+255; lX2[n] = x+220; lY2[n] = y+195;
-        n++;
-        lX1[n] = x+220; lY1[n] = y+195; lX2[n] = x+260; lY2[n] = y+195;
-        n++;
-        lX1[n] = x+260; lY1[n] = y+195; lX2[n] = x+260; lY2[n] = y+175;
-
-//----------//bottom row
-                //t-shape 1
-        n++;
-        lX1[n] = x-260; lY1[n] = y+300; lX2[n] = x-145; lY2[n] = y+300;
-        n++;
-        lX1[n] = x-145; lY1[n] = y+300; lX2[n] = x-145; lY2[n] = y+235;
-        n++;
-        lX1[n] = x-145; lY1[n] = y+235; lX2[n] = x-125; lY2[n] = y+235;
-        n++;
-        lX1[n] = x-125; lY1[n] = y+235; lX2[n] = x-125; lY2[n] = y+300;
-        n++;
-        lX1[n] = x-125; lY1[n] = y+300; lX2[n] = x-60; lY2[n] = y+300;
-        n++;
-        lX1[n] = x-60; lY1[n] = y+300; lX2[n] = x-60; lY2[n] = y+320;
-        n++;
-        lX1[n] = x-60; lY1[n] = y+320; lX2[n] = x-260; lY2[n] = y+320;
-        n++;
-        lX1[n] = x-260; lY1[n] = y+320; lX2[n] = x-260; lY2[n] = y+300;
-                //t-shape 2
-        n++;
-        lX1[n] = x-75; lY1[n] = y+235; lX2[n] = x+75; lY2[n] = y+235;
-        n++;
-        lX1[n] = x+75; lY1[n] = y+235; lX2[n] = x+75; lY2[n] = y+255;
-        n++;
-        lX1[n] = x+75; lY1[n] = y+255; lX2[n] = x+10; lY2[n] = y+255;
-        n++;
-        lX1[n] = x+10; lY1[n] = y+255; lX2[n] = x+10; lY2[n] = y+320;
-        n++;
-        lX1[n] = x+10; lY1[n] = y+320; lX2[n] = x-10; lY2[n] = y+320;
-        n++;
-        lX1[n] = x-10; lY1[n] = y+320; lX2[n] = x-10; lY2[n] = y+255;
-        n++;
-        lX1[n] = x-10; lY1[n] = y+255; lX2[n] = x-75; lY2[n] = y+255;
-        n++;
-        lX1[n] = x-75; lY1[n] = y+255; lX2[n] = x-75; lY2[n] = y+235;
-                //t-shape 3
-        n++;
-        lX1[n] = x+260; lY1[n] = y+300; lX2[n] = x+145; lY2[n] = y+300;
-        n++;
-        lX1[n] = x+145; lY1[n] = y+300; lX2[n] = x+145; lY2[n] = y+235;
-        n++;
-        lX1[n] = x+145; lY1[n] = y+235; lX2[n] = x+125; lY2[n] = y+235;
-        n++;
-        lX1[n] = x+125; lY1[n] = y+235; lX2[n] = x+125; lY2[n] = y+300;
-        n++;
-        lX1[n] = x+125; lY1[n] = y+300; lX2[n] = x+60; lY2[n] = y+300;
-        n++;
-        lX1[n] = x+60; lY1[n] = y+300; lX2[n] = x+60; lY2[n] = y+320;
-        n++;
-        lX1[n] = x+60; lY1[n] = y+320; lX2[n] = x+260; lY2[n] = y+320;
-        n++;
-        lX1[n] = x+260; lY1[n] = y+320; lX2[n] = x+260; lY2[n] = y+300;
-
-        //actual render bit:
-        for (int i = 0; i < lArraySize; ++i) {
-            sketch.stroke(250,50,50);
-            sketch.strokeWeight(4);
-            sketch.line(lX1[i], lY1[i], lX2[i], lY2[i]);
-        }
+    //good ol' : https://print-graph-paper.com/virtual-graph-paper (used to design maze)
+    private void populateBoard(){
+        int row = 4;
+        //y-index 0, 1, and 2 remain blank, as those are where score and stuff will go
+        //the first row is already initialised through the "clearBoard()"
+        //2nd row
+        board[1][row] = 0; board[2][row] = 0; board[3][row] = 0; board[4][row] = 0; board[5][row] = 0; board[6][row] = 0;
+        board[7][row] = 0; board[8][row] = 0; board[11][row] = 0; board[12][row] = 0; board[13][row] = 0; board[14][row] = 0;
+        board[15][row] = 0; board[16][row] = 0; board[17][row] = 0; board[18][row] = 0;
+        //3rd row
+        row++;
+        board[1][row] = 0; board[4][row] = 0; board[8][row] = 0; board[11][row] = 0; board[15][row] = 0; board[18][row] = 0;
+        //4th row
+        row++;
+        board[1][row] = 0; board[4][row] = 0; board[8][row] = 0; board[11][row] = 0; board[15][row] = 0; board[18][row] = 0;
+        //5th row
+        row++;
+        board[1][row] = 0; board[2][row] = 0; board[3][row] = 0; board[4][row] = 0; board[5][row] = 0; board[6][row] = 0;
+        board[7][row] = 0; board[8][row] = 0; board[9][row] = 0; board[10][row] = 0; board[11][row] = 0; board[12][row] = 0;
+        board[13][row] = 0; board[14][row] = 0; board[15][row] = 0; board[16][row] = 0; board[17][row] = 0; board[18][row] = 0;
+        //6th row
+        row++;
+        board[1][row] = 0; board[7][row] = 0; board[12][row] = 0; board[18][row] = 0;
+        //7th row
+        row++;
+        board[1][row] = 0; board[2][row] = 0; board[3][row] = 0; board[5][row] = 0; board[6][row] = 0; board[7][row] = 0;
+        board[8][row] = 0; board[9][row] = 0; board[10][row] = 0; board[11][row] = 0; board[12][row] = 0; board[13][row] = 0;
+        board[14][row] = 0; board[16][row] = 0; board[17][row] = 0; board[18][row] = 0;
+        //8th row
+        row++;
+        board[3][row] = 0; board[5][row] = 0; board[9][row] = 2; board[10][row] = 2; board[14][row] = 0; board[16][row] = 0;
+        //9th row
+        row++;
+        board[3][row] = 0; board[4][row] = 0; board[5][row] = 0; board[6][row] = 0; board[8][row] = 2; board[9][row] = 2;
+        board[10][row] = 2; board[11][row] = 2; board[13][row] = 0; board[14][row] = 0; board[15][row] = 0; board[16][row] = 0;
+        //10th row
+        row++;
+        board[0][row] = 2; board[1][row] = 2; board[2][row] = 2; board[3][row] = 0; board[6][row] = 0; board[8][row] = 2;
+        board[9][row] = 2; board[10][row] = 2; board[11][row] = 2; board[13][row] = 0; board[16][row] = 0; board[17][row] = 2;
+        board[18][row] = 2; board[19][row] = 2;
+        //11th row
+        row++;
+        board[3][row] = 0; board[4][row] = 0; board[5][row] = 0; board[6][row] = 0; board[8][row] = 2; board[9][row] = 2;
+        board[10][row] = 2; board[11][row] = 2; board[13][row] = 0; board[14][row] = 0; board[15][row] = 0; board[16][row] = 0;
+        //12th row
+        row++;
+        board[3][row] = 0; board[5][row] = 0; board[8][row] = 2; board[9][row] = 2; board[10][row] = 2; board[11][row] = 2;
+        board[14][row] = 0; board[16][row] = 0;
+        //13th row
+        row++;
+        board[1][row] = 0; board[2][row] = 0; board[3][row] = 0; board[5][row] = 0; board[14][row] = 0; board[16][row] = 0;
+        board[17][row] = 0; board[18][row] = 0;
+        //14th row
+        row++;
+        board[1][row] = 0; board[3][row] = 0; board[5][row] = 0; board[6][row] = 0; board[7][row] = 0; board[8][row] = 0;
+        board[9][row] = 0; board[10][row] = 0; board[11][row] = 0; board[12][row] = 0; board[13][row] = 0; board[14][row] = 0;
+        board[16][row] = 0; board[18][row] = 0;
+        //15th row
+        row++;
+        board[1][row] = 0; board[3][row] = 0; board[7][row] = 0; board[12][row] = 0; board[16][row] = 0; board[18][row] = 0;
+        //16th row
+        row++;
+        board[1][row] = 0; board[2][row] = 0; board[3][row] = 0; board[4][row] = 0; board[5][row] = 0; board[6][row] = 0;
+        board[7][row] = 0; board[8][row] = 0; board[9][row] = 0; board[10][row] = 0; board[12][row] = 0; board[13][row] = 0;
+        board[14][row] = 0; board[15][row] = 0; board[16][row] = 0; board[17][row] = 0; board[18][row] = 0;
+        //17th row
+        row++;
+        board[1][row] = 0; board[3][row] = 0; board[6][row] = 0; board[10][row] = 0; board[11][row] = 0; board[12][row] = 0;
+        board[16][row] = 0;
+        //18th row
+        row++;
+        board[1][row] = 0; board[3][row] = 0; board[5][row] = 0; board[6][row] = 0; board[7][row] = 0; board[8][row] = 0;
+        board[10][row] = 0; board[12][row] = 0; board[14][row] = 0; board[15][row] = 0; board[16][row] = 0; board[17][row] = 0;
+        board[18][row] = 0;
+        //19th row
+        row++;
+        board[1][row] = 0; board[2][row] = 0; board[3][row] = 0; board[4][row] = 0; board[5][row] = 0; board[8][row] = 0;
+        board[9][row] = 0; board[10][row] = 0; board[12][row] = 0; board[13][row] = 0; board[14][row] = 0; board[16][row] = 0;
+        board[18][row] = 0;
     }
 }

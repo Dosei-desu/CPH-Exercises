@@ -61,13 +61,23 @@ public class Arena01 extends PApplet { //has to also extend the processing app
         }
     }
 
+    public boolean hit(){
+        for (int i = 0; i < ghosts.length; i++) {
+            if(puck.getX() == ghosts[i].getX() && puck.getY() == ghosts[i].getY()) return true;
+        }
+
+        return false;
+    }
+
     private void updateBoard(){
         //player coordinates
-        board[previousX][previousY] = 2; //eats pellet
+        board[previousX][previousY] = 2; //eats pellet by turning the value from "0" to "2"
         previousX = puck.getX();
         previousY = puck.getY();
         board[puck.getX()][puck.getY()] = 1;
+
         for (int i = 0; i < ghosts.length; i++) {
+            //ensures that the ghosts don't alter the tiles they move across similar to what the player does
             board[ghostPreviousX[i]][ghostPreviousY[i]] = previousBoardValue[i];
             ghostPreviousX[i] = ghosts[i].getX();
             ghostPreviousY[i] = ghosts[i].getY();
@@ -78,8 +88,17 @@ public class Arena01 extends PApplet { //has to also extend the processing app
 
     public void ghostAI(){
         int ghostSpeed = 4; //less = more speed
+
         //decided to do it on-rails because the alternative was beyond my ability, and in a sense, it gives the game
-        //a different kind of spin, more akin to games like SuperHot, where enemies only move when you do
+        //a different kind of spin, more akin to games like SuperHot, where enemies only move when you do, which in a
+        //way requires a different kind of finesse from the original pac-man game
+
+        //the ghost move with a timer incremented by "ghostSpeed", therefore, the smaller the number of "ghostSpeed"
+        //the shorter that timer is and the faster they move
+
+        //without the timer they would move with the rate of the FPS, i.e. 30-60 moves per second, which would make it
+        //impossible to avoid them... it's janky, but it works
+
         //ghost one
         if(sketch.keyPressed) {
             int num = 0;
@@ -225,6 +244,44 @@ public class Arena01 extends PApplet { //has to also extend the processing app
             if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
             if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
             if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); }
 
             if(moveCounter[3] > 41*ghostSpeed){
                 moveCounter[3] = 13*ghostSpeed;
@@ -232,6 +289,11 @@ public class Arena01 extends PApplet { //has to also extend the processing app
 
             moveCounter[3]++;
         }
+
+        //note for further development:
+        //consider making the "rails" for each ghost longer so that it covers a different pattern that minimises
+        //dark-spots where you can easily avoid them and also reduces the predictability, but requiring you to memorise
+        //their entire track pattern
     }
 
     //good ol' : https://print-graph-paper.com/virtual-graph-paper (used to design maze)

@@ -9,7 +9,14 @@ public class Puck_Man extends PApplet {
 //--variables
     boolean paused = false;
         //player
-    Puck puck = new Puck(6,18);
+    PImage puck_man;
+    Puck puck = new Puck(8,18);
+            //health
+    PImage heart;
+    int hearts = 2;
+            //score
+    int highScore = 0;
+    int time = 0;
         //ghost
     PImage ghost;
         //arenas
@@ -27,6 +34,8 @@ public class Puck_Man extends PApplet {
 //--setup
     public void setup(){ //draw is necessary, since some methods don't work in Settings()
         //noCursor();
+        puck_man = loadImage("puck-man.png"); //find better image and make a version for left,right,up,down
+        heart = loadImage("heart.png");
         ghost = loadImage("ghost.png");
     }
 
@@ -36,6 +45,7 @@ public class Puck_Man extends PApplet {
         background(0);
         arena_01.update();
         gameBoard();
+        gameOverState();
     }
 
 //--necessary to run the PApplet
@@ -47,11 +57,15 @@ public class Puck_Man extends PApplet {
 
 //--scoreboard
     public void scoreboard(int orbCounter){
-        int score = (171-orbCounter)*50;
-        textAlign(CORNER,CENTER);
-        textSize(30);
-        fill(150,50,50);
-        text("Highscore: "+score,45,45);
+        if(orbCounter != 0) {
+            time++;
+            highScore = (171 - orbCounter) * 50;
+            textAlign(CORNER, CENTER);
+            textSize(28);
+            fill(150, 50, 50);
+            text("Highscore: " + highScore, 20, 45);
+            text("Time: " + time / 60 + "s", width - 225, 45);
+        }
     }
 
 //--game board for spawning visuals
@@ -72,13 +86,13 @@ public class Puck_Man extends PApplet {
 
                 //spawns the little pebbles or whatever they are
                 if(y > 2 && board[x][y] == 0){
-                    orbCounter++;
+                    orbCounter++; //counts the pellets
                     ellipseMode(CORNER);
                     fill(225, 198, 153); //beige
                     ellipse((x * 32) + 12, (y * 32) + 12, 8, 8);
                 }
                 //spawns player visuals
-                if(board[x][y] == 1){
+                if(board[x][y] == 1 && !arena_01.hit()){
                     ellipseMode(CORNER);
                     fill(200, 200, 50); //yellow ish
                     ellipse((x * 32) + 2,(y * 32 ) + 2, 30, 30);
@@ -92,13 +106,66 @@ public class Puck_Man extends PApplet {
         }
         //who knew it could be so fucking simple to make a win state... jesus christ...
         if(orbCounter == 0){
-            System.out.println("Win");
+            //if the number of pellets == 0 you have eaten them all, aka, there are no tiles with the value "0"
+            rectMode(CORNER);
+            fill(0,150);
+            noStroke();
+            rect(0,0,width,height);
+            textAlign(CENTER,CENTER);
+            textSize(100);
+            fill(250,250,50);
+            text("YOU WIN",width/2,height/2-35);
+            textSize(30);
+            fill(250,250,50);
+            highScore += hearts * 250;
+            highScore += (25 * (180 - time/60));
+            text("Highscore: "+highScore,width/2,height/2+45);
+            text("Time: "+time/60+"s",width/2,height/2+90);
+            noLoop();
         }
         rectMode(CORNER);
         fill(0);
         noStroke();
         rect(0,0,width,95);
         scoreboard(orbCounter);
+        displayHearts(orbCounter);
+    }
+
+//--Game Over State
+    public void gameOverState(){
+        if(arena_01.hit() && hearts != 0){
+            hearts -= 1;
+            puck.setX(8);
+            puck.setY(18);
+        }
+        if(arena_01.hit() && hearts == 0){
+            hearts = -1;
+            rectMode(CORNER);
+            fill(0,150);
+            noStroke();
+            rect(0,0,width,height);
+            textAlign(CENTER,CENTER);
+            textSize(100);
+            fill(250,250,50);
+            text("GAME OVER",width/2,height/2+35);
+            noLoop();
+        }
+    }
+
+//--displays
+    public void displayHearts(int orbCounter){
+        if(orbCounter != 0) {
+            if (hearts == 2) {
+                image(heart, width / 2 - 60, 30, 40, 40);
+                image(heart, width / 2 - 20, 30, 40, 40);
+                image(heart, width / 2 + 20, 30, 40, 40);
+            } else if (hearts == 1) {
+                image(heart, width / 2 - 20, 30, 40, 40);
+                image(heart, width / 2 + 20, 30, 40, 40);
+            } else if (hearts == 0) {
+                image(heart, width / 2 + 20, 30, 40, 40);
+            }
+        }
     }
 
 //--keybinds

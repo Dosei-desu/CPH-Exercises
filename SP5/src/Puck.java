@@ -20,6 +20,10 @@ public class Puck extends PApplet {
         this.x = x;
     }
 
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void moveX(int x) {
         this.x += x;
     }

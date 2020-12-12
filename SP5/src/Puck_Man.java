@@ -1,14 +1,14 @@
 import processing.core.PApplet;
 import processing.core.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
 public class Puck_Man extends PApplet {
 
 //--variables
     boolean paused = false;
         //player
+    static String name = "";
     PImage puck_man;
     Puck puck = new Puck(11,19);
             //health
@@ -25,6 +25,9 @@ public class Puck_Man extends PApplet {
     //since this^ is defined prior to the Size() initialisation, width and height won't work
         //arena debug image
     boolean debug = false;
+
+//--Database
+    Database database = new Database();
 
 //--settings
     public void settings(){
@@ -52,6 +55,12 @@ public class Puck_Man extends PApplet {
 
 //--necessary to run the PApplet
     public static void main(String[] args) {
+        //Entering name before beginning
+        System.out.println("Please enter your 5-digit name:");
+        Scanner input = new Scanner(System.in);
+        name = input.next();
+        System.out.println("Starting Puck-Man...");
+
         String[] processingArgs = {"Puck_Man"};
         Puck_Man mySketch = new Puck_Man();
         PApplet.runSketch(processingArgs, mySketch);
@@ -131,6 +140,16 @@ public class Puck_Man extends PApplet {
             highScore += (25 * (180 - time/60));
             text("Highscore: "+highScore,width/2,height/2+45);
             text("Time: "+time/60+"s",width/2,height/2+90);
+            //database
+            if(name == ""){
+                name = "NONAM";
+            }
+            if(name.length() > 5){
+                name = name.substring(0,5);
+            }
+            database.addToDatabase(name.toUpperCase(),highScore,time/60);
+
+
             noLoop();
         }
         rectMode(CORNER);

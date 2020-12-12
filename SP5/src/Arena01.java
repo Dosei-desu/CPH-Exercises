@@ -5,14 +5,14 @@ import java.util.Arrays;
 public class Arena01 extends PApplet { //has to also extend the processing app
     private final PApplet sketch; //not currently in use, but required to access processing library
     private Puck puck;
-    private Puck[] ghosts = new Puck[4];
+    private Puck[] ghosts = new Puck[5];
     private final int w = 20, h = 23;
     private int[][] board;
     private int previousX, previousY;
     private final int[] ghostPreviousX = new int[ghosts.length],
                         ghostPreviousY = new int[ghosts.length],
                         previousBoardValue = new int[ghosts.length];
-    private int[] moveCounter = {0,0,0,0};
+    private int[] moveCounter = {0,0,0,0,0};
 
     Arena01(PApplet sketch, Puck puck){
         this.sketch = sketch; //necessary to define what sketch is being used, without this, the class would require
@@ -24,9 +24,9 @@ public class Arena01 extends PApplet { //has to also extend the processing app
         this.ghosts[1] = new Puck(10,12);
         this.ghosts[2] = new Puck(9,13);
         this.ghosts[3] = new Puck(10,13);
-        for (int i = 0; i < previousBoardValue.length; i++) {
-            previousBoardValue[i] = 0;
-        }
+        this.ghosts[4] = new Puck(8,11);
+        Arrays.fill(previousBoardValue, 0);
+
         clearBoard();
         populateBoard();
     }
@@ -65,7 +65,6 @@ public class Arena01 extends PApplet { //has to also extend the processing app
         for (int i = 0; i < ghosts.length; i++) {
             if(puck.getX() == ghosts[i].getX() && puck.getY() == ghosts[i].getY()) return true;
         }
-
         return false;
     }
 
@@ -99,7 +98,7 @@ public class Arena01 extends PApplet { //has to also extend the processing app
         //without the timer they would move with the rate of the FPS, i.e. 30-60 moves per second, which would make it
         //impossible to avoid them... it's janky, but it works
 
-        //ghost one
+        //ghost one (top left)
         if(sketch.keyPressed) {
             int num = 0;
             if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
@@ -134,15 +133,61 @@ public class Arena01 extends PApplet { //has to also extend the processing app
             if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
             if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
             if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
-            if(num == moveCounter[0]){ ghosts[0].moveY(1); }
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed; //1st loop end
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed; //2nd loop end
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[0]){ ghosts[0].moveY(1); } //3rd loop end
 
-            if(moveCounter[0] > 32 * ghostSpeed){
+            if(moveCounter[0] > 78 * ghostSpeed){
                 moveCounter[0] = 4*ghostSpeed;
             }
 
             moveCounter[0]++;
         }
-        //ghost two
+        //ghost two (top right)
         if(sketch.keyPressed) {
             int num = 0;
             if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
@@ -177,15 +222,53 @@ public class Arena01 extends PApplet { //has to also extend the processing app
             if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
             if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
             if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
-            if(num == moveCounter[1]){ ghosts[1].moveX(-1); }
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed; //1st loop end
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[1]){ ghosts[1].moveX(-1); } //2nd loop end
 
-            if(moveCounter[1] > 32 * ghostSpeed){
+            if(moveCounter[1] > 70 * ghostSpeed){
                 moveCounter[1] = 4*ghostSpeed;
             }
 
             moveCounter[1]++;
         }
-        //ghost three
+        //ghost three (bottom left)
         if(sketch.keyPressed) {
             int num = 0;
             if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
@@ -229,15 +312,55 @@ public class Arena01 extends PApplet { //has to also extend the processing app
             if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
             if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
             if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed; //1st loop end
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
             if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[2]){ ghosts[2].moveX(1); } //2nd loop end
 
-            if(moveCounter[2] > 41*ghostSpeed){
+            if(moveCounter[2] > 81*ghostSpeed){
                 moveCounter[2] = 13*ghostSpeed;
             }
 
             moveCounter[2]++;
         }
-        //ghost four
+        //ghost four (bottom right)
         if(sketch.keyPressed) {
             int num = 0;
             if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
@@ -281,13 +404,97 @@ public class Arena01 extends PApplet { //has to also extend the processing app
             if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
             if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
             if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
-            if(num == moveCounter[3]){ ghosts[3].moveX(-1); }
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed; //1st loop end
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveY(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } num += ghostSpeed;
+            if(num == moveCounter[3]){ ghosts[3].moveX(-1); } //2nd loop end
 
-            if(moveCounter[3] > 41*ghostSpeed){
+            if(moveCounter[3] > 77*ghostSpeed){
                 moveCounter[3] = 13*ghostSpeed;
             }
 
             moveCounter[3]++;
+        }
+        //ghost five (middle)
+        if(sketch.keyPressed) {
+            int num = 0;
+            if (num == moveCounter[4]) { ghosts[4].moveY(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveY(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } num += ghostSpeed;
+            if (num == moveCounter[4]) { ghosts[4].moveX(-1); } //1st loop end
+
+            if(moveCounter[4] > 37*ghostSpeed){
+                moveCounter[4] = -1*ghostSpeed;
+            }
+
+            moveCounter[4]++;
         }
 
         //note for further development:
@@ -342,7 +549,7 @@ public class Arena01 extends PApplet { //has to also extend the processing app
         board[10][row] = 2; board[11][row] = 2; board[13][row] = 0; board[14][row] = 0; board[15][row] = 0; board[16][row] = 0;
         //12th row
         row++;
-        board[3][row] = 0; board[5][row] = 0; board[8][row] = 2; board[9][row] = 2; board[10][row] = 2; board[11][row] = 2;
+        board[3][row] = 0; board[5][row] = 0; board[8][row] = 2; board[9][row] = 2; board[10][row] = 4; board[11][row] = 2;
         board[14][row] = 0; board[16][row] = 0;
         //13th row
         row++;

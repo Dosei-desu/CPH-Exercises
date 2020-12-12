@@ -10,13 +10,14 @@ public class Puck_Man extends PApplet {
     boolean paused = false;
         //player
     PImage puck_man;
-    Puck puck = new Puck(8,18);
+    Puck puck = new Puck(11,19);
             //health
     PImage heart;
     int hearts = 2;
             //score
     int highScore = 0;
     int time = 0;
+    PImage fruit;
         //ghost
     PImage ghost;
         //arenas
@@ -37,6 +38,7 @@ public class Puck_Man extends PApplet {
         puck_man = loadImage("puck-man.png"); //find better image and make a version for left,right,up,down
         heart = loadImage("heart.png");
         ghost = loadImage("ghost.png");
+        fruit = loadImage("fruit.png");
     }
 
 //--draw
@@ -56,10 +58,11 @@ public class Puck_Man extends PApplet {
     }
 
 //--scoreboard
-    public void scoreboard(int orbCounter){
+    public void scoreboard(int orbCounter, int fruitCounter){
         if(orbCounter != 0) {
             time++;
             highScore = (171 - orbCounter) * 50;
+            highScore += (1 - fruitCounter) * 1000;
             textAlign(CORNER, CENTER);
             textSize(28);
             fill(150, 50, 50);
@@ -71,6 +74,7 @@ public class Puck_Man extends PApplet {
 //--game board for spawning visuals
     public void gameBoard() {
         int orbCounter = 0;
+        int fruitCounter = 0;
         int[][] board = arena_01.getBoard();
         for (int y = 0; y < arena_01.getHeight(); y++) {
             for (int x = 0; x < arena_01.getWidth(); x++) {
@@ -102,6 +106,12 @@ public class Puck_Man extends PApplet {
                     fill(0);
                     image(ghost,(x * 32 ) + 2,(y * 32 ) + 2,28,28);
                 }
+                //fruit
+                if(board[x][y] == 4){
+                    fruitCounter++; //counts number of fruits
+                    fill(50,250,50);
+                    image(fruit,(x * 32 ) + 8,(y * 32 ) + 8,20,20);
+                }
             }
         }
         //who knew it could be so fucking simple to make a win state... jesus christ...
@@ -127,7 +137,7 @@ public class Puck_Man extends PApplet {
         fill(0);
         noStroke();
         rect(0,0,width,95);
-        scoreboard(orbCounter);
+        scoreboard(orbCounter, fruitCounter);
         displayHearts(orbCounter);
     }
 
@@ -135,8 +145,8 @@ public class Puck_Man extends PApplet {
     public void gameOverState(){
         if(arena_01.hit() && hearts != 0){
             hearts -= 1;
-            puck.setX(8);
-            puck.setY(18);
+            puck.setX(11);
+            puck.setY(19);
         }
         if(arena_01.hit() && hearts == 0){
             hearts = -1;

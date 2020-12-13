@@ -1,12 +1,19 @@
 import processing.core.PApplet;
 import processing.core.*;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Puck_Man extends PApplet {
 
 //--variables
+        //startscreen
+    PImage startscreen;
+    boolean started = false;
+        //system functions
     boolean paused = false;
+            //highscorers
+    ArrayList<Highscorer> highscorers = new ArrayList<>();
         //player
     static String name = "";
     PImage puck_man;
@@ -23,7 +30,7 @@ public class Puck_Man extends PApplet {
         //arenas
     Arena01 arena_01 = new Arena01(this, puck);
     //since this^ is defined prior to the Size() initialisation, width and height won't work
-        //arena debug image
+        //arena debug image (not in use)
     boolean debug = false;
 
 //--Database
@@ -38,6 +45,7 @@ public class Puck_Man extends PApplet {
 //--setup
     public void setup(){ //draw is necessary, since some methods don't work in Settings()
         //noCursor();
+        startscreen = loadImage("Puck-Man startscreen.png");
         puck_man = loadImage("puck-man.png"); //find better image and make a version for left,right,up,down
         heart = loadImage("heart.png");
         ghost = loadImage("ghost.png");
@@ -46,11 +54,19 @@ public class Puck_Man extends PApplet {
 
 //--draw
     public void draw(){
-        //background
-        background(0);
-        arena_01.update();
-        gameBoard();
-        gameOverState();
+        if(mousePressed && mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height){
+            started = true;
+        }
+        if(started) {
+            //background
+            background(0);
+
+            arena_01.update();
+            gameBoard();
+            gameOverState();
+        }else{
+            image(startscreen,0,0,width,height);
+        }
     }
 
 //--necessary to run the PApplet
@@ -127,20 +143,18 @@ public class Puck_Man extends PApplet {
         if(orbCounter == 0){
             //if the number of pellets == 0 you have eaten them all, aka, there are no tiles with the value "0"
             rectMode(CORNER);
-            fill(0,150);
+            fill(0,200);
             noStroke();
             rect(0,0,width,height);
             textAlign(CENTER,CENTER);
             textSize(100);
             fill(250,250,50);
-            text("YOU WIN",width/2,height/2-35);
-            textSize(30);
-            fill(250,250,50);
+            text("YOU WIN",width/2,130);
             highScore += hearts * 250;
             highScore += (25 * (180 - time/60));
-            text("Highscore: "+highScore,width/2,height/2+45);
-            text("Time: "+time/60+"s",width/2,height/2+90);
-            //database
+
+
+            //adds newest score to database
             if(name == ""){
                 name = "NONAM";
             }
@@ -149,6 +163,23 @@ public class Puck_Man extends PApplet {
             }
             database.addToDatabase(name.toUpperCase(),highScore,time/60);
 
+            //display your score
+            textSize(30);
+            fill(250,250,50);
+            text("\""+name.toUpperCase()+"\"",width/2,250);
+            text("Score: "+highScore,width/2,300);
+            text("Time: "+time/60+"s",width/2,350);
+
+            //display highscorers
+                //populates arraylist with top 3 scorers, yours included if you get a high enough score
+            database.populateHighscorers(highscorers);
+            text("------Highscorers------",width/2,450);
+            text("\""+highscorers.get(0).getPlayer()+"\" --- "+highscorers.get(0).getScore()+" --- "+
+                    highscorers.get(0).getTime()+"s",width/2,500);
+            text("\""+highscorers.get(1).getPlayer()+"\" --- "+highscorers.get(1).getScore()+" --- "+
+                    highscorers.get(1).getTime()+"s",width/2,550);
+            text("\""+highscorers.get(2).getPlayer()+"\" --- "+highscorers.get(2).getScore()+" --- "+
+                    highscorers.get(2).getTime()+"s",width/2,600);
 
             noLoop();
         }

@@ -39,7 +39,7 @@ public class Database {
     public void populateHighscorers(ArrayList<Highscorer> arrayList){
         try {
             PreparedStatement pstmt = null;
-            String sql = "SELECT * FROM highscorers ORDER BY highscorers.score DESC LIMIT 3;";
+            String sql = "SELECT * FROM highscorers ORDER BY score DESC, id ASC LIMIT 3;";
 
             pstmt = connection.prepareStatement(sql);
 

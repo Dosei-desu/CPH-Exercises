@@ -12,12 +12,18 @@ public class Puck_Man extends PApplet {
     boolean started = false;
         //system functions
     boolean paused = false;
+        //states
+    boolean win = false;
+    boolean gameOver = false;
             //highscorers
     ArrayList<Highscorer> highscorers = new ArrayList<>();
         //player
     static String name = "";
     PImage puck_man;
     Puck puck = new Puck(11,19);
+            //"animation"
+    int animationCounter = 0;
+    boolean moveU = false, moveD = false, moveR = true, moveL = false;
             //health
     PImage heart;
     int hearts = 2;
@@ -67,6 +73,18 @@ public class Puck_Man extends PApplet {
         }else{
             image(startscreen,0,0,width,height);
         }
+    }
+
+//--reset
+    public void reset(){
+        loop();
+        started = false;
+        time = 0;
+        highScore = 0;
+        hearts = 2;
+        animationCounter = 0;
+        puck = new Puck(11,19);
+        arena_01 = new Arena01(this, puck);
     }
 
 //--necessary to run the PApplet
@@ -123,8 +141,88 @@ public class Puck_Man extends PApplet {
                 //spawns player visuals
                 if(board[x][y] == 1 && !arena_01.hit()){
                     ellipseMode(CORNER);
-                    fill(200, 200, 50); //yellow ish
-                    ellipse((x * 32) + 2,(y * 32 ) + 2, 30, 30);
+                    if(animationCounter < 4) {
+                        fill(200, 200, 50); //yellow ish
+                        ellipse((x * 32) + 2,(y * 32 ) + 2, 28, 28);
+                    }else if(animationCounter < 8){
+                        fill(200, 200, 50); //yellow ish
+                        ellipse((x * 32) + 2,(y * 32 ) + 2, 28, 28);
+                        fill(0);
+                        //animation
+                            //up
+                        if(moveU) {
+                            beginShape();
+                            vertex((x * 32) + 17, (y * 32) + 15);
+                            vertex((x * 32) + 10, (y * 32));
+                            vertex((x * 32) + 20, (y * 32));
+                            endShape();
+                        }
+                            //down
+                        if(moveD) {
+                            beginShape();
+                            vertex((x * 32) + 17, (y * 32) + 15);
+                            vertex((x * 32) + 10, (y * 32) + 30);
+                            vertex((x * 32) + 20, (y * 32) + 30);
+                            endShape();
+                        }
+                            //right
+                        if(moveR) {
+                            beginShape();
+                            vertex((x * 32) + 15, (y * 32) + 15);
+                            vertex((x * 32) + 35, (y * 32) + 10);
+                            vertex((x * 32) + 35, (y * 32) + 20);
+                            endShape();
+                        }
+                            //left
+                        if(moveL) {
+                            beginShape();
+                            vertex((x * 32) + 20, (y * 32) + 15);
+                            vertex((x * 32), (y * 32) + 10);
+                            vertex((x * 32), (y * 32) + 20);
+                            endShape();
+                        }
+                    }else{
+                        fill(200, 200, 50); //yellow ish
+                        ellipse((x * 32) + 2,(y * 32 ) + 2, 28, 28);
+                        fill(0);
+                        //animation
+                            //up
+                        if(moveU) {
+                            beginShape();
+                            vertex((x * 32) + 17, (y * 32) + 15);
+                            vertex((x * 32), (y * 32));
+                            vertex((x * 32) + 30, (y * 32));
+                            endShape();
+                        }
+                            //down
+                        if(moveD) {
+                            beginShape();
+                            vertex((x * 32) + 17, (y * 32) + 15);
+                            vertex((x * 32), (y * 32) + 30);
+                            vertex((x * 32) + 30, (y * 32) + 30);
+                            endShape();
+                        }
+                            //right
+                        if(moveR) {
+                            beginShape();
+                            vertex((x * 32) + 15, (y * 32) + 15);
+                            vertex((x * 32) + 35, (y * 32));
+                            vertex((x * 32) + 35, (y * 32) + 30);
+                            endShape();
+                        }
+                            //left
+                        if(moveL) {
+                            beginShape();
+                            vertex((x * 32) + 20, (y * 32) + 15);
+                            vertex((x * 32), (y * 32));
+                            vertex((x * 32), (y * 32) + 30);
+                            endShape();
+                        }
+                    }
+                    if(animationCounter > 12){
+                        animationCounter = 0;
+                    }
+                    animationCounter++;
                 }
                 //ghosts
                 if(board[x][y] == 3){
@@ -145,14 +243,15 @@ public class Puck_Man extends PApplet {
             rectMode(CORNER);
             fill(0,200);
             noStroke();
-            rect(0,0,width,height);
+            rect(0,0,width,height); //blacks out background with transparent screen
+
             textAlign(CENTER,CENTER);
             textSize(100);
             fill(250,250,50);
             text("YOU WIN",width/2,130);
+
             highScore += hearts * 250;
             highScore += (25 * (180 - time/60));
-
 
             //adds newest score to database
             if(name == ""){
@@ -181,12 +280,15 @@ public class Puck_Man extends PApplet {
             text("\""+highscorers.get(2).getPlayer()+"\" --- "+highscorers.get(2).getScore()+" --- "+
                     highscorers.get(2).getTime()+"s",width/2,600);
 
+            win = true;
+
             noLoop();
         }
         rectMode(CORNER);
         fill(0);
         noStroke();
-        rect(0,0,width,95);
+        rect(0,0,width,95); //blacks out score, hearts, timer
+
         scoreboard(orbCounter, fruitCounter);
         displayHearts(orbCounter);
     }
@@ -199,15 +301,21 @@ public class Puck_Man extends PApplet {
             puck.setY(19);
         }
         if(arena_01.hit() && hearts == 0){
-            hearts = -1;
-            rectMode(CORNER);
-            fill(0,150);
             noStroke();
-            rect(0,0,width,height);
+            rectMode(CORNER);
+            fill(0);
+            rect(0,0,width,95); //blacks out score, hearts, timer
+
+            fill(0,200);
+            rect(0,0,width,height); //blacks out background with transparent screen
+
             textAlign(CENTER,CENTER);
             textSize(100);
-            fill(250,250,50);
-            text("GAME OVER",width/2,height/2+35);
+            fill(250,50,50);
+            text("GAME OVER",width/2,height/2);
+
+            gameOver = true;
+
             noLoop();
         }
     }
@@ -237,6 +345,7 @@ public class Puck_Man extends PApplet {
             for (int x = 0; x < arena_01.getWidth(); x++) {
                 if (!paused) {
                     if (key == 'A' || key == 'a' || keyCode == LEFT) {
+                        moveL = true; moveR = false; moveU = false; moveD = false;
                         //left exit teleporter
                         if (puck.getX() == 0 && puck.getY() == 12) {
                             puck.setX(18);
@@ -249,6 +358,7 @@ public class Puck_Man extends PApplet {
                         }
                     }
                     if (key == 'D' || key == 'd' || keyCode == RIGHT) {
+                        moveR = true; moveL = false; moveU = false; moveD = false;
                         //left exit teleporter
                         if (puck.getX() == 19 && puck.getY() == 12) {
                             puck.setX(1);
@@ -261,6 +371,7 @@ public class Puck_Man extends PApplet {
                         }
                     }
                     if (key == 'W' || key == 'w' || keyCode == UP) {
+                        moveU = true; moveR = false; moveL = false;  moveD = false;
                         if (board[puck.getX()][puck.getY() - 1] != -1) {
                             if (moveOnce) {
                                 puck.moveY(-1);
@@ -269,6 +380,7 @@ public class Puck_Man extends PApplet {
                         }
                     }
                     if (key == 'S' || key == 's' || keyCode == DOWN) {
+                        moveD = true; moveU = false; moveR = false; moveL = false;
                         if (board[puck.getX()][puck.getY() + 1] != -1) {
                             if (moveOnce) {
                                 puck.moveY(1);
@@ -286,10 +398,14 @@ public class Puck_Man extends PApplet {
         //pause
         if(key == 'P' || key == 'p') {
             if (!paused) {
-                fill(250,250,50);
-                textSize(35);
+                rectMode(CORNER);
+                fill(50,200);
+                rect(0,0,width,height); //greys out background with transparent screen
+
+                fill(150);
+                textSize(100);
                 textAlign(CENTER,CENTER);
-                text("PAUSED",width/2,height/2+85);
+                text("PAUSED",width/2,height/2);
                 paused = true;
                 noLoop();
             } else {
@@ -297,6 +413,11 @@ public class Puck_Man extends PApplet {
                 loop();
             }
         }
+        //reset
+        if(key == 'R' || key == 'r'){
+            reset();
+        }
+        //debug
         if(key == 'M' || key == 'm'){
             debug = !debug;
         }
@@ -314,16 +435,22 @@ public class Puck_Man extends PApplet {
                 System.out.println("X: " + (mouseX) + "\nY: " + (mouseY));
             }
         }
+        if(win || gameOver){
+            win = false;
+            gameOver = false;
+            reset();
+        }
     }
 }
 
 //TODO
 /**
- * Add enenenmies that track player
- * Add "fruit" (maybe trapped inside ghost cage)
+ *
  */
 
 //FIXME
 /**
- *
+ * Rare event of magically skipping around a corner when two keys are pressed simultaneously, have not been able to
+   recreate...
+ * Make up and down chomping look less derp
  */

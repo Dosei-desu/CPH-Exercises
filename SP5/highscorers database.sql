@@ -16,3 +16,5 @@ CREATE TABLE highscorers(
     PRIMARY KEY (id)
 );
 */
+
+SELECT * FROM highscorers ORDER BY score DESC, id ASC;

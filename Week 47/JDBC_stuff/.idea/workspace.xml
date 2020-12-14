@@ -19,15 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4752a7f4-b667-486b-9bb9-f1bc1975aca4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../../SP5/Puck-Man startscreen.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../SP5/src/Highscorer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../SP5/out/production/SP5/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../SP5/out/production/SP5/Database.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../SP5/out/production/SP5/Puck_Man.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../SP5/out/production/SP5/Puck_Man.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../SP5/src/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../SP5/src/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../SP5/src/Puck_Man.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../SP5/src/Puck_Man.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="4752a7f4-b667-486b-9bb9-f1bc1975aca4" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

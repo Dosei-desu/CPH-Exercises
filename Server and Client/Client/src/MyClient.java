@@ -17,23 +17,19 @@ public class MyClient
             in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             out = new DataOutputStream(socket.getOutputStream());
         }
-        catch(UnknownHostException u)
-        {
+        catch(IOException u){
             System.out.println(u);
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
         }
 
         String line = "";
         String newLine = "";
-        while (!line.equals("Over"))
+        while (!line.equalsIgnoreCase("Over"))
         {
             try
             {
                 line = input.readLine();
                 out.writeUTF(line);
+                out.flush();
 
                 newLine = in.readUTF(); //throws exception (End of File)
                 System.out.println(newLine);
@@ -41,7 +37,6 @@ public class MyClient
             catch(IOException i)
             {
                 System.out.println(i);
-                i.printStackTrace();
             }
         }
         try
@@ -56,8 +51,10 @@ public class MyClient
             System.out.println(i);
         }
     }
+
     public static void main(String args[])
     {
         MyClient client = new MyClient("127.0.0.1", 5000);
     }
 }
+

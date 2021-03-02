@@ -1,14 +1,3 @@
-/**
- * Skriv en klient som har 2 tråde. Den første tråd skal håndere indput fra serveren og den anden tråd skal sørge for at
- * tage imod input fra klienten. Altså en tråd til at sende og modtage med.
- *
- * Ekstra til denne opgave:
- *
- *     Implementer en loginfunktionalitet som vi allerede har talt om
- *     Sørg for at der ikke er race condition og deadlocks i koden
- *     Evt. overvej om I kan gemme brugernavne og passwords i filer på serveren
- */
-
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;

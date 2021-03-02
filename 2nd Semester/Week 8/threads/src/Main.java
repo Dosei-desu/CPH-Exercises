@@ -1,16 +1,27 @@
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         Thread t1 = new Thread(new WorkerClass());
-        t1.start();
         Thread t2 = new Thread(new DeWorkerClass());
-        t2.start();
         Thread t3 = new Thread(new WorkerClass());
-        t3.start();
         Thread t4 = new Thread(new DeWorkerClass());
-        t4.start();
         Thread t5 = new Thread(new WorkerClass());
-        t5.start();
         Thread t6 = new Thread(new DeWorkerClass());
+
+        /*
+        //test to see if there's an discernible difference between user and daemon thread in this example (there isn't)
+        t1.setDaemon(true);
+        t2.setDaemon(true);
+        t3.setDaemon(true);
+        t4.setDaemon(true);
+        t5.setDaemon(true);
+        t6.setDaemon(true);
+        */
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        t5.start();
         t6.start();
 
         //joins to ensure that Threads finish before the result is printed

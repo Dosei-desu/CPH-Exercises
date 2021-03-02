@@ -2,77 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="499f019a-d454-400e-ab4b-17a7e0c177a3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Client/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Client/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Client/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Client/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Client/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Client/Network thingy.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Client/out/production/Network thingy/MyClient.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Client/src/MyClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Server/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Server/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Server/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Server/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Server/Network thingy 2.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Server/out/production/Network thingy 2/MyServer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Server/src/MyServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/Client.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/out/production/Client/Main.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/out/production/Client/MyClient.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Client/src/MyClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Server/MyServer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/MyServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/.idea/description.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/.idea/project-template.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/DeWorkerClass.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/Main.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/WorkerClass.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/sharedResource.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../threads/threads.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Client/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Client/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Client/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Client/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Client/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Client/Network thingy.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Client/out/production/Network thingy/MyClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Client/src/MyClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Server/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Server/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Server/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Server/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Server/Network thingy 2.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Server/out/production/Network thingy 2/MyServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../Server and Client/Server/src/MyServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/.idea/description.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/.idea/project-template.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/out/production/threads/DeWorkerClass.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/out/production/threads/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/out/production/threads/WorkerClass.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/out/production/threads/sharedResource.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/src/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../../threads/threads.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/out/production/Client/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/out/production/Client/MyClient$InThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/out/production/Client/MyClient$OutThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/out/production/Client/MyClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/out/production/Client/MyClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/MyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/MyClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MyServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../threads/out/production/threads/DeWorkerClass.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/DeWorkerClass.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../threads/out/production/threads/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../threads/out/production/threads/WorkerClass.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/WorkerClass.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../threads/out/production/threads/sharedResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/sharedResource.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../threads/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

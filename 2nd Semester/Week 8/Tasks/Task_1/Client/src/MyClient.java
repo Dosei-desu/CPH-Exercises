@@ -1,16 +1,6 @@
-/**
- * Skriv en klient som har 2 tråde. Den første tråd skal håndere indput fra serveren og den anden tråd skal sørge for at
- * tage imod input fra klienten. Altså en tråd til at sende og modtage med.
- *
- * Ekstra til denne opgave:
- *
- *     Implementer en loginfunktionalitet som vi allerede har talt om
- *     Sørg for at der ikke er race condition og deadlocks i koden
- *     Evt. overvej om I kan gemme brugernavne og passwords i filer på serveren
- */
-
 import java.net.*;
 import java.io.*;
+import java.util.Scanner;
 
 public class MyClient
 {
@@ -18,7 +8,7 @@ public class MyClient
     private DataInputStream input = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
-    private boolean run = true;
+    private String line = "";
 
     // constructor to put ip address and port
     public MyClient(String address, int port) throws InterruptedException {
@@ -30,58 +20,56 @@ public class MyClient
             in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             out = new DataOutputStream(socket.getOutputStream());
         }
+        catch(UnknownHostException u) //although it is a sub-IOException, this is used to catch specifically UnknownHost
+        {
+            System.out.println(u);
+        }
         catch(IOException u){
             System.out.println(u);
         }
 
-        while (run)
-        {
-            Thread outThread = new Thread(new OutThread());
-            outThread.start();
-            Thread inThread = new Thread(new InThread());
-            inThread.start();
-            outThread.join();
-            inThread.join();
-        }
-        try
-        {
-            input.close();
-            in.close();
-            out.close();
-            socket.close();
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
-        }
-    }
+        Scanner scanner = new Scanner(System.in);
 
-    class OutThread implements Runnable{
-        @Override
-        public void run(){
-            try {
-                String line = input.readLine();
-                out.writeUTF(line);
-                out.flush();
-                if(line.equalsIgnoreCase("Over")){ //this is the alternative to using "line" to control the while loop
-                    run = false;
+        Thread outThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!line.equalsIgnoreCase("Over")) {
+                    line = scanner.nextLine();
+                    try {
+                        out.writeUTF(line);
+                        out.flush();
+                    } catch (IOException ex) {
+                        System.out.println(ex);
+                    }
                 }
             }
-            catch (IOException ex){
-                System.out.println(ex);
-            }
-        }
-    }
+        });
 
-    class InThread implements Runnable{
-        @Override
-        public void run(){
-            try {
-                String line = in.readUTF(); //throws exception (End of File)
-                System.out.println(line);
+        Thread inThread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                while(!line.equalsIgnoreCase("Over")) {
+                    try {
+                        String receivedLine = in.readUTF();
+                        System.out.println(receivedLine);
+                    } catch (IOException ex) {
+                        System.out.println(ex);
+                    }
+                }
             }
-            catch (IOException ex){
-                System.out.println(ex);
+        });
+
+        outThread.start();
+        inThread.start();
+
+        if(line.equals("Over")) {
+            try {
+                input.close();
+                in.close();
+                out.close();
+                socket.close();
+            } catch (IOException i) {
+                System.out.println(i);
             }
         }
     }

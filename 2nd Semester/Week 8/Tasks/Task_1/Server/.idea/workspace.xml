@@ -2,18 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="499f019a-d454-400e-ab4b-17a7e0c177a3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../Client/out/production/Client/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/out/production/Client/MyClient$InThread.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/out/production/Client/MyClient$OutThread.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/out/production/Client/MyClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/out/production/Client/MyClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Client/src/MyClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/MyClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Client/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Client/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Client/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Client/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Client/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Client/Client.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Server/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Server/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Server/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Server/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../Server and Client/Multithread/Server/Server.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MyServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MyServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../threads/out/production/threads/DeWorkerClass.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/DeWorkerClass.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../threads/out/production/threads/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../threads/out/production/threads/WorkerClass.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/WorkerClass.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../threads/out/production/threads/sharedResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/out/production/threads/sharedResource.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../threads/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../threads/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -15,11 +15,12 @@
     <jsp:body>
 
         <div>
-            <h2>Our Cool Site</h2>
+            <h2>BMI calculator</h2>
 
-            <div style="margin-top: 3em;margin-bottom: 3em;">
-                Main page for this 2. semester start project used at cphbusiness.dk
-            </div>
+            <p>
+                Link to Result Page:
+                <a href="fc/bmiresult">Result Page</a>
+            </p>
 
             <c:if test="${sessionScope.role == 'employee' }">
                 <p style="font-size: larger">This is what you can do,

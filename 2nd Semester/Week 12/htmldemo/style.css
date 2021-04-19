@@ -1,0 +1,41 @@
+/* style stuff */
+
+body {
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header {
+    width: 1024px;
+    height: 55px;
+    background-color: black;
+    padding: 5px;
+}
+
+h1 {
+    color: darkred;
+    font-size: 32px;
+}
+
+h2 {
+    color: darkred;
+    font-size: 28px;
+}
+
+h3 {
+    color: darkred;
+    font-size: 24px;
+}
+
+p {
+    color: slategrey;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 55px;
+    border-top: 2px solid black;
+    padding: 10px;
+}

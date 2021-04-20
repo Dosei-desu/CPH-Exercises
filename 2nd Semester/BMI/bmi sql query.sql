@@ -21,3 +21,4 @@ INSERT INTO `users` VALUES
 (3,'robin@gotham.com','batman','employee');
 UNLOCK TABLES;
 */
+SELECT * FROM bmi.bmi_entry;

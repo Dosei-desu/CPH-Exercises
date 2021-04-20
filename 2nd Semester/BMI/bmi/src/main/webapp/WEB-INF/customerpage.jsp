@@ -11,8 +11,9 @@
 
     <jsp:body>
         <h1>Hello ${sessionScope.email} </h1>
-        You are now logged in as a Customer of our wonderful site.
-        Role: ${sessionScope.role}
+        <p>Let's calculate your BMI!</p>
+        <p>Visit the <a href="${pageContext.request.contextPath}">homepage</a> to get started!</p>
+        <p>Click <a href="${pageContext.request.contextPath}/fc/mybmientries">here</a> to view your previous BMI calculations.</p>
     </jsp:body>
 
 </t:genericpage>

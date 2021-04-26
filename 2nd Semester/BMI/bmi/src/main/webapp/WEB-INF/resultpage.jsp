@@ -18,10 +18,12 @@
             <div class="col-sm-4"></div>
 
             <div class="col-sm-4">
-                <h2>BMI Result</h2>
+                <h2 class="mb-4">BMI Result</h2>
 
                 <p>
                     Your height is ${requestScope.height} cm.<br/>
+                </p>
+                <p>
                     Your weight is ${requestScope.weight} kg.
                 </p>
                 <p>
@@ -34,11 +36,11 @@
                     Gender: ${requestScope.gender}
                 </p>
                 <p>
-                    Sport: ${requestScope.sport_id}
+                    Sport: ${requestScope.sport_name}
                 </p>
                 <p>
                     Hobbies:<br/>
-                    <c:forEach var="hobbyitem" items="${requestScope.hobbies}">
+                    <c:forEach var="hobbyitem" items="${requestScope.hobbiesName}">
                         - ${hobbyitem}<br/>
                     </c:forEach>
                 </p>

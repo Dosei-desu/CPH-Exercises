@@ -1,9 +1,11 @@
 package web.commands;
 
+import business.entities.Sport;
 import business.entities.User;
 import business.exceptions.UserException;
 import business.services.BmiFacade;
 import business.services.BmiUtil;
+import business.services.Capitaliser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,12 +48,16 @@ public class CalcBMICommand extends CommandUnprotectedPage{
         //gender
         String gender = request.getParameter("gender");
         //sport
-        int sport_id = Integer.parseInt(request.getParameter("sport"));
+        Sport sport = bmiFacade.getSportsById(Integer.parseInt(request.getParameter("sport")));
+        int sport_id = sport.getSport_id();
+        String sport_name = sport.getName();
         //hobbies
         String[] hobbies = request.getParameterValues("hobby"); //turning string list
-        List<Integer> hobbyList = new ArrayList<>(); //into integer list
+        List<Integer> hobbyListIds = new ArrayList<>(); //into integer list
+        List<String> hobbyListNames = new ArrayList<>();
         for (String hobby : hobbies) { //like so...
-            hobbyList.add(Integer.parseInt(hobby));
+            hobbyListIds.add(Integer.parseInt(hobby));
+            hobbyListNames.add(bmiFacade.getHobbyById(Integer.parseInt(hobby)).getName());
         }
 
         try {
@@ -71,11 +77,13 @@ public class CalcBMICommand extends CommandUnprotectedPage{
         request.setAttribute("height",String.format("%.0f",height));
         request.setAttribute("weight",String.format("%.0f",weight));
         request.setAttribute("category",category);
-        request.setAttribute("gender",gender);
+        request.setAttribute("gender", Capitaliser.capitalise(gender));
         request.setAttribute("sport_id",sport_id);
-        request.setAttribute("hobbies",hobbyList);
+        request.setAttribute("sport_name",sport_name);
+        request.setAttribute("hobbiesId",hobbyListIds);
+        request.setAttribute("hobbiesName",hobbyListNames);
 
-        bmiFacade.insertBmiEntry(bmi,height,weight,category,gender,sport_id,user_id,hobbyList);
+        bmiFacade.insertBmiEntry(bmi,height,weight,category,gender,sport_id,user_id,hobbyListIds);
 
         return pageToShow;
     }

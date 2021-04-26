@@ -1,9 +1,11 @@
 package business.persistence;
 
 import business.entities.BmiEntry;
+import business.entities.Hobby;
 import business.entities.Sport;
 import business.entities.User;
 import business.exceptions.UserException;
+import business.services.Capitaliser;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ public class BmiMapper {
                     int weight = rs.getInt("weight");;
                     String category = rs.getString("category");
                     double bmi = rs.getDouble("bmi");
-                    String gender = rs.getString("gender");
+                    String gender = Capitaliser.capitalise(rs.getString("gender"));
                     Timestamp created = rs.getTimestamp("created");
                     bmiEntryList.add(new BmiEntry(id,height,weight,category,bmi,gender,created));
                 }
@@ -66,7 +68,7 @@ public class BmiMapper {
                     int weight = rs.getInt("weight");;
                     String category = rs.getString("category");
                     double bmi = rs.getDouble("bmi");
-                    String gender = rs.getString("gender");
+                    String gender = Capitaliser.capitalise(rs.getString("gender"));
                     Timestamp created = rs.getTimestamp("created");
                     bmiEntryList.add(new BmiEntry(id,height,weight,category,bmi,gender,created));
                 }
@@ -97,7 +99,7 @@ public class BmiMapper {
                 ps.setDouble(2,weight);
                 ps.setString(3,category);
                 ps.setDouble(4,bmi);
-                ps.setString(5,gender);
+                ps.setString(5,Capitaliser.capitalise(gender));
                 ps.setInt(6,sport_id);
                 ps.setInt(7,user_id);
                 ps.executeUpdate();
@@ -139,6 +141,138 @@ public class BmiMapper {
         catch (SQLException ex)
         {
             throw new UserException(ex.getMessage());
+        }
+    }
+
+    public int deleteSport(int sportId) throws UserException{
+        try (Connection connection = database.connect())
+        {
+            String sql = "DELETE FROM bmi.sport WHERE sport_id = ? AND sport_id NOT IN (SELECT sport_id FROM bmi.bmi_entry);";
+
+            try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS))
+            {
+                ps.setInt(1, sportId);
+                int rowsAffected = ps.executeUpdate();
+                return rowsAffected;
+            }
+            catch (SQLException ex)
+            {
+                throw new UserException(ex.getMessage());
+            }
+        }
+        catch (SQLException ex)
+        {
+            throw new UserException(ex.getMessage());
+        }
+    }
+
+    public List<Sport> getAllSports() throws UserException{
+        List<Sport> sportList = new ArrayList<>();
+        try (Connection connection = database.connect())
+        {
+            String sql = "SELECT * FROM sport;";
+
+            try (PreparedStatement ps = connection.prepareStatement(sql))
+            {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next())
+                {
+                    int id = rs.getInt("sport_id");
+                    String name = rs.getString("name");
+
+                    sportList.add(new Sport(id,name));
+                }
+                return sportList;
+            }
+            catch (SQLException ex)
+            {
+                throw new UserException(ex.getMessage());
+            }
+        }
+        catch (SQLException ex)
+        {
+            throw new UserException("Connection to database could not be established");
+        }
+    }
+
+    public Sport getSportsById(int sportId) throws UserException{
+        try (Connection connection = database.connect())
+        {
+            String sql = "SELECT * FROM bmi.sport WHERE sport_id = ?;";
+
+            try (PreparedStatement ps = connection.prepareStatement(sql))
+            {
+                ps.setInt(1,sportId);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next())
+                {
+                    int id = rs.getInt("sport_id");
+                    String name = rs.getString("name");
+
+                    return new Sport(id,name);
+                }
+                throw new UserException("Sport-type not found for id = "+sportId);
+            }
+            catch (SQLException ex)
+            {
+                throw new UserException(ex.getMessage());
+            }
+        }
+        catch (SQLException ex)
+        {
+            throw new UserException("Connection to database could not be established");
+        }
+    }
+
+    public Hobby getHobbyById(int hobbyId) throws UserException{
+        try (Connection connection = database.connect())
+        {
+            String sql = "SELECT * FROM bmi.hobby WHERE hobby_id = ?;";
+
+            try (PreparedStatement ps = connection.prepareStatement(sql))
+            {
+                ps.setInt(1,hobbyId);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next())
+                {
+                    int id = rs.getInt("hobby_id");
+                    String name = rs.getString("name");
+
+                    return new Hobby(id,name);
+                }
+                throw new UserException("Hobby not found for id = "+hobbyId);
+            }
+            catch (SQLException ex)
+            {
+                throw new UserException(ex.getMessage());
+            }
+        }
+        catch (SQLException ex)
+        {
+            throw new UserException("Connection to database could not be established");
+        }
+    }
+
+    public int updateSport(int sportId, String name) throws UserException{
+        try (Connection connection = database.connect())
+        {
+            String sql = "UPDATE bmi.sport SET `name` = ? WHERE sport_id = ?;";
+
+            try (PreparedStatement ps = connection.prepareStatement(sql))
+            {
+                ps.setString(1,name);
+                ps.setInt(2,sportId);
+                int rowsInserted = ps.executeUpdate();
+                return rowsInserted;
+            }
+            catch (SQLException ex)
+            {
+                throw new UserException(ex.getMessage());
+            }
+        }
+        catch (SQLException ex)
+        {
+            throw new UserException("Connection to database could not be established");
         }
     }
 }

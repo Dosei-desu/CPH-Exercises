@@ -1,5 +1,7 @@
 package business.entities;
 
+import business.services.Capitaliser;
+
 import java.sql.Timestamp;
 
 public class BmiEntry {
@@ -20,7 +22,7 @@ public class BmiEntry {
         this.weight = weight;
         this.category = category;
         this.bmi = bmi;
-        this.gender = gender;
+        this.gender = Capitaliser.capitalise(gender);
         this.user = null;
         this.sport = null;
         this.created = created;

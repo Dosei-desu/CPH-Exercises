@@ -21,4 +21,5 @@ INSERT INTO `users` VALUES
 (3,'robin@gotham.com','batman','employee');
 UNLOCK TABLES;
 */
-SELECT * FROM bmi.bmi_entry;
+
+SELECT bmi_entry_id, users.email, users.id, users.`role`, bmi_entry.bmi, bmi_entry.category FROM bmi.bmi_entry, bmi.users WHERE bmi_entry.user_id = users.id;

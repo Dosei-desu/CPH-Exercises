@@ -18,7 +18,8 @@
             <div class="col-sm-4"></div>
 
             <div class="col-sm-4">
-                <h2>BMI calculator</h2>
+
+                <h1 class="text-center">BMI Calculator</h1>
 
                 <form method="post" action="${pageContext.request.contextPath}/fc/bmiresult">
                     <div class="form-group">
@@ -33,43 +34,42 @@
 
                     <br/>
 
-                    <div>
-                        <input type="radio" id="male" name="gender" value="male">
-                        <label for="male">Male</label>
-                        <input type="radio" id="female" name="gender" value="female">
-                        <label for="female">Female</label>
-                        <input type="radio" id="nonconformist" name="gender" value="nonconformist">
-                        <label for="nonconformist">Nonconformist</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="male" name="gender" value="male">
+                        <label class="form-check-label" for="male">Male</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="female" name="gender" value="female">
+                        <label class="form-check-label" for="female">Female</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="nonconformist" name="gender" value="nonconformist">
+                        <label class="form-check-label" for="nonconformist">Nonconformist</label>
                     </div>
 
-                    <br/>
-
-                    <div>
-                        <label for="sport">Choose your primary sport:</label>
-                        <select name="sport" id="sport">
-                            <option value="1">Free-diving</option>
-                            <option value="2">Extreme Fishing</option>
-                            <option value="3">Golf (really??)</option>
-                            <option value="4">4D Chess</option>
+                    <div class="form-group mt-3">
+                        <label class="form-check-label" for="sport">Choose your primary sports-type:</label>
+                        <select class="form-control" name="sport" id="sport">
+                            <c:forEach var="sport" items="${applicationScope.sportList}">
+                                <option value="${sport.sport_id}">${sport.name}</option>
+                            </c:forEach>
                         </select>
                     </div>
 
-                    <br/>
-
-                    <div>
-                        <p>Select your hobbies:</p>
-                        <input type="checkbox" id="hobby1" name="hobby" value="1">
-                        <label for="hobby1">Avalanche Sledding</label><br>
-                        <input type="checkbox" id="hobby2" name="hobby" value="2">
-                        <label for="hobby2">Playing with my 18 cats</label><br>
-                        <input type="checkbox" id="hobby3" name="hobby" value="3">
-                        <label for="hobby3">Bungee-jumping while knitting</label><br>
-                        <input type="checkbox" id="hobby4" name="hobby" value="4">
-                        <label for="hobby4">Wondering where my life went so wrong</label><br>
-                        <input type="checkbox" id="hobby5" name="hobby" value="5">
-                        <label for="hobby5">Building model trains (I'm not a serial killer... yet)</label><br>
-                        <input type="checkbox" id="hobby6" name="hobby" value="6">
-                        <label for="hobby6">Disassociating in the shower</label><br>
+                    <div class="mt-4">
+                        <p class="text-center mb-0">I enjoy (check following):</p><br>
+                        <input class="form-check-input" type="checkbox" id="hobby1" name="hobby" value="1">
+                        <label class="form-check-label mt-0" for="hobby1">Avalanche Sledding</label><br>
+                        <input class="form-check-input" type="checkbox" id="hobby2" name="hobby" value="2">
+                        <label class="form-check-label mt-1" for="hobby2">Playing with my 18 cats</label><br>
+                        <input class="form-check-input" type="checkbox" id="hobby3" name="hobby" value="3">
+                        <label class="form-check-label mt-1" for="hobby3">Bungee-jumping while knitting</label><br>
+                        <input class="form-check-input" type="checkbox" id="hobby4" name="hobby" value="4">
+                        <label class="form-check-label mt-1" for="hobby4">Wondering where my life went so wrong</label><br>
+                        <input class="form-check-input" type="checkbox" id="hobby5" name="hobby" value="5">
+                        <label class="form-check-label mt-1" for="hobby5">Building model trains (I'm not a serial killer... yet)</label><br>
+                        <input class="form-check-input" type="checkbox" id="hobby6" name="hobby" value="6">
+                        <label class="form-check-label mt-1" for="hobby6">Disassociating in the shower</label><br>
                     </div>
 
                     <br/>
@@ -79,8 +79,9 @@
                                 ${requestScope.error}
                         </p>
                     </c:if>
-
-                    <button type="submit" class="btn btn-primary">Calculate BMI</button>
+                    <div class="text-center mt-4">
+                      <button type="submit" class="btn btn-secondary">Calculate BMI</button>
+                    </div>
                 </form>
             </div>
 

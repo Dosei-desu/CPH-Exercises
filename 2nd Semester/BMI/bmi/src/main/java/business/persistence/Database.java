@@ -20,6 +20,7 @@ public class Database
             USER = System.getenv("JDBC_USER");
             PASSWORD = System.getenv("JDBC_PASSWORD");
             URL = System.getenv("JDBC_CONNECTION_STRING");
+
         } else
         {
             USER = user;

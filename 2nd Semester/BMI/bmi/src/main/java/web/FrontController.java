@@ -1,6 +1,7 @@
 package web;
 
 import business.exceptions.UserException;
+import business.persistence.BmiMapper;
 import business.persistence.Database;
 import web.commands.*;
 
@@ -17,8 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "FrontController", urlPatterns = {"/fc/*"})
 public class FrontController extends HttpServlet
 {
-    private final static String USER = "root";
-    private final static String PASSWORD = "h4bI1tAt10n";
+    //had to hardcode this to make it work, because the setenv.sh
+    private final static String USER = "bmi";
+    private final static String PASSWORD = "4Mber-4tom"; //for some reason I used the wrong password
     private final static String URL = "jdbc:mysql://localhost:3306/bmi?serverTimezone=CET";
 
     public static Database database;
@@ -39,7 +41,12 @@ public class FrontController extends HttpServlet
         }
 
         // Initialize whatever global datastructures needed here:
-
+        BmiMapper bmiMapper = new BmiMapper(database);
+        try {
+            getServletContext().setAttribute("sportList", bmiMapper.getAllSports());
+        } catch (UserException ex) {
+            Logger.getLogger("web").log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }
 
     protected void processRequest(

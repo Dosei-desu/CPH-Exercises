@@ -12,8 +12,8 @@
         <h1>Hello ${sessionScope.email} </h1>
         This is a list of all BMI entries:
 
-        <table>
-            <thead><th>ID-----</th><th>BMI------</th><th>Category-------</th><th>Gender----------</th><th>Height-----</th><th>Weight</th></thead>
+        <table class="table">
+            <thead><th>#</th><th>BMI</th><th>Category</th><th>Gender</th><th>Height</th><th>Weight</th><th>Created</th></thead>
             <c:forEach var="bmiEntry" items="${requestScope.bmiEntryList}">
                 <tr>
                     <td>${bmiEntry.id}</td>
@@ -22,6 +22,7 @@
                     <td>${bmiEntry.gender}</td>
                     <td>${bmiEntry.height}</td>
                     <td>${bmiEntry.weight}</td>
+                    <td>${bmiEntry.created}</td>
                 </tr>
             </c:forEach>
         </table>
